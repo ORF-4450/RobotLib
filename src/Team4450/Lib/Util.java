@@ -205,7 +205,7 @@ public class Util
         StackTraceElement stackTrace[];
     
         stackTrace = new Throwable().getStackTrace();
-        
+                
         try
         {
         	return stackTrace[level].toString().split("Robot9.")[1];
@@ -218,7 +218,14 @@ public class Util
         	}
         	catch (Throwable e1)
         	{
+        		try
+        		{
         		return stackTrace[level].toString().split("Lib.")[1];
+        		}
+        		catch (Throwable e2)
+        		{
+        			return "method not found";
+        		}
         	}
         }
 	}

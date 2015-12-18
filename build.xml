@@ -3,5 +3,7 @@
 <project name="RobotLib" default="CreateJar">
   <target name="CreateJar" description="Create Jar file">
         <jar jarfile="dist/RobotLib.jar" basedir="bin/" includes="**/*.class" />
+  	
+  		<copy file="dist/RobotLib.jar" todir="c:/FRC Java/Robot8/libs/" />
   </target>
 </project>
