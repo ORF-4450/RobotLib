@@ -20,6 +20,8 @@ import java.util.logging.LogRecord;
 
 public class Util
 {
+	public static final String libraryVersion = "ORF-01.08.16";
+	
 	// PrintStream that writes to our logging system.
 	public static final PrintStream	logPrintStream = new PrintStream(new LoggingOutputStream());
 

@@ -51,8 +51,8 @@ public class LaunchPad
     		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_TWO);
     		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_THREE);
-    		controls.add(control);
+    		//control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_THREE);
+    		//controls.add(control);
     		
     		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_FOUR);
     		controls.add(control);
@@ -63,8 +63,8 @@ public class LaunchPad
     		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_SIX);
     		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_SEVEN);
-    		controls.add(control);
+    		//control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_SEVEN);
+    		//controls.add(control);
     		
     		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_EIGHT);
     		controls.add(control);
@@ -72,8 +72,8 @@ public class LaunchPad
     		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_NINE);
     		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_TEN);
-    		controls.add(control);
+    		//control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_TEN);
+    		//controls.add(control);
     		
     		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_ELEVEN);
     		controls.add(control);
@@ -329,15 +329,23 @@ public class LaunchPad
     {
         BUTTON_ONE (1),
         BUTTON_TWO (2),
-        BUTTON_THREE (3),
+        //BUTTON_THREE (3),
         BUTTON_FOUR (4),
         BUTTON_FIVE (5),
         BUTTON_SIX (6),
-        BUTTON_SEVEN (7),
+        //BUTTON_SEVEN (7),
         BUTTON_EIGHT (8),
         BUTTON_NINE (9),
-        BUTTON_TEN (10),
-        BUTTON_ELEVEN (11);
+        //BUTTON_TEN (10),
+        BUTTON_ELEVEN (11),
+        BUTTON_GREEN(1),
+        BUTTON_BLUE(2),
+        BUTTON_BLACK(6),
+        BUTTON_RED(8),
+        BUTTON_YELLOW(11),
+        ROCKER_LEFT_FRONT(4),
+        ROCKER_LEFT_BACK(5),
+        ROCKER_RIGHT(9);
         
         private int value;
 
