@@ -82,7 +82,7 @@ public class JoyStick
 		joyStickName = name;
 		this.caller = caller;
 		
-		AddButton(button);
+		if (button != null) AddButton(button);
 	}
 	
 	// Add additonal button to be monitored.
@@ -127,13 +127,15 @@ public class JoyStick
 		Util.consoleLog(joyStickName);
 
 		monitorJoyStickThread.interrupt();
+		
+		monitorJoyStickThread = null;
 	}
 	
 	public void dispose()
 	{
 		Util.consoleLog(joyStickName);
 		
-		monitorJoyStickThread.interrupt();
+		if (monitorJoyStickThread != null) monitorJoyStickThread.interrupt();
 	}
 
 	public double GetX()

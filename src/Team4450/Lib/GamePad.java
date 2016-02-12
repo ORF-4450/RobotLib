@@ -150,14 +150,16 @@ public class GamePad
 	{
 		Util.consoleLog(gamePadName);
 
-		monitorGamePadThread.interrupt();
+		if (monitorGamePadThread != null) monitorGamePadThread.interrupt();
+		
+		monitorGamePadThread = null;
 	}
 	
 	public void dispose()
 	{
 		Util.consoleLog(gamePadName);
 		
-		monitorGamePadThread.interrupt();
+		if (monitorGamePadThread != null) monitorGamePadThread.interrupt();
 	}
 
 	public double GetLeftX()

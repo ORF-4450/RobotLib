@@ -24,8 +24,8 @@ public class LaunchPad
 {
 	private Object			caller;
 	private	Joystick		joyStick;
-	private 				Set<LaunchPadEventListener> listeners;
-	private					Set<LaunchPadControl> controls;
+	private 				Set<LaunchPadEventListener> listeners = new HashSet<LaunchPadEventListener>();
+	private					Set<LaunchPadControl> controls = new HashSet<LaunchPadControl>();
 	private Thread			monitorLaunchPadThread;
 
 	public LaunchPad(Joystick	joystick, Object caller)
@@ -41,9 +41,6 @@ public class LaunchPad
     		
     		// Build full set of launch pad controls and register them
     		// for monitoring.
-    		
-    		listeners = new HashSet<LaunchPadEventListener>();
-    		controls = new HashSet<LaunchPadControl>();
     		
     		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_ONE);
     		controls.add(control);
@@ -92,10 +89,7 @@ public class LaunchPad
     		this.joyStick = joystick;
     		this.caller = caller;
     		
-    		listeners = new HashSet<LaunchPadEventListener>();
-    		controls = new HashSet<LaunchPadControl>();
-    		
-    		AddControl(controlID);
+    		if (controlID != null) AddControl(controlID);
     	}
     	catch (Exception  e) {e.printStackTrace(Util.logPrintStream);}
 	}
@@ -147,14 +141,16 @@ public class LaunchPad
 	{
 		Util.consoleLog();
 		
-		monitorLaunchPadThread.interrupt();
+		if (monitorLaunchPadThread != null) monitorLaunchPadThread.interrupt();
+		
+		monitorLaunchPadThread = null;
 	}
 
 	public void dispose()
 	{
 		Util.consoleLog();
 		
-		monitorLaunchPadThread.interrupt();
+		if (monitorLaunchPadThread != null) monitorLaunchPadThread.interrupt();
 	}
 
 	// Launch Pad Monitor thread.
