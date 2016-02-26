@@ -15,13 +15,24 @@ public class FestoSA
 	private final Solenoid valveOpenSide;
 
 	/**
-	 * @param port DIO port wired to valve.
+	 * @param port DIO port wired to valve. Assumes PCM with CAN Id 0.
 	 */
 	public FestoSA(int port)
 	{
 	  	Util.consoleLog("port=%d", port); 
 
 		valveOpenSide = new Solenoid(port);
+	}
+
+	/**
+	 * @param pcmCanId PCM CAN Id number.
+	 * @param port DIO port wired to valve.
+	 */
+	public FestoSA(int pcmCanId, int port)
+	{
+	  	Util.consoleLog("port=%d", port); 
+
+		valveOpenSide = new Solenoid(pcmCanId, port);
 	}
 
 	public void dispose()
