@@ -126,7 +126,7 @@ public class JoyStick
 	{
 		Util.consoleLog(joyStickName);
 
-		monitorJoyStickThread.interrupt();
+		if (monitorJoyStickThread != null) monitorJoyStickThread.interrupt();
 		
 		monitorJoyStickThread = null;
 	}
@@ -209,9 +209,9 @@ public class JoyStick
           				}
     	            }
     	            
-    	            // We sleep since JS updates come from DS every 20ms or so. We wait 50ms so this thread
+    	            // We sleep since JS updates come from DS every 20ms or so. We wait 30ms so this thread
     	            // does not run at the same time as the teleop thread.
-    	            sleep(50);
+    	            sleep(30);
     	    	}
 	    	}
 	    	catch (InterruptedException e) {}

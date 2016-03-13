@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.can.CANJNI;
 
 public class Util
 {
-	public static final String libraryVersion = "ORF-02.26.16";
+	public static final String libraryVersion = "ORF-03.12.16";
 	
 	// PrintStream that writes to our logging system.
 	public static final PrintStream	logPrintStream = new PrintStream(new LoggingOutputStream());
@@ -107,25 +107,24 @@ public class Util
 	
 	private static class LogFormatter extends Formatter 
 	{
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss:S");
+        
+        public LogFormatter()
+        {
+            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
+        }
+
         public String format(LogRecord rec) 
         {
             StringBuffer buf = new StringBuffer(1024);
             
-            buf.append(String.format("<%d>", rec.getThreadID())); //Thread.currentThread().getId()));
-            buf.append(formatDate(rec.getMillis()));
+            buf.append(String.format("<%d>", rec.getThreadID()));
+            buf.append(dateFormat.format(new Date(rec.getMillis())));
             buf.append(" ");
             buf.append(formatMessage(rec));
             buf.append("\n");
         
             return buf.toString();
-        }
-        
-        private String formatDate(long millisecs) 
-        {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss:S");
-            dateFormat.setTimeZone(TimeZone.getTimeZone("America/Los_Angeles"));
-            Date resultDate = new Date(millisecs);
-            return dateFormat.format(resultDate);
         }
 	}
 	

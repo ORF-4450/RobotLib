@@ -321,23 +321,42 @@ public class LaunchPad
         }
     }
     
+    // Driver Station Launch Pad to Booster to Joystick mapping.
+    // -- MSP --  Booster  --  JS button Id -- Name
+    //    Left
+    //    P1.6      A4              1          Trigger
+    //    P3.2      A5              2          Top Back
+    //    P2.7      B8              3          Top Center
+    //    P4.2      A10             4          Top Left
+    //    P4.1      A11             5          Top Right
+    //    P3.6      A3              6          Left Front
+    //    P3.5      none            7          Left Rear
+    //
+    //    Right
+    //    P2.2      A2              8          Back Left
+    //    P7.4      B1              9          Back Right
+    //    P1.5      A6             10          Right Rear
+    //    P1.4      B2             11          Right Front
+    
     public enum LaunchPadControlIDs
     {
         BUTTON_ONE (1),
         BUTTON_TWO (2),
-        //BUTTON_THREE (3),
+        BUTTON_THREE (3),
         BUTTON_FOUR (4),
         BUTTON_FIVE (5),
         BUTTON_SIX (6),
         //BUTTON_SEVEN (7),
         BUTTON_EIGHT (8),
         BUTTON_NINE (9),
-        //BUTTON_TEN (10),
+        BUTTON_TEN (10),
         BUTTON_ELEVEN (11),
         BUTTON_GREEN(1),
         BUTTON_BLUE(2),
+        BUTTON_RED_RIGHT(3),
         BUTTON_BLACK(6),
         BUTTON_RED(8),
+        BUTTON_BLUE_RIGHT(10),
         BUTTON_YELLOW(11),
         ROCKER_LEFT_FRONT(4),
         ROCKER_LEFT_BACK(5),
@@ -347,7 +366,7 @@ public class LaunchPad
 
         private LaunchPadControlIDs(int value) 
         {
-      	  this.value = value;
+        	this.value = value;
         }
     };
 }
