@@ -1,13 +1,11 @@
 
 package Team4450.Lib;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.ArrayList;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.logging.ConsoleHandler;
@@ -20,19 +18,28 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.can.CANJNI;
 
 public class Util
 {
-	public static final String libraryVersion = "ORF-03.12.16";
-	
 	// PrintStream that writes to our logging system.
 	public static final PrintStream	logPrintStream = new PrintStream(new LoggingOutputStream());
 
 	// Logging class for use by other classes to log through our custom logging scheme. All
 	// logging should be done by calls to methods on this class instance.
 	public final static Logger logger = Logger.getGlobal();
+	
+	// Private constructor means this class cannot be instantiated. All access is static.
+	
+	private Util()
+	{
+		
+	}
 
 	// Read our properties file from RoboRio memory.
 	
@@ -95,8 +102,11 @@ public class Util
             
             //if (true) throw new IOException("Test Exception");
             
-            fileTxt = new FileHandler("/home/lvuser/Logging.txt");
-
+            if (new File("/home/lvuser/Logging.txt.99").exists() != true)
+            	fileTxt = new FileHandler("/home/lvuser/Logging.txt");
+            else
+            	throw new IOException("Max number of log files reached.");
+            
             fileTxt.setFormatter(logFormatter);
 
             logger.addHandler(fileTxt);
@@ -228,28 +238,14 @@ public class Util
         {
 			return "method not found";
         }
-        
+
 //        try
 //        {
 //        	return stackTrace[level].toString().split("Robot9.")[1];
 //        }
 //        catch (Throwable e)
 //        {
-//        	try
-//        	{
-//            	return stackTrace[level].toString().split("Robot8.")[1];
-//        	}
-//        	catch (Throwable e1)
-//        	{
-//        		try
-//        		{
-//        		return stackTrace[level].toString().split("Lib.")[1];
-//        		}
-//        		catch (Throwable e2)
-//        		{
-//        			return "method not found";
-//        		}
-//        	}
+//        	return stackTrace[level].toString().split("Lib.")[1];
 //        }
 	}
 
@@ -258,8 +254,8 @@ public class Util
     
     /**
      * Write message to console log with optional formatting and program location.
-     * @param message message with optional format specifiers for listed parameters
-     * @param parms parameter list matching format specifiers
+     * @param message Message with optional format specifiers for listed parameters.
+     * @param parms Parameter list matching format specifiers.
      */
 	public static void consoleLog(String message, Object... parms)
 	{
@@ -274,6 +270,17 @@ public class Util
 	{
 		// logs to the console as well as our log file on RR disk.
 		logger.log(Level.INFO, String.format("robot: %s", currentMethod(2)));
+	}
+
+	/**
+	 * Write exception message to console window and exception stack trace to
+	 * log file.
+	 * @param e The exception to log.
+	 */
+	public static void logException(Throwable e)
+	{
+		DriverStation.reportError(e.getMessage(), false);
+		e.printStackTrace(Util.logPrintStream);
 	}
 
 	/** helper routine to get last received message for a given ID */
@@ -317,7 +324,7 @@ public class Util
 		long []srx_timeStamp0 = new long[63];
 		
 		pdp0_timeStamp0 = checkMessage(0x08041400,0);
-		
+		 
 		for(int i = 0; i < 63; ++i) 
 		{
 			pcm_timeStamp0[i] = checkMessage(0x09041400, i);
@@ -344,15 +351,15 @@ public class Util
 		}
 
 		/* compare, if timestamp0 is good and timestamp1 is good, and they are different, device is healthy */
-		if( pdp0_timeStamp0 >= 0 && pdp0_timeStamp1 >=0 && pdp0_timeStamp0 != pdp0_timeStamp1)
+		if( pdp0_timeStamp0 >= 0 && pdp0_timeStamp1 >= 0 && pdp0_timeStamp0 != pdp0_timeStamp1)
 			retval.add("PDP 0");
 
 		for(int i = 0; i < 63; ++i) 
 		{
-			if( pcm_timeStamp0[i] >= 0 && pcm_timeStamp1[i] >=0 && pcm_timeStamp0[i]!=pcm_timeStamp1[i])
+			if( pcm_timeStamp0[i] >= 0 && pcm_timeStamp1[i] >= 0 && pcm_timeStamp0[i] != pcm_timeStamp1[i])
 				retval.add("PCM " + i);
 		
-			if( srx_timeStamp0[i] >= 0 && srx_timeStamp1[i] >=0 && srx_timeStamp0[i]!=srx_timeStamp1[i])
+			if( srx_timeStamp0[i] >= 0 && srx_timeStamp1[i] >= 0 && srx_timeStamp0[i] != srx_timeStamp1[i])
 				retval.add("SRX " + i);
 		}
 		

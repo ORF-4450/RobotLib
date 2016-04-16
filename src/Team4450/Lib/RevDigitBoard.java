@@ -1,5 +1,5 @@
 /*
- * Based on code from team 1493.
+ * Based on code from team 1493. 
  */
 
 package Team4450.Lib;
@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj.AnalogInput;
 
 public class RevDigitBoard
 {
+	// RevDigitBoard is a Singleton class. One instance only as there is only one RevDigitBoard per robot.
+	private static RevDigitBoard	instance;
+	
 	// I2C address of the digit board is 0x70
 	private I2C i2c = new I2C(Port.kMXP, 0x70);
 	
@@ -20,53 +23,66 @@ public class RevDigitBoard
 	private DigitalInput buttonB = new DigitalInput(20);
 	
 	// The potentiometer is keyed to AI 3	
-	private AnalogInput pot = new AnalogInput(3);
-
+	private AnalogInput	 pot = new AnalogInput(3);
+	
 	// this is the array of all characters - this is not the most efficient way to store the data - but it works for now
 	byte[][] charreg = new byte[37][2]; //charreg is short for character registry
 	
-	public RevDigitBoard()
+	// Private constructor prevents instantiation.
+	private RevDigitBoard()
+	{
+	}
+
+	/**
+	 * Returns the common instance of RevDigitBoard.
+	 * @return Instance of RevDigitBoard.
+	 */
+	public static RevDigitBoard getInstance()
 	{
 		Util.consoleLog();
+		
+		// Create common instance if needed.
+		
+		if (instance == null) instance = new RevDigitBoard();
 
 		// Load the character registry.
-		charreg[0][0] = (byte)0b00000110; charreg[0][1] = (byte)0b00000000; //1
-		charreg[1][0] = (byte)0b11011011; charreg[1][1] = (byte)0b00000000; //2
-		charreg[2][0] = (byte)0b11001111; charreg[2][1] = (byte)0b00000000; //3
-		charreg[3][0] = (byte)0b11100110; charreg[3][1] = (byte)0b00000000; //4
-		charreg[4][0] = (byte)0b11101101; charreg[4][1] = (byte)0b00000000; //5
-		charreg[5][0] = (byte)0b11111101; charreg[5][1] = (byte)0b00000000; //6
-		charreg[6][0] = (byte)0b00000111; charreg[6][1] = (byte)0b00000000; //7
-		charreg[7][0] = (byte)0b11111111; charreg[7][1] = (byte)0b00000000; //8
-		charreg[8][0] = (byte)0b11101111; charreg[8][1] = (byte)0b00000000; //9
-		charreg[9][0] = (byte)0b00111111; charreg[9][1] = (byte)0b00000000; //0
-		charreg[10][0] = (byte)0b11110111; charreg[10][1] = (byte)0b00000000; //A
-		charreg[11][0] = (byte)0b10001111; charreg[11][1] = (byte)0b00010010; //B
-		charreg[12][0] = (byte)0b00111001; charreg[12][1] = (byte)0b00000000; //C
-		charreg[13][0] = (byte)0b00001111; charreg[13][1] = (byte)0b00010010; //D
-		charreg[14][0] = (byte)0b11111001; charreg[14][1] = (byte)0b00000000; //E
-		charreg[15][0] = (byte)0b11110001; charreg[15][1] = (byte)0b00000000; //F
-		charreg[16][0] = (byte)0b10111101; charreg[16][1] = (byte)0b00000000; //G
-		charreg[17][0] = (byte)0b11110110; charreg[17][1] = (byte)0b00000000; //H
-		charreg[18][0] = (byte)0b00001001; charreg[18][1] = (byte)0b00010010; //I
-		charreg[19][0] = (byte)0b00011110; charreg[19][1] = (byte)0b00000000; //J
-		charreg[20][0] = (byte)0b01110000; charreg[20][1] = (byte)0b00001100; //K
-		charreg[21][0] = (byte)0b00111000; charreg[21][1] = (byte)0b00000000; //L
-		charreg[22][0] = (byte)0b00110110; charreg[22][1] = (byte)0b00000101; //M
-		charreg[23][0] = (byte)0b00110110; charreg[23][1] = (byte)0b00001001; //N
-		charreg[24][0] = (byte)0b00111111; charreg[24][1] = (byte)0b00000000; //O
-		charreg[25][0] = (byte)0b11110011; charreg[25][1] = (byte)0b00000000; //P
-		charreg[26][0] = (byte)0b00111111; charreg[26][1] = (byte)0b00001000; //Q
-		charreg[27][0] = (byte)0b11110011; charreg[27][1] = (byte)0b00001000; //R
-		charreg[28][0] = (byte)0b10001101; charreg[28][1] = (byte)0b00000001; //S
-		charreg[29][0] = (byte)0b00000001; charreg[29][1] = (byte)0b00010010; //T
-		charreg[30][0] = (byte)0b00111110; charreg[30][1] = (byte)0b00000000; //U
-		charreg[31][0] = (byte)0b00110000; charreg[31][1] = (byte)0b00100100; //V
-		charreg[32][0] = (byte)0b00110110; charreg[32][1] = (byte)0b00101000; //W
-		charreg[33][0] = (byte)0b00000000; charreg[33][1] = (byte)0b00101101; //X
-		charreg[34][0] = (byte)0b00000000; charreg[34][1] = (byte)0b00010101; //Y
-		charreg[35][0] = (byte)0b00001001; charreg[35][1] = (byte)0b00100100; //Z
-		charreg[36][0] = (byte)0b00000000; charreg[36][1] = (byte)0b00000000; //Space
+		instance.charreg[0][0] = (byte)0b00000110; instance.charreg[0][1] = (byte)0b00000000; //1
+		instance.charreg[1][0] = (byte)0b11011011; instance.charreg[1][1] = (byte)0b00000000; //2
+		instance.charreg[2][0] = (byte)0b11001111; instance.charreg[2][1] = (byte)0b00000000; //3
+		instance.charreg[3][0] = (byte)0b11100110; instance.charreg[3][1] = (byte)0b00000000; //4
+		instance.charreg[4][0] = (byte)0b11101101; instance.charreg[4][1] = (byte)0b00000000; //5
+		instance.charreg[5][0] = (byte)0b11111101; instance.charreg[5][1] = (byte)0b00000000; //6
+		instance.charreg[6][0] = (byte)0b00000111; instance.charreg[6][1] = (byte)0b00000000; //7
+		instance.charreg[7][0] = (byte)0b11111111; instance.charreg[7][1] = (byte)0b00000000; //8
+		instance.charreg[8][0] = (byte)0b11101111; instance.charreg[8][1] = (byte)0b00000000; //9
+		instance.charreg[9][0] = (byte)0b00111111; instance.charreg[9][1] = (byte)0b00000000; //0
+		instance.charreg[10][0] = (byte)0b11110111; instance.charreg[10][1] = (byte)0b00000000; //A
+		instance.charreg[11][0] = (byte)0b10001111; instance.charreg[11][1] = (byte)0b00010010; //B
+		instance.charreg[12][0] = (byte)0b00111001; instance.charreg[12][1] = (byte)0b00000000; //C
+		instance.charreg[13][0] = (byte)0b00001111; instance.charreg[13][1] = (byte)0b00010010; //D
+		instance.charreg[14][0] = (byte)0b11111001; instance.charreg[14][1] = (byte)0b00000000; //E
+		instance.charreg[15][0] = (byte)0b11110001; instance.charreg[15][1] = (byte)0b00000000; //F
+		instance.charreg[16][0] = (byte)0b10111101; instance.charreg[16][1] = (byte)0b00000000; //G
+		instance.charreg[17][0] = (byte)0b11110110; instance.charreg[17][1] = (byte)0b00000000; //H
+		instance.charreg[18][0] = (byte)0b00001001; instance.charreg[18][1] = (byte)0b00010010; //I
+		instance.charreg[19][0] = (byte)0b00011110; instance.charreg[19][1] = (byte)0b00000000; //J
+		instance.charreg[20][0] = (byte)0b01110000; instance.charreg[20][1] = (byte)0b00001100; //K
+		instance.charreg[21][0] = (byte)0b00111000; instance.charreg[21][1] = (byte)0b00000000; //L
+		instance.charreg[22][0] = (byte)0b00110110; instance.charreg[22][1] = (byte)0b00000101; //M
+		instance.charreg[23][0] = (byte)0b00110110; instance.charreg[23][1] = (byte)0b00001001; //N
+		instance.charreg[24][0] = (byte)0b00111111; instance.charreg[24][1] = (byte)0b00000000; //O
+		instance.charreg[25][0] = (byte)0b11110011; instance.charreg[25][1] = (byte)0b00000000; //P
+		instance.charreg[26][0] = (byte)0b00111111; instance.charreg[26][1] = (byte)0b00001000; //Q
+		instance.charreg[27][0] = (byte)0b11110011; instance.charreg[27][1] = (byte)0b00001000; //R
+		instance.charreg[28][0] = (byte)0b10001101; instance.charreg[28][1] = (byte)0b00000001; //S
+		instance.charreg[29][0] = (byte)0b00000001; instance.charreg[29][1] = (byte)0b00010010; //T
+		instance.charreg[30][0] = (byte)0b00111110; instance.charreg[30][1] = (byte)0b00000000; //U
+		instance.charreg[31][0] = (byte)0b00110000; instance.charreg[31][1] = (byte)0b00100100; //V
+		instance.charreg[32][0] = (byte)0b00110110; instance.charreg[32][1] = (byte)0b00101000; //W
+		instance.charreg[33][0] = (byte)0b00000000; instance.charreg[33][1] = (byte)0b00101101; //X
+		instance.charreg[34][0] = (byte)0b00000000; instance.charreg[34][1] = (byte)0b00010101; //Y
+		instance.charreg[35][0] = (byte)0b00001001; instance.charreg[35][1] = (byte)0b00100100; //Z
+		instance.charreg[36][0] = (byte)0b00000000; instance.charreg[36][1] = (byte)0b00000000; //Space
 
 		// set up the board - turn on, set blinking and brightness   
 	    byte[] osc = new byte[1];
@@ -77,16 +93,18 @@ public class RevDigitBoard
 	    blink[0] = (byte)0x81;
 	    bright[0] = (byte)0xEF;
 
-		i2c.writeBulk(osc);
+	    instance.i2c.writeBulk(osc);
 		Timer.delay(.01);
 		
-		i2c.writeBulk(bright);
+		instance.i2c.writeBulk(bright);
 		Timer.delay(.01);
 		
-		i2c.writeBulk(blink);
+		instance.i2c.writeBulk(blink);
 		Timer.delay(.01);
 		
-		display("");
+		instance.display("");
+		
+		return instance;
     }
 
 	public void dispose()
@@ -96,6 +114,8 @@ public class RevDigitBoard
 		if (pot != null) pot.free();
 		if (buttonA != null) buttonA.free();
 		if (buttonB != null) buttonB.free();
+		
+		instance = null;
 	}
 	
 	/**

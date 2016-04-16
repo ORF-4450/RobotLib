@@ -1,8 +1,6 @@
 
 package Team4450.Lib;
 
-import java.util.Properties;
-
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 
@@ -20,18 +18,20 @@ public class CameraFeed extends Thread
 	private int 			currentCamera;
 	private Image 			frame;
 	private CameraServer 	server;
-	private boolean			cameraChangeInProgress;
+	private boolean			cameraChangeInProgress, isComp;
 	
 	/**
 	 * @param robot Robot class instance.
 	 */
 
-	public CameraFeed(Properties robotProperties)
+	public CameraFeed(boolean isCompetitionRobot)
 	{
 		try
 		{
     		Util.consoleLog();
     
+    		isComp = isCompetitionRobot;
+    		
     		this.setName("CameraFeed");
     		
     		// Get camera ids by supplying camera name ex 'cam0', found on roborio web interface.
@@ -40,7 +40,7 @@ public class CameraFeed extends Thread
     		
     		// Camera initialization based on robotid from properties file.
     		
-    		if (robotProperties.getProperty("RobotId").equals("comp"))
+    		if (isComp)
     		{
         		try
         		{
@@ -55,12 +55,13 @@ public class CameraFeed extends Thread
         		catch (Exception e) {}
     		}
     		
-    		if (robotProperties.getProperty("RobotId").equalsIgnoreCase("clone"))
+    		if (!isComp)
     		{
     			Util.consoleLog("in clone");
+    			
         		try
         		{
-        			cam1 = NIVision.IMAQdxOpenCamera("cam1", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
+        			cam1 = NIVision.IMAQdxOpenCamera("cam0", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
         		}
         		catch (Exception e) {}
     		}
@@ -87,6 +88,8 @@ public class CameraFeed extends Thread
 	// Run thread to read and feed camera images. Called by Thread.start().
 	public void run()
 	{
+		int frameCount = 0;
+		
 		try
 		{
 			Util.consoleLog();
@@ -94,6 +97,14 @@ public class CameraFeed extends Thread
 			while (true)
 			{
 				if (!cameraChangeInProgress) UpdateCameraImage();
+		
+//				frameCount++;
+//				
+//				if (frameCount == frameRate)
+//				{
+//					frameCount = 0;
+//					vision.CheckTarget(frame);
+//				}
 				
 				Timer.delay(1 / frameRate);
 			}
@@ -101,6 +112,12 @@ public class CameraFeed extends Thread
 		catch (Throwable e) {e.printStackTrace(Util.logPrintStream);}
 	}
 	
+	public Image CurrentImage()
+	{
+		Util.consoleLog();
+		
+		return frame;
+	}
 	/**
 	 * Stop feed, ie close camera stream.
 	 */
