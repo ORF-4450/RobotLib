@@ -1,10 +1,9 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SampleRobot;
 
 /**
  * Task to monitor ultrasonic sensor and report distance to driver station.

@@ -4,7 +4,6 @@ package Team4450.Lib;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Task to monitor ultrasonic sensor and report distance to driver station.
@@ -16,8 +15,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class MonitorDistanceMBX extends Thread
 {
-    SampleRobot robot;
- 
+	SampleRobot robot;
+	
     /**
      * @param robot Robot class instance.
      */

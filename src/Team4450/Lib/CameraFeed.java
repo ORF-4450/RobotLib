@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.Timer;
 
 /**
  * USB camera feed task. Runs as a thread separate from Robot class.
+ * Manages one or more usb cameras feeding their images to the 
+ * CameraServer class to send to the DS.
+ * Uses NI image library to access cameras directly.
  */
 
 public class CameraFeed extends Thread
@@ -18,20 +21,18 @@ public class CameraFeed extends Thread
 	private int 			currentCamera;
 	private Image 			frame;
 	private CameraServer 	server;
-	private boolean			cameraChangeInProgress, isComp;
+	private boolean			cameraChangeInProgress;
 	
 	/**
 	 * @param robot Robot class instance.
 	 */
 
-	public CameraFeed(boolean isCompetitionRobot)
+	public CameraFeed(boolean isComp)
 	{
 		try
 		{
     		Util.consoleLog();
     
-    		isComp = isCompetitionRobot;
-    		
     		this.setName("CameraFeed");
     		
     		// Get camera ids by supplying camera name ex 'cam0', found on roborio web interface.
@@ -88,8 +89,6 @@ public class CameraFeed extends Thread
 	// Run thread to read and feed camera images. Called by Thread.start().
 	public void run()
 	{
-		int frameCount = 0;
-		
 		try
 		{
 			Util.consoleLog();
@@ -98,26 +97,23 @@ public class CameraFeed extends Thread
 			{
 				if (!cameraChangeInProgress) UpdateCameraImage();
 		
-//				frameCount++;
-//				
-//				if (frameCount == frameRate)
-//				{
-//					frameCount = 0;
-//					vision.CheckTarget(frame);
-//				}
-				
 				Timer.delay(1 / frameRate);
 			}
 		}
 		catch (Throwable e) {e.printStackTrace(Util.logPrintStream);}
 	}
 	
+	/**
+	 * Get last image read from camera.
+	 * @return Image Last image from camera.
+	 */
 	public Image CurrentImage()
 	{
 		Util.consoleLog();
 		
 		return frame;
 	}
+	
 	/**
 	 * Stop feed, ie close camera stream.
 	 */
