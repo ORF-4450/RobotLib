@@ -1,9 +1,10 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.SampleRobot;
+import Team4450.Robot9.Robot;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Task to monitor ultrasonic sensor and report distance to driver station.
@@ -15,16 +16,31 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class MonitorDistanceMBX extends Thread
 {
-	SampleRobot robot;
-	
+    Robot robot;
+    private static MonitorDistanceMBX	monitorDistance;
+
+    // Create single instance of this class and return that single instance to any callers.
+    // This is the singleton class model. You don't use new, you use getInstance.
+      
     /**
-     * @param robot Robot class instance.
+     * Get a reference to global MonitorDistanceMBX Thread object.
+     * @return Reference to global MonitorDistanceMBX object.
      */
-	public MonitorDistanceMBX(SampleRobot robot)
+    
+    public static MonitorDistanceMBX getInstance(Robot robot) 
+    {
+  	 Util.consoleLog();
+      	
+       if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot);
+          
+       return monitorDistance;
+    }
+
+    private MonitorDistanceMBX(Robot robot)
 	{
 		Util.consoleLog();
         this.robot = robot;
-        this.setName("MonitorDistance");
+        this.setName("MonitorDistanceMBX");
     }
     
     public void run()
@@ -61,6 +77,6 @@ public class MonitorDistanceMBX extends Thread
 				Timer.delay(1.0);
 			}
 		}
-		catch (Throwable e)  {e.printStackTrace(Util.logPrintStream);}
+		catch (Throwable e) {Util.logException(e);}
 	}
 }

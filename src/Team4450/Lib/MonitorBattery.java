@@ -16,11 +16,29 @@ public class MonitorBattery extends Thread
 {
   private final DriverStation	ds;
   private final double		  	LOW_BATTERY = 11.7;
-  
+  private static MonitorBattery	monitorBattery;
+
+  // Create single instance of this class and return that single instance to any callers.
+  // This is the singleton class model. You don't use new, you use getInstance.
+    
   /**
+   * Get a reference to global MonitorBattery Thread object.
    * @param ds Driver Station instance.
+   * @return Reference to global MonitorBattery object.
    */
-  public MonitorBattery(DriverStation ds)
+      
+  public static MonitorBattery getInstance(DriverStation ds) 
+  {
+  	Util.consoleLog();
+    	
+  	if (monitorBattery == null) monitorBattery = new MonitorBattery(ds);
+        
+      return monitorBattery;
+  }
+
+  // Private constructor means callers must use getInstance.
+
+  private MonitorBattery(DriverStation ds)
   {
 	  Util.consoleLog();
 	  this.ds = ds;
@@ -68,6 +86,6 @@ public class MonitorBattery extends Thread
 				}
 			}
 		}
-		catch (Throwable e)	{e.printStackTrace(Util.logPrintStream);}
+		catch (Throwable e)	{Util.logException(e);}
 	}
 }

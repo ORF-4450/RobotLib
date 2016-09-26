@@ -335,7 +335,7 @@ public class Util
 		try 
 		{
 			Thread.sleep(200);
-		} catch (InterruptedException e) {e.printStackTrace(logPrintStream);}
+		} catch (InterruptedException e) {Util.logException(e);}
 
 		/* get timestamp1 for each device */
 		long pdp0_timeStamp1; // only look for PDP at '0'

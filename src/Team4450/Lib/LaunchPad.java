@@ -13,6 +13,8 @@ import java.util.Set;
 
 
 
+
+
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -77,7 +79,7 @@ public class LaunchPad
 
     		Start();
 		}
-		catch (Exception  e) {e.printStackTrace(Util.logPrintStream);}
+		catch (Exception  e) {Util.logException(e);}
 	}
 	
 	public LaunchPad(Joystick joystick, LaunchPadControlIDs controlID, Object caller)
@@ -218,7 +220,7 @@ public class LaunchPad
     	    	}
 	    	}
 	    	catch (InterruptedException e) {}
-	    	catch (Throwable e) {e.printStackTrace(Util.logPrintStream);}
+	    	catch (Throwable e) {Util.logException(e);}
 	    }
 	}
 	

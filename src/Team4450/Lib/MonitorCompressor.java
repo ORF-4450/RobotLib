@@ -1,6 +1,7 @@
 
 package Team4450.Lib;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
@@ -14,9 +15,27 @@ import edu.wpi.first.wpilibj.Compressor;
 
 public class MonitorCompressor extends Thread
 {
-  private final Compressor	compressor = new Compressor(0);
+  private final Compressor			compressor = new Compressor(0);
+  private static MonitorCompressor	monitorCompressor;
+
+  // Create single instance of this class and return that single instance to any callers.
+  // This is the singleton class model. You don't use new, you use getInstance.
     
-  public MonitorCompressor()
+  /**
+   * Get a reference to global MonitorCompressor Thread object.
+   * @return Reference to global MonitorCompressor object.
+   */
+  
+  public static MonitorCompressor getInstance() 
+  {
+	 Util.consoleLog();
+    	
+     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor();
+        
+     return monitorCompressor;
+  }
+
+  private MonitorCompressor()
   {
 	  Util.consoleLog();
 	  this.setName("MonitorCompressor");
@@ -47,6 +66,6 @@ public class MonitorCompressor extends Thread
 			Timer.delay(2.0);
 		}
 	}
-	catch (Throwable e) {e.printStackTrace(Util.logPrintStream);}
+	catch (Throwable e) {Util.logException(e);}
   }
 }

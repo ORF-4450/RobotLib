@@ -305,7 +305,7 @@ public class GamePad
     	    	}
 	    	}
 	    	catch (InterruptedException e) {}
-	    	catch (Throwable e) {e.printStackTrace(Util.logPrintStream);}
+	    	catch (Throwable e) {Util.logException(e);}
 	    }
 	}	// end of MonitorJoystick thread class.
 
