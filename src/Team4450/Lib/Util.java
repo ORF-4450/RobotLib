@@ -27,11 +27,17 @@ import edu.wpi.first.wpilibj.can.CANJNI;
 
 public class Util
 {
-	// PrintStream that writes to our logging system.
+	/**
+	 * Open print stream that writes to the log file. Example of use:
+	 * exception.printStackTrace(Util.logPrintStream);
+	 */
 	public static final PrintStream	logPrintStream = new PrintStream(new LoggingOutputStream());
 
-	// Logging class for use by other classes to log through our custom logging scheme. All
-	// logging should be done by calls to methods on this class instance.
+	/**
+	 * Logging class for use by other classes to log though this custom logging scheme. All
+	 * logging should be done by calls to methods on this class instance or with the 
+	 * convenience methods of the Util class.
+	 */
 	public final static Logger logger = Logger.getGlobal();
 	
 	// Private constructor means this class cannot be instantiated. All access is static.
@@ -40,9 +46,11 @@ public class Util
 	{
 		
 	}
-
-	// Read our properties file from RoboRio memory.
 	
+	/**
+	 * Read properties file from RobRio disk into a Properties object.
+	 * @return A Properties object.
+	 */
 	public static Properties readProperties() throws IOException
 	{
 		consoleLog();
@@ -61,15 +69,20 @@ public class Util
 		return props;
 	}
 	
-	// Configures and holds (static) classes for our custom logging.
-	
+	/**
+	 * Configures and holds (static) classes for our custom logging system. 
+	 * Call setup() method to initialize logging.
+	 */
 	public static class CustomLogger 
 	{
         static private FileHandler 		fileTxt;
         //static private SimpleFormatter	formatterTxt;
         static private LogFormatter		logFormatter;
         
-        // Initialize our logging system.
+        /**
+         *  Initializes our logging system.
+         *  Call before using any logging methods.
+         */
         static public void setup() throws IOException 
         {
             // get the global logger to configure it and add a file handler.

@@ -78,6 +78,9 @@ public final class Grip
 		}
 	}
 	
+	/**
+	 * Launch Grip process and start it capturing images.
+	 */
 	public static void startGrip()
 	{
 		ProcessBuilder pb;
@@ -95,6 +98,9 @@ public final class Grip
 		catch (Throwable e) {e.printStackTrace(Util.logPrintStream);}
 	}
   
+	/**
+	 * Stop Grip process.
+	 */
 	public static void stopGrip()
 	{
 		Util.consoleLog();
@@ -104,6 +110,10 @@ public final class Grip
 		gripProcess = null;
 	}
 	
+	/**
+	 * Suspend/resume Grip image capturing.
+	 * @param suspend True to suspend, false to resume.
+	 */
 	public static void suspendGrip(boolean suspend)
 	{
 		Util.consoleLog("%b", suspend);

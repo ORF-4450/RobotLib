@@ -1,10 +1,9 @@
 
 package Team4450.Lib;
 
-import Team4450.Robot9.Robot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.SampleRobot;
 
 /**
  * Task to monitor ultrasonic sensor and report distance to driver station.
@@ -16,18 +15,19 @@ import edu.wpi.first.wpilibj.Ultrasonic;
 
 class MonitorDistance extends Thread
 {
-    Robot robot;
-    private static MonitorDistance	monitorDistance;
+    SampleRobot 	robot;
+    private static 	MonitorDistance	monitorDistance;
 
     // Create single instance of this class and return that single instance to any callers.
     // This is the singleton class model. You don't use new, you use getInstance.
       
     /**
      * Get a reference to global MonitorDistance Thread object.
+     * @param robot SampleRobot instance calling this function (use 'this').
      * @return Reference to global MonitorDistance object.
      */
     
-    public static MonitorDistance getInstance(Robot robot) 
+    public static MonitorDistance getInstance(SampleRobot robot) 
     {
   	 Util.consoleLog();
       	
@@ -36,7 +36,7 @@ class MonitorDistance extends Thread
        return monitorDistance;
     }
     
-	private MonitorDistance(Robot robot)
+	private MonitorDistance(SampleRobot robot)
 	{
 		Util.consoleLog();
         this.robot = robot;

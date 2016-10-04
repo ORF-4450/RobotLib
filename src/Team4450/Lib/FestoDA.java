@@ -60,6 +60,9 @@ public class FestoDA
 		//Close();
 	}
 
+	/**
+	 * Release FestoDA resources.
+	 */
 	public void dispose()
 	{
 		Util.consoleLog();

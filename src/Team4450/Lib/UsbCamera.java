@@ -27,21 +27,37 @@ public class UsbCamera
 	public int brightness = -1;		// 0 - 100, -1 is "do not set"
 	public int exposure = -1;		// 0 - 100, -1 is "auto"
 
+	/**
+	 * Create UsbCamera object.
+	 * @param name Camera name from RoboRio mapping
+	 * of connected Usb cameras.
+	 */
 	public UsbCamera(String name) 
 	{
 		this.name = name;
 	}
 	
+	/**
+	 * Returns the name of the camera.
+	 * @return Camera name.
+	 */
 	public String getName()
 	{
 		return name;
 	}
 	
+	/**
+	 * Returns running state of camera.
+	 * @return True if capturing images, false if not.
+	 */
 	public boolean isRunning() 
 	{
 		return (cam != null);
 	}
 	
+	/**
+	 * Update camera with current settings fields values.
+	 */
 	public void updateSettings() 
 	{
 		if (!isRunning()) return;
@@ -64,6 +80,9 @@ public class UsbCamera
 		cam.updateSettings();
 	}
 	
+	/**
+	 * Start the camera capturing images.
+	 */
 	public void startCapture() 
 	{
 		if (isRunning()) return;
@@ -77,6 +96,9 @@ public class UsbCamera
 		cam.startCapture();
 	}
 
+	/**
+	 * Stops camera image capturing.
+	 */
 	public void stopCapture() 
 	{
 		if (isRunning()) cam.closeCamera();
@@ -84,6 +106,10 @@ public class UsbCamera
 		cam = null;
 	}
 	
+	/**
+	 * Get the last image captured.
+	 * @return Last image captured.
+	 */
 	public Image getImage() 
 	{
 		startCapture();		

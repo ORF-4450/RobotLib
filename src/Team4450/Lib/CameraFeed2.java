@@ -1,20 +1,23 @@
 
 package Team4450.Lib;
 
-import Team4450.Robot9.Robot;
 import Team4450.Lib.CameraServer;
 
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 
-//import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.SampleRobot;
 
 /**
  * USB camera feed task. Runs as a thread separate from Robot class.
  * Manages one or more usb cameras feeding their images to the 
  * CameraServer class to send to the DS.
  * Uses UsbCamera objects instead of NI image library.
+ * We create one or more usb camera objects and start them capturing
+ * images. We then loop on a thread getting the current image from
+ * the currently selected camera and pass the image to the camera
+ * server which passes the image to the driver station.
  */
 
 public class CameraFeed2 extends Thread
@@ -22,23 +25,22 @@ public class CameraFeed2 extends Thread
 	public	double				frameRate = 30;		// frames per second
 	private UsbCamera			currentCamera, cam1, cam2;
 	private Image 				frame;
-	private CameraServer 		server;
-	private Robot				robot;
+	private CameraServer2 		server;
 	private static CameraFeed2	cameraFeed;
 
 	// Create single instance of this class and return that single instance to any callers.
 	
 	/**
 	 * Get a reference to global CameraFeed2 object.
-	 * @param robot Robot class instance.
+	 * @param isComp True if competition robot, false if clone.
 	 * @return Reference to global CameraFeed2 object.
 	 */
 	  
-	public static CameraFeed2 getInstance(Robot robot) 
+	public static CameraFeed2 getInstance(boolean isComp) 
 	{
 		Util.consoleLog();
 		
-		if (cameraFeed == null) cameraFeed = new CameraFeed2(robot);
+		if (cameraFeed == null) cameraFeed = new CameraFeed2(isComp);
 	    
 	    return cameraFeed;
 	}
@@ -46,7 +48,7 @@ public class CameraFeed2 extends Thread
 	// Private constructor means callers must use getInstance.
 	// This is the singleton class model.
 	
-	private CameraFeed2(Robot robot)
+	private CameraFeed2(boolean isComp)
 	{
 		try
 		{
@@ -54,19 +56,17 @@ public class CameraFeed2 extends Thread
     
     		this.setName("CameraFeed2");
     		
-    		this.robot = robot;
-    		
             // Frame that will contain current camera image.
             frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
             
-            // Server that we'll give the image to.
-            server = CameraServer.getInstance();
+            // camera Server that we'll give the image to.
+            server = CameraServer2.getInstance();
             server.setQuality(50);
     
             // Open camera.
             // Using one camera at this time.
 
-            if (robot.isComp)
+            if (isComp)
     			cam1 = new UsbCamera("cam1");
     		else
     			cam1 = new UsbCamera("cam0");
@@ -102,7 +102,7 @@ public class CameraFeed2 extends Thread
 		{
 			Util.consoleLog();
 
-			while (true)
+			while (!isInterrupted())
 			{
 				UpdateCameraImage();
 		
@@ -124,7 +124,7 @@ public class CameraFeed2 extends Thread
 	}
 	
 	/**
-	 * Stop image feed, ie close camera stream.
+	 * Stop image feed, ie close camera stream stop feed thread.
 	 */
 	public void EndFeed()
 	{
@@ -132,6 +132,8 @@ public class CameraFeed2 extends Thread
 		{
     		Util.consoleLog();
 
+    		Thread.currentThread().interrupt();
+    		
     		cam1.stopCapture();
     		
     		currentCamera = cam1 = null;

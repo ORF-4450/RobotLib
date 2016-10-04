@@ -11,19 +11,40 @@ import java.util.logging.Level;
 
 public class LCD
 {
-	LCD()
+	private LCD	lcd;
+
+	/**
+	 * Get a reference to the global instance of LCD class.
+	 * @return
+	 */
+	public LCD getInstance()
+	{
+	  	if (lcd == null) lcd = new LCD();
+	    
+	    return lcd;
+	}
+
+	private LCD()
 	{
 		Util.consoleLog();
 		
 		clearAll();
 	}
 
+	/**
+	 * Release any resources held by LCD class.
+	 */
 	public void dispose()
 	{
 		Util.consoleLog();
 	}
 
 	@Deprecated
+	/**
+	 * Log message to the console as well as our log file.
+	 * @param message Message to display with optional formatting parameters.
+	 * @param parms optional objects matching formatting parameters.
+	 */
 	public static void consoleLog(String message, Object... parms)
 	{
 		// logs to the console as well as our log file on RR disk.
@@ -31,6 +52,10 @@ public class LCD
 	}
 
 	@Deprecated
+	/**
+	 * Log message to the console as well as our log file.
+	 * @param message Message to display.
+	 */
 	public static  void consoleLogNoFormat(String message)
 	{
 		Util.logger.log(Level.INFO, String.format("robot: %s", message));

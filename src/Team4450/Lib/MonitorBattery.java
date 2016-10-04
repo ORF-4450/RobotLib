@@ -33,7 +33,7 @@ public class MonitorBattery extends Thread
     	
   	if (monitorBattery == null) monitorBattery = new MonitorBattery(ds);
         
-      return monitorBattery;
+    return monitorBattery;
   }
 
   // Private constructor means callers must use getInstance.

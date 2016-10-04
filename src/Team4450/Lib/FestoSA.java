@@ -35,6 +35,9 @@ public class FestoSA
 		valveOpenSide = new Solenoid(pcmCanId, port);
 	}
 
+	/**
+	 * Release FestoSA resources.
+	 */
 	public void dispose()
 	{
 		Util.consoleLog();

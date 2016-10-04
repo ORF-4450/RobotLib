@@ -1,12 +1,9 @@
 
 package Team4450.Lib;
 
-import Team4450.Robot9.Robot;
-
 import com.ni.vision.NIVision;
 import com.ni.vision.NIVision.Image;
 
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -24,22 +21,21 @@ public class CameraFeed extends Thread
 	private Image 				frame;
 	private CameraServer 		server;
 	private boolean				cameraChangeInProgress;
-	private Robot				robot;
 	private static CameraFeed	cameraFeed;
 
 	// Create single instance of this class and return that single instance to any callers.
 	
 	/**
 	 * Get a reference to global CameraFeed object.
-	 * @param robot Robot class instance.
+	 * @param isComp True if competition robot, false if clone.
 	 * @return Reference to global CameraFeed object.
 	 */
 	  
-	public static CameraFeed getInstance(Robot robot) 
+	public static CameraFeed getInstance(boolean isComp) 
 	{
 		Util.consoleLog();
 		
-		if (cameraFeed == null) cameraFeed = new CameraFeed(robot);
+		if (cameraFeed == null) cameraFeed = new CameraFeed(isComp);
 	    
 	    return cameraFeed;
 	}
@@ -47,7 +43,7 @@ public class CameraFeed extends Thread
 	// Private constructor means callers must use getInstance.
 	// This is the singleton class model.
 	
-	private CameraFeed(Robot robot)
+	private CameraFeed(boolean isComp)
 	{
 		try
 		{
@@ -55,15 +51,13 @@ public class CameraFeed extends Thread
     
     		this.setName("CameraFeed");
     		
-    		this.robot = robot;
-    		
     		// Get camera ids by supplying camera name ex 'cam0', found on roborio web interface.
     		// This code sets up first two cameras found using all the camera names known on our
     		// 2 RoboRios.
     		
     		// Camera initialization based on robotid from properties file.
     		
-    		if (robot.isComp)
+    		if (isComp)
     		{
         		try
         		{
@@ -78,7 +72,7 @@ public class CameraFeed extends Thread
         		catch (Exception e) {}
     		}
     		
-    		if (robot.isClone)
+    		if (!isComp)
     		{
     			Util.consoleLog("in clone");
     			

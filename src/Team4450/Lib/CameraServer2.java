@@ -29,9 +29,11 @@ import edu.wpi.first.wpilibj.vision.USBCamera;
  * Camera Server copied from WpiLib source. Implements an M-JPEG streamer
  * that feeds images to the DS. 
  * Copied here for study and possible customization.
+ * Corrected error handling and added logging. 
+ * Made this class a singleton.
  */
 
-public class CameraServer 
+public class CameraServer2 
 {
   private static final int 		kPort = 1180;
   private static final byte[] 	kMagicNumber = {0x01, 0x00, 0x00, 0x00};
@@ -40,7 +42,7 @@ public class CameraServer
   private static final int 		kSize160x120 = 2;
   private static final int 		kHardwareCompression = -1;
   private static final int 		kMaxImageSize = 200000;
-  private static CameraServer	server;
+  private static CameraServer2	server;
 
   private int 		 m_quality;
   private boolean 	 m_autoCaptureStarted;
@@ -66,11 +68,11 @@ public class CameraServer
    * Get a reference to the global CameraServer object.
    * @return Reference to the global CameraServer object.
    */
-  public static CameraServer getInstance() 
+  public static CameraServer2 getInstance() 
   {
 	Util.consoleLog();
 	
-    if (server == null) server = new CameraServer();
+    if (server == null) server = new CameraServer2();
     
     return server;
   }
@@ -78,7 +80,7 @@ public class CameraServer
   // Private constructor means this class cannot be instantiated. All access is via
   // getInstance(). This is the singleton class model.
   
-  private CameraServer() 
+  private CameraServer2() 
   {
     m_quality = 50;
     m_camera = null;
@@ -90,6 +92,9 @@ public class CameraServer
     for (int i = 0; i < 3; i++) 
       m_imageDataPool.addLast(ByteBuffer.allocateDirect(kMaxImageSize));
     
+    // Thread that runs all the time reading images from camera or the
+    // setImage() method and feeds the images to the DS.
+    
     final Thread serverThread = new Thread(new Runnable() 
     {
       public void run() 
@@ -98,9 +103,11 @@ public class CameraServer
         {
           serve();
         } 
-        catch (IOException ex) {Util.logException(ex);}
-        catch (InterruptedException ex) {Thread.currentThread().interrupt();}
-      }
+        catch (Exception ex) 
+        {
+        	Util.logException(ex);}
+        	//Thread.currentThread().interrupt();
+        }
     });
     
     serverThread.setName("CameraServer Send Thread");
@@ -175,7 +182,7 @@ public class CameraServer
   /**
    * Start automatically capturing images to send to the dashboard. You should call this method to
    * just see a camera feed on the dashboard without doing any vision processing on the roboRIO.
-   * {@link #setImage} shouldn't be called after this is called. This overload calles {@link
+   * {@link #setImage} shouldn't be called after this is called. This overload calls {@link
    * #startAutomaticCapture(String)} with the default camera name
    */
   public void startAutomaticCapture() 
@@ -345,8 +352,9 @@ public class CameraServer
    * @throws IOException          if the Socket connection fails
    * @throws InterruptedException if the sleep is interrupted
    */
-  protected void serve() throws IOException, InterruptedException 
+  protected void serve() throws Exception 
   {
+	// Open server socket to listen for connection from DS.
     ServerSocket socket = new ServerSocket();
     socket.setReuseAddress(true);
     InetSocketAddress address = new InetSocketAddress(kPort);
@@ -356,6 +364,7 @@ public class CameraServer
     {
       try 
       {
+    	// Accept connection from DS into socket1.
         Socket socket1 = socket.accept();
 
         DataInputStream is = new DataInputStream(socket1.getInputStream());
@@ -364,7 +373,7 @@ public class CameraServer
         int fps = is.readInt();
         int compression = is.readInt();
         int size = is.readInt();
-
+        
         if (compression != kHardwareCompression) 
         {
           Util.consoleLog("Hardware compression != -1, wrong camera type on Dashboard.");
@@ -376,7 +385,7 @@ public class CameraServer
         
         synchronized (this) 
         {
-        	Util.consoleLog("Camera not yet ready, awaiting first image");
+          Util.consoleLog("Camera not yet ready, awaiting first image");
           
           if (m_camera == null) wait();
           
@@ -394,7 +403,7 @@ public class CameraServer
 
         long period = (long) (1000 / (1.0 * fps));
         
-        // Loop waiting on image then sending image.
+        // Loop waiting on next image then sending image.
         
         while (true) 
         {
@@ -427,37 +436,39 @@ public class CameraServer
             os.writeInt(imageArray.length);
             os.write(imageArray);
             os.flush();
-          
+            
             long dt = System.currentTimeMillis() - t0;
 
             if (dt < period) Thread.sleep(period - dt);
           } 
-          catch (IOException | UnsupportedOperationException ex) 
+          catch (Exception ex) 
           {
-          	ex.printStackTrace(Util.logPrintStream);
-            break;
+        	// failure on connection. Close it and loop back to waiting for
+        	// new connection.
+        	ex.printStackTrace(Util.logPrintStream);
+          	is.close();
+          	os.close();
+          	socket1.close();
+            break;	// eject from inner while loop.
           } 
-          finally 
-          {
-            imageData.data.free();
+
+          imageData.data.free();
           
-            if (imageData.data.getBuffer() != null) 
-            {
+          if (imageData.data.getBuffer() != null) 
+          {
               synchronized (this) 
               {
                 m_imageDataPool.addLast(imageData.data.getBuffer());
               }
-            }
           }
         } // while reading/writing data, loop back for next image.
       } 
-      catch (IOException ex) 
+      catch (Exception ex) 
       {
     	Util.logException(ex);
-        break;	// Eject from outer while loop.
+        socket.close();
+        throw ex;	// Eject from outer while loop.
       }
     } // while accept connection.
-    
-    socket.close();
   }
 }

@@ -29,7 +29,7 @@ public class GamePad
 	/**
 	 * Constructor which adds all GamePad buttons to be monitored.
 	 * @param joyStick JoyStick object representing the GamePad.
-	 * @param name Identifying name for the pad.
+	 * @param name Identifying name for the pad object.
 	 * @param caller calling class instance (use 'this').
 	 */
 	
@@ -78,7 +78,7 @@ public class GamePad
 	/**
 	 * Constructor which adds single button to be monitored.
 	 * @param joyStick JoyStick object representing the GamePad.
-	 * @param name Identifying name for the pad.
+	 * @param name Identifying name for the pad object.
 	 * @param button Enum value identifying button to add.
 	 * @param caller Calling class instance (use 'this').
 	 */
@@ -96,7 +96,7 @@ public class GamePad
 	
 	/**
 	 * Add additonal GamePadButton button to be monitored.
-	 * @param button Enum value identifying button to add.
+	 * @param button id value identifying button to add.
 	 * @return New button added or existing button.
 	 */
 
@@ -116,9 +116,9 @@ public class GamePad
 	}
 	
 	/**
-	 * Find GamePadButton button by type in the list of configured buttons.
+	 * Find GamePadButton button by id in the list of registered buttons.
 	 * @param buttonID Enum value identifying button to find.
-	 * @return Button or null.
+	 * @return Button or null if not found.
 	 */
 	
 	public GamePadButton FindButton(GamePadButtonIDs button)
@@ -155,6 +155,9 @@ public class GamePad
 		monitorGamePadThread = null;
 	}
 	
+	/**
+	 * Release GamePad resources.
+	 */
 	public void dispose()
 	{
 		Util.consoleLog(gamePadName);
@@ -162,6 +165,10 @@ public class GamePad
 		if (monitorGamePadThread != null) monitorGamePadThread.interrupt();
 	}
 
+	/**
+	 * Get left joystick X value.
+	 * @return X axis deflection value.
+	 */
 	public double GetLeftX()
 	{
 		double x;
@@ -171,6 +178,10 @@ public class GamePad
 		return x;
 	}
 	
+	/**
+	 * Get left joystick Y value.
+	 * @return Y axis deflection value.
+	 */
 	public double GetLeftY()
 	{
 		double y;
@@ -180,6 +191,10 @@ public class GamePad
 		return y;
 	}
 
+	/**
+	 * Get right joystick X value.
+	 * @return X axis deflection value.
+	 */
 	public double GetRightX()
 	{
 		double x;
@@ -189,6 +204,10 @@ public class GamePad
 		return x;
 	}
 	
+	/**
+	 * Get rightt joystick Y value.
+	 * @return Y axis deflection value.
+	 */
 	public double GetRightY()
 	{
 		double y;
@@ -198,6 +217,10 @@ public class GamePad
 		return y;
 	}
 
+	/**
+	 * Get right trigger deflection value.
+	 * @return Trigger deflection value.
+	 */
 	public double GetRightTrigger()
 	{
 		double x;
@@ -207,6 +230,10 @@ public class GamePad
 		return x;
 	}
 	
+	/**
+	 * Get left trigger deflection value.
+	 * @return Trigger deflection value.
+	 */
 	public double GetLeftTrigger()
 	{
 		double y;
@@ -340,7 +367,6 @@ public class GamePad
   /**
    *  Event description class returned to event handlers.
    */
-	
   public class GamePadEvent extends EventObject 
   {
 	  private static final long serialVersionUID = 1L;
@@ -358,7 +384,6 @@ public class GamePad
    *  Interface defintion for event listener. Actual listener implements
    *  the actions associated with button up and down events.
    */
-  
   public interface GamePadEventListener extends EventListener 
   {
       public void ButtonDown(GamePadEvent GamePadEvent);
@@ -367,20 +392,18 @@ public class GamePad
   }
   
   /**
-   *  Add (register) an event listener.
+   * Add (register) an event listener.
    * @param listener function to register
    */
-  
   public void addGamePadEventListener(GamePadEventListener listener) 
   {
       this.listeners.add(listener);
   }
    
   /**
-   *  Remove an event listener registration.
+   * Remove an event listener registration.
    * @param listener function to unregister
    */
-  
   public void removeGamePadEventListener(GamePadEventListener listener) 
   {
       this.listeners.remove(listener);
@@ -409,8 +432,7 @@ public class GamePad
   /**
   *  Button object which contains button id and current and latched state and POV value of the button
   *  when contained in an event and if you directly request button state.
-  **/
-  
+  */
   public class GamePadButton
   {
 	  public GamePadButtonIDs	id;
@@ -425,8 +447,7 @@ public class GamePad
   
   /**
    *  Gamepad button id enumeration. 
-   **/
-  
+   */
   public enum GamePadButtonIDs
   {
       A (1),

@@ -22,7 +22,12 @@ public class JoyStick
 	
 	public  double			deadZone = 0.1;
 	
-	// Constructor which adds all buttons.
+	/**
+	 * Constructor which adds all JoyStick buttons to be monitored.
+	 * @param joyStick JoyStick object representing the GamePad.
+	 * @param name Identifying name for the JoyStick object.
+	 * @param caller calling class instance (use 'this').
+	 */
 	
 	public JoyStick(Joystick joystick, String name, Object caller)
 	{
@@ -72,8 +77,13 @@ public class JoyStick
 		Start();
 	}
 	
-	// Constructor which adds single button to be monitored.
-	
+	/**
+	 * Constructor which adds single JoyStick button to be monitored.
+	 * @param joyStick JoyStick object representing the GamePad.
+	 * @param name Identifying name for the JoyStick object.
+	 * @param button Enum value identifying button to add.
+	 * @param caller Calling class instance (use 'this').
+	 */
 	public JoyStick(Joystick joystick, String name, JoyStickButtonIDs button, Object caller)
 	{
 		Util.consoleLog(name);
@@ -87,6 +97,11 @@ public class JoyStick
 	
 	// Add additonal button to be monitored.
 	
+	/**
+	 * Add additonal JoystickButton button to be monitored.
+	 * @param button id value identifying button to add.
+	 * @return New button added or existing button.
+	 */
 	public JoyStickButton AddButton(JoyStickButtonIDs button)
 	{
 		Util.consoleLog("%s (%s)", joyStickName, button.name());
@@ -102,6 +117,11 @@ public class JoyStick
 		return jsButton;
 	}
 	
+	/**
+	 * Find JoyStick button by id in the list of registered buttons.
+	 * @param buttonID id value identifying button to find.
+	 * @return Button reference or null if not found.
+	 */
 	public JoyStickButton FindButton(JoyStickButtonIDs button)
 	{
 		Util.consoleLog("%s (%s)", joyStickName, button.name());
@@ -112,8 +132,9 @@ public class JoyStick
         return null;
 	}
 
-	// Call to start Joystick monitoring once all buttons are added.
-	
+	/**
+	 *  Call to start JoyStick button monitoring once all buttons are added.
+	 */
 	public void Start()
 	{
 		Util.consoleLog(joyStickName);
@@ -122,6 +143,9 @@ public class JoyStick
 		monitorJoyStickThread.start();
 	}
 
+	/**
+	 * Stop button monitoring.
+	 */
 	public void Stop()
 	{
 		Util.consoleLog(joyStickName);
@@ -131,6 +155,9 @@ public class JoyStick
 		monitorJoyStickThread = null;
 	}
 	
+	/**
+	 * Release any JoyStick resources.
+	 */
 	public void dispose()
 	{
 		Util.consoleLog(joyStickName);
@@ -138,6 +165,10 @@ public class JoyStick
 		if (monitorJoyStickThread != null) monitorJoyStickThread.interrupt();
 	}
 
+	/**
+	 * Get JoyStick X axis deflection value.
+	 * @return X axis deflection.
+	 */
 	public double GetX()
 	{
 		double x;
@@ -147,6 +178,10 @@ public class JoyStick
 		return x;
 	}
 	
+	/**
+	 * Get JoyStick Y axis deflection value.
+	 * @return Y axis deflection.
+	 */
 	public double GetY()
 	{
 		double y;
@@ -219,6 +254,11 @@ public class JoyStick
 	    }
 	}	// end of MonitorJoystick thread class.
 	
+	/**
+	 * Get the current state of a registered button.
+	 * @param requestedbutton Button id to check.
+	 * @return True if pressed, false if not.
+	 */
 	public boolean GetCurrentState(JoyStickButtonIDs requestedbutton)
 	{
       for (JoyStickButton button: buttons) 
@@ -227,6 +267,13 @@ public class JoyStick
       return false;
 	}
 	
+	/**
+	 * Gets the latched state of a registered button. When buttons
+	 * are pressed, the latch state is toggled and retained. Latched is in effect
+	 * a presistent button press. Press and it latches, press again and it unlatches.
+	 * @param requestedbutton Button id to check.
+	 * @return True if button latched, false if not.
+	 */
 	public boolean GetLatchedState(JoyStickButtonIDs requestedbutton)
 	{
       for (JoyStickButton button: buttons) 
@@ -235,12 +282,13 @@ public class JoyStick
       return false;
 	}
 	
-  // Event Handling classes.
+	// Event Handling classes.
 	
-  // Event description class returned to event handlers.
-	
-  public class JoyStickEvent extends EventObject 
-  {
+    /**
+     *  Event description class returned to event handlers.
+     */
+	public class JoyStickEvent extends EventObject 
+	{
 	  private static final long serialVersionUID = 1L;
 
 	  public JoyStickButton	button;
@@ -250,87 +298,95 @@ public class JoyStick
 		  super(source);
 		  this.button = button;
 	  }
-  }
+	}
   
-  // Interface defintion for event listener. Actual listener implements
-  // the actions associated with button up and down events.
-  
-  public interface JoyStickEventListener extends EventListener 
-  {
-      public void ButtonDown(JoyStickEvent JoyStickEvent);
+    /**
+     *  Interface defintion for event listener. Actual listener implements
+     *  the actions associated with button up and down events.
+     */
+	public interface JoyStickEventListener extends EventListener 
+	{
+		public void ButtonDown(JoyStickEvent JoyStickEvent);
       
-      public void ButtonUp(JoyStickEvent JoyStickEvent);
-  }
+		public void ButtonUp(JoyStickEvent JoyStickEvent);
+	}
   
-  // Add (register) an event listener.
   
-  public void addJoyStickEventListener(JoyStickEventListener listener) 
-  {
-      this.listeners.add(listener);
-  }
+    /**
+     * Register a JoyStickEventListener object to receive events.
+     * @param listener JoyStickEventListener object to receive events.
+     */
+	public void addJoyStickEventListener(JoyStickEventListener listener) 
+	{
+		this.listeners.add(listener);
+	}
    
-  // Remove an event listener registration.
+    /**
+     * Remove the specifed JoyStickEventListener object from event notification.
+     * @param listener JoyStickEventListener object to remove.
+     */
+	public void removeJoyStickEventListener(JoyStickEventListener listener) 
+	{
+		this.listeners.remove(listener);
+	}  
   
-  public void removeJoyStickEventListener(JoyStickEventListener listener) 
-  {
-      this.listeners.remove(listener);
-  }  
+	// Notify all registered handlers of button up event.
   
-  // Notify all registered handlers of button up event.
+	private void notifyButtonUp(JoyStickButton button) 
+	{
+		for (JoyStickEventListener JoyStickEventListener: listeners) 
+		{
+			JoyStickEventListener.ButtonUp(new JoyStickEvent(caller, button));
+		}
+	}
   
-  private void notifyButtonUp(JoyStickButton button) 
-  {
-      for (JoyStickEventListener JoyStickEventListener: listeners) 
-      {
-          JoyStickEventListener.ButtonUp(new JoyStickEvent(caller, button));
-      }
-  }
+	// Notify all registered handlers of button down event.
   
-  // Notify all registered handlers of button down event.
-  
-  private void notifyButtonDown(JoyStickButton button) 
-  {
-      for (JoyStickEventListener JoyStickEventListener: listeners) 
-      {
-          JoyStickEventListener.ButtonDown(new JoyStickEvent(caller, button));
-      }
-  }
+	private void notifyButtonDown(JoyStickButton button) 
+	{
+		for (JoyStickEventListener JoyStickEventListener: listeners) 
+		{
+			JoyStickEventListener.ButtonDown(new JoyStickEvent(caller, button));
+		}
+	}
 
-  // Button object which contains button id and current and latched state of the button
-  // when contained in an event and if you directly request button state.
+    /**
+    *  Button object which contains button id and current and latched state values of the button
+    *  when contained in an event and if you directly request button state.
+    */
+	public class JoyStickButton
+	{
+		public JoyStickButtonIDs	id;
+		public boolean			currentState, latchedState;
   
-  public class JoyStickButton
-  {
-	  public JoyStickButtonIDs	id;
-      public boolean			currentState, latchedState;
+		public JoyStickButton(JoyStickButtonIDs buttonID)
+		{
+			id = buttonID;
+		}
+	}
   
-      public JoyStickButton(JoyStickButtonIDs buttonID)
-      {
-    	  id = buttonID;
-      }
-  }
-  
-  // Joystick button id enumeration. 
-  
-  public enum JoyStickButtonIDs
-  {
-      TOP_MIDDLE (3),
-      TOP_LEFT (4),
-      TOP_RIGHT (5),
-      TRIGGER (1),
-      TOP_BACK (2),
-      LEFT_FRONT (6),
-      LEFT_REAR (7),
-      RIGHT_FRONT (11),
-      RIGHT_REAR (10),
-      BACK_LEFT (8),
-      BACK_RIGHT (9);
-      
-      public int value;
-      
-      private JoyStickButtonIDs(int value) 
-      {
-    	  this.value = value;
-      }
-  };
+    /**
+    *  JoyStick button id enumeration. 
+    */
+	public enum JoyStickButtonIDs
+	{
+        TOP_MIDDLE (3),
+        TOP_LEFT (4),
+        TOP_RIGHT (5),
+        TRIGGER (1),
+        TOP_BACK (2),
+        LEFT_FRONT (6),
+        LEFT_REAR (7),
+        RIGHT_FRONT (11),
+        RIGHT_REAR (10),
+        BACK_LEFT (8),
+        BACK_RIGHT (9);
+          
+        public int value;
+          
+        private JoyStickButtonIDs(int value) 
+        {
+        	this.value = value;
+        }
+	};
 }

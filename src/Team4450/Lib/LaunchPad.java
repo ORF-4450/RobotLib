@@ -30,6 +30,11 @@ public class LaunchPad
 	private					Set<LaunchPadControl> controls = new HashSet<LaunchPadControl>();
 	private Thread			monitorLaunchPadThread;
 
+	/**
+	 * Construct JoyStick class with all controls registered for monitoring.
+	 * @param joystick The JoyStick object that maps to the LaunchPad
+	 * @param caller 'this' in calling class.
+	 */
 	public LaunchPad(Joystick	joystick, Object caller)
 	{
 		LaunchPadControl	control;
@@ -82,6 +87,12 @@ public class LaunchPad
 		catch (Exception  e) {Util.logException(e);}
 	}
 	
+	/**
+	 * Construct JoyStick class with one control registered for monitoring.
+	 * @param joystick The JoyStick object that maps to the LaunchPad
+	 * @param controlID Launch pad control id identifying control to register.
+	 * @param caller 'this' in calling class.
+	 */
 	public LaunchPad(Joystick joystick, LaunchPadControlIDs controlID, Object caller)
 	{
 		Util.consoleLog(controlID.name());
@@ -98,6 +109,11 @@ public class LaunchPad
 	
 	// Add additional control to be monitored.
 	
+	/**
+	 * Register additional control.
+	 * @param controlID LaunchPad control id of control to register.
+	 * @return New control added or existing control.
+	 */
 	public LaunchPadControl AddControl(LaunchPadControlIDs controlID)
 	{
 		Util.consoleLog(controlID.name());
@@ -119,6 +135,11 @@ public class LaunchPad
 		return control;
 	}
 	
+	/**
+	 * Get a reference to a registered LaunchPad control.
+	 * @param controlID Id of control to find.
+	 * @return Reference to the control object or null if not found.
+	 */
 	public LaunchPadControl FindButton(LaunchPadControlIDs controlID)
 	{
 		Util.consoleLog(controlID.name());
@@ -129,8 +150,9 @@ public class LaunchPad
         return null;
 	}
 
-	// Call to start LP monitoring once all controls are added.
-	
+	/**
+	 *  Call to start LaunchPad control monitoring once all controls are added.
+	 */
 	public void Start()
 	{
 		Util.consoleLog();
@@ -139,6 +161,9 @@ public class LaunchPad
 		monitorLaunchPadThread.start();
 	}
 	
+	/**
+	 * Stop montioring the Launchpad controls.
+	 */
 	public void Stop()
 	{
 		Util.consoleLog();
@@ -148,6 +173,9 @@ public class LaunchPad
 		monitorLaunchPadThread = null;
 	}
 
+	/**
+	 * Release LaunchPad resources.
+	 */
 	public void dispose()
 	{
 		Util.consoleLog();
@@ -224,6 +252,12 @@ public class LaunchPad
 	    }
 	}
 	
+	/**
+	 * Get the current state of a registered control.
+	 * @param requestedControl Control id to check.
+	 * @return If button, True if pressed, false if not. If rocker switch,
+	 * true or false depending on rocker position.
+	 */
 	public boolean GetCurrentState(LaunchPadControlIDs requestedControl)
 	{
         for (LaunchPadControl control: controls) 
@@ -232,6 +266,13 @@ public class LaunchPad
         return false;
 	}
 	
+	/**
+	 * For buttons, gets the latched state of a registered control. When buttons
+	 * are pressed, the latch state is toggled and retained. Latched is in effect
+	 * a presistent button press. Press and it latches, press again and it unlatches.
+	 * @param requestedControl Control id to check.
+	 * @return True if button latched, false if not.
+	 */
 	public boolean GetLatchedState(LaunchPadControlIDs requestedControl)
 	{
         for (LaunchPadControl control: controls) 
@@ -242,6 +283,9 @@ public class LaunchPad
 	
 	// Event Handling classes.
 	
+	/**
+	 *  Event description class returned to event handlers.
+	 */
     public class LaunchPadEvent extends EventObject 
     {
 		private static final long serialVersionUID = 1L;
@@ -255,6 +299,10 @@ public class LaunchPad
         }
     }
     
+    /**
+     *  Interface defintion for event listener. Actual listener implements
+     *  the actions associated with button up and down or switch change events.
+     */
     public interface LaunchPadEventListener extends EventListener 
     {
         public void ButtonDown(LaunchPadEvent launchPadEvent);
@@ -264,11 +312,19 @@ public class LaunchPad
         public void SwitchChange(LaunchPadEvent launchPadEvent);
     }
     
+    /**
+     * Register a LaunchPadEventListener object to receive events.
+     * @param listener LaunchPadEventListener object to receive events.
+     */
     public void addLaunchPadEventListener(LaunchPadEventListener listener) 
     {
         this.listeners.add(listener);
     }
      
+    /**
+     * Remove the specifed LaunchPadEventListener object from event notification.
+     * @param listener LaunchPadEventListener object to remove.
+     */
     public void removeLaunchPadEventListener(LaunchPadEventListener listener) 
     {
         this.listeners.remove(listener);
@@ -305,12 +361,20 @@ public class LaunchPad
 //            launchPadEventListener.ButtonUp(new LaunchPadEvent(this, control));
 //        }
 //    
+
+    /**
+     * LaunchPad control type enumeration. 
+     */
     public enum LaunchPadControlTypes
     {
     	BUTTON,
     	SWITCH
     };
     
+    /**
+    *  Control object which contains the id, type and current and latched state values of the control
+    *  when contained in an event and if you directly request button state.
+    */
     public class LaunchPadControl
     {
     	public  LaunchPadControlIDs		id;
@@ -339,7 +403,10 @@ public class LaunchPad
     //    P7.4      B1              9          Back Right
     //    P1.5      A6             10          Right Rear
     //    P1.4      B2             11          Right Front
-    
+
+    /**
+     * LaunchPad control id enumeration.
+     */
     public enum LaunchPadControlIDs
     {
         BUTTON_ONE (1),
