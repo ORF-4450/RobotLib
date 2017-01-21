@@ -7,7 +7,7 @@
 	<target name="Compile" description="Compile java code">
 		<mkdir dir="bin"/>
 		<mkdir dir="bin/classes"/>
-		<javac srcdir="src/" destdir="bin/classes/">
+		<javac srcdir="src/" destdir="bin/classes/" includeantruntime="false">
 			<classpath>
       				<fileset dir="/home/travis/build/MoSadie/RobotLib">
 					<include name="**/*.jar"/>
