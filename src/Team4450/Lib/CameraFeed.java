@@ -36,6 +36,7 @@ public class CameraFeed extends Thread
 	private CvSink				imageSource;
 	private CvSource			imageOutputStream;
 	private boolean				changingCamera;
+	private CameraServer		cameraServer;
 	
 	// Camera settings - Static
 	public static final int 	imageWidth = 320; //640;
@@ -76,10 +77,12 @@ public class CameraFeed extends Thread
     		Util.consoleLog();
     
     		this.setName("CameraFeed");
+    		
+    		cameraServer = CameraServer.getInstance();
 
             // Create Mjpeg stream server.
             
-            mjpegServer = CameraServer.getInstance().addServer("4450-mjpegServer", 1180);
+            mjpegServer = cameraServer.addServer("4450-mjpegServer", 1180);
 
             // Create image source.
             

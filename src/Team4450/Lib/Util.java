@@ -20,6 +20,7 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import edu.wpi.cscore.UsbCamera;
@@ -316,7 +317,9 @@ public class Util
 			timeStamp.order(ByteOrder.LITTLE_ENDIAN);
 			timeStamp.asIntBuffer().put(0,0x00000000);
 			
-			CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetID.asIntBuffer(), 0x1fffffff, timeStamp);
+			IntBuffer intBuffer = targetID.asIntBuffer();
+			
+			CANJNI.FRCNetCommCANSessionMuxReceiveMessage(intBuffer, 0x1fffffff, timeStamp);
 		
 			long retval = timeStamp.getInt();
 			
