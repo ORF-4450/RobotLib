@@ -10,6 +10,11 @@ before_script:
   -O opencv.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.1/cscore-1.0.1-arm.jar
   -O cscore.jar
+before_deploy:
+- rm wpilib.jar
+- rm networktables.jar
+- rm opencv.jar
+- rm cscore.jar
 deploy:
   provider: releases
   api_key:
@@ -18,4 +23,4 @@ deploy:
   - "$TRAVIS_BUILD_DIR/dist/RoboLib.jar"
   - "$TRAVIS_BUILD_DIR/dist/RoboLib-sources.jar"
   on:
-    repo: MoSadie/RobotLib
+    tags: true
