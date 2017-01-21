@@ -7,7 +7,13 @@
 	<target name="Compile" description="Compile java code">
 		<mkdir dir="bin"/>
 		<mkdir dir="bin/classes"/>
-		<javac srcdir="src/" destdir="bin/classes/" classpath="/home/travis/build/MoSadie/RobotLib/wpilib.jar,/home/travis/build/MoSadie/RobotLib/opencv.jar,/home/travis/build/MoSadie/RobotLib/cscore.jar"/>
+		<javac srcdir="src/" destdir="bin/classes/">
+			<classpath>
+      				<fileset dir="/home/travis/build/MoSadie/RobotLib">
+					<include name="**/*.jar"/>
+    				</fileset>
+    			</classpath>
+		</javac>
 	</target>
 	<target name="CreateJar" description="Create Jar file" depends="Compile">
 		<jar jarfile="dist/RobotLib.jar" basedir="bin/" includes="**/*.class" />
