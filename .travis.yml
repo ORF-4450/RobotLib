@@ -1,0 +1,12 @@
+language: java
+jdk:
+  - oraclejdk8
+deploy:
+  provider: releases
+  api_key: "6cfb3f538a73ed7ced83a2932257109399c12aaf"
+  file:
+    - "$TRAVIS_BUILD_DIR/dist/RoboLib.jar"
+    - "$TRAVIS_BUILD_DIR/dist/RoboLib-sources.jar"
+  skip_cleanup: true
+  on:
+    tags: true
