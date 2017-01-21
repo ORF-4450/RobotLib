@@ -6,12 +6,12 @@ before_script:
   - mkdir /tmp/opencv
   - wget https://github.com/wpilibsuite/allwpilib/archive/v2017.2.1.tar.gz -O /tmp/wpilib/wpilib.tar.gz
   - wget https://github.com/wpilibsuite/opencv/archive/v3.1.0-beta-3.tar.gz -O /tmp/opencv/opencv.tar.gz
-  - tar -xzf /tmp/wpilib/wpilib.tar.gz
-  - tar -xzf /tmp/opencv/opencv.tar.gz
   - cd /tmp/wpilib
+  - tar -xzf /wpilib.tar.gz
   - ls
   - ./gradlew.sh build
   - cd /tmp/opencv
+  - tar -xzf /opencv.tar.gz
   - ls
   - ./gradlew.sh build
 deploy:
