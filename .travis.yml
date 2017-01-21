@@ -1,6 +1,13 @@
 language: java
 jdk:
   - oraclejdk8
+before_script:
+  - wget https://github.com/wpilibsuite/allwpilib/archive/v2017.2.1.tar.gz -O /tmp/wpilib/wpilib.tar.gz
+  - wget https://github.com/wpilibsuite/opencv/archive/v3.1.0-beta-3.tar.gz -O /tmp/opencv/opencv.tar.gz
+  - tar -xzf /tmp/wpilib.tar.gz
+  - tar -xzf /tmp/opencv.tar.gz
+  - /tmp/wpilib/gradlew build
+  - /tmp/opencv/gradlew build
 deploy:
   provider: releases
   api_key: "6cfb3f538a73ed7ced83a2932257109399c12aaf"
