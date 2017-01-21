@@ -9,9 +9,11 @@ before_script:
   - tar -xzf /tmp/wpilib/wpilib.tar.gz
   - tar -xzf /tmp/opencv/opencv.tar.gz
   - cd /tmp/wpilib
-  - ./gradlew build
+  - ls
+  - ./gradlew.sh build
   - cd /tmp/opencv
-  - ./gradlew build
+  - ls
+  - ./gradlew.sh build
 deploy:
   provider: releases
   api_key: "6cfb3f538a73ed7ced83a2932257109399c12aaf"
