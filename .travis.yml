@@ -9,9 +9,13 @@ before_script:
   - cd /tmp/wpilib
   - tar -xzf wpilib.tar.gz
   - ls
-  - ./gradlew.sh build
+  - cd allwpilib-2017.2.1
+  - ls
+  - ./gradlew build
   - cd /tmp/opencv
   - tar -xzf opencv.tar.gz
+  - ls
+  - cd opencv-v3.1.0-beta-3
   - ls
   - ./gradlew.sh build
 deploy:
