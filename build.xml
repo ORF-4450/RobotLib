@@ -7,7 +7,7 @@
 	<target name="Compile" description="Compile java code">
 		<mkdir dir="bin"/>
 		<mkdir dir="bin/classes"/>
-		<javac srcdir="src/" destdir="bin/classes/"/>
+		<javac srcdir="src/" destdir="bin/classes/" classpath="wpilib.jar,opencv.jar,cscore.jar"/>
 	</target>
 	<target name="CreateJar" description="Create Jar file" depends="Compile">
 		<jar jarfile="dist/RobotLib.jar" basedir="bin/" includes="**/*.class" />
