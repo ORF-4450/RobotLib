@@ -5,7 +5,7 @@
 		<echo>Testing jar compiling...</echo>
 	</target>
 	<target name="Compile" description="Compile java code">
-		 <javac srcdir="src/" destdir="$bin/classes/"/>
+		 <javac srcdir="src/" destdir="bin/classes/"/>
 	</target>
 	<target name="CreateJar" description="Create Jar file" depends="Compile">
 		<jar jarfile="dist/RobotLib.jar" basedir="bin/" includes="**/*.class" />
