@@ -2,8 +2,17 @@ package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
+/**
+ * This class manages Grip run in a separate process. 
+ * Starts/Stops that process and obtains Grip contour reports from 
+ * that process via network tables. 
+ */
+
 public final class Grip
 {
+	public static final	 int			IMAGE_WIDTH = 320;
+	public static final  int			IMAGE_HEIGHT = 240;
+	
 	private static 		 Process		gripProcess = null;
 	private static final NetworkTable	gripTable = NetworkTable.getTable("GRIP/myContoursReport");
 	
@@ -50,12 +59,12 @@ public final class Grip
 			
 			try
 			{
-			contour.area = (int) area[index];
-			contour.centerX = (int) centerX[index];
-			contour.centerY = (int) centerY[index];
-			contour.width = (int) width[index];
-			contour.height = (int) height[index];
-			contour.solidity = solidity[index];
+    			contour.area = (int) area[index];
+    			contour.centerX = (int) centerX[index];
+    			contour.centerY = (int) centerY[index];
+    			contour.width = (int) width[index];
+    			contour.height = (int) height[index];
+    			contour.solidity = solidity[index];
 			}
 			catch (Throwable e) {return null;};
 			

@@ -1,41 +1,64 @@
 
 package Team4450.Lib;
 
-import com.ni.vision.NIVision;
-import com.ni.vision.NIVision.Image;
+import java.util.ArrayList;
 
+import org.opencv.core.Mat;
+
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.UsbCameraInfo;
+import edu.wpi.cscore.VideoMode;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
  * USB camera feed task. Runs as a thread separate from Robot class.
  * Manages one or more usb cameras feeding their images to the 
  * CameraServer class to send to the DS.
- * Uses NI image library to access cameras directly.
+ * We create one or more usb of our camera objects and start them capturing
+ * images. We then loop on a thread getting the current image from
+ * the currently selected camera and pass the image to the camera
+ * server which passes the image to the driver station.
  */
 
 public class CameraFeed extends Thread
 {
-	public	int		 			cam1 = -1, cam2 = -1;
-	public	double				frameRate = 30;		// frames per second
-	private int 				currentCamera;
-	private Image 				frame;
-	private CameraServer 		server;
-	private boolean				cameraChangeInProgress;
+	private UsbCamera			currentCamera;
+	private int					currentCameraIndex;
+	private ArrayList			<UsbCamera>cameras = new ArrayList<UsbCamera>();
+	private Mat 				image = new Mat();
 	private static CameraFeed	cameraFeed;
+	private boolean				initialized;
+	private MjpegServer			mjpegServer;
+	private CvSink				imageSource;
+	private CvSource			imageOutputStream;
+	private boolean				changingCamera;
+	
+	// Camera settings - Static
+	public static final int 	imageWidth = 320; //640;
+	public static final int 	imageHeight = 240; //480;
+	//public static final double 	fovH = 48.0;
+	//public static final double 	fovV = 32.0;
+	public static final	double	frameRate = 20;		// frames per second
+	public static final int		whitebalance = 4700;	// Color temperature in K, -1 is auto
+	public static final int		brightness = 50;		// 0 - 100, -1 is "do not set"
+	public static final int		exposure = 50;		// 0 - 100, -1 is "auto"
 
 	// Create single instance of this class and return that single instance to any callers.
 	
 	/**
 	 * Get a reference to global CameraFeed object.
-	 * @param isComp True if competition robot, false if clone.
 	 * @return Reference to global CameraFeed object.
 	 */
 	  
-	public static CameraFeed getInstance(boolean isComp) 
+	public static CameraFeed getInstance() 
 	{
 		Util.consoleLog();
 		
-		if (cameraFeed == null) cameraFeed = new CameraFeed(isComp);
+		if (cameraFeed == null) cameraFeed = new CameraFeed();
 	    
 	    return cameraFeed;
 	}
@@ -43,75 +66,88 @@ public class CameraFeed extends Thread
 	// Private constructor means callers must use getInstance.
 	// This is the singleton class model.
 	
-	private CameraFeed(boolean isComp)
+	private CameraFeed()
 	{
+		UsbCameraInfo	cameraInfo, cameraList[];
+		UsbCamera		camera;
+
 		try
 		{
     		Util.consoleLog();
     
     		this.setName("CameraFeed");
+
+            // Create Mjpeg stream server.
+            
+            mjpegServer = CameraServer.getInstance().addServer("4450-mjpegServer", 1180);
+
+            // Create image source.
+            
+            imageSource = new CvSink("4450-CvSink");
+            
+            // Create output image stream.
+            
+            imageOutputStream = new CvSource("4450-CvSource", VideoMode.PixelFormat.kMJPEG, imageWidth, imageHeight, (int) frameRate);
+            
+            mjpegServer.setSource(imageOutputStream);
+            
+            // Create cameras by getting the list of cameras detected by the RoboRio and
+            // creating camera objects and storing them in an arraylist so we can switch
+            // between them.
     		
-    		// Get camera ids by supplying camera name ex 'cam0', found on roborio web interface.
-    		// This code sets up first two cameras found using all the camera names known on our
-    		// 2 RoboRios.
+    		cameraList = UsbCamera.enumerateUsbCameras();
     		
-    		// Camera initialization based on robotid from properties file.
-    		
-    		if (isComp)
+    		for(int i = 0; i < cameraList.length; ++i) 
     		{
-        		try
-        		{
-        			cam1 = NIVision.IMAQdxOpenCamera("cam1", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-        		}
-        		catch (Exception e) {}
-        		
-        		try
-        		{
-        			cam2 = NIVision.IMAQdxOpenCamera("cam0", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-        		}
-        		catch (Exception e) {}
-    		}
-    		
-    		if (!isComp)
-    		{
-    			Util.consoleLog("in clone");
+    			cameraInfo = cameraList[i];
     			
-        		try
-        		{
-        			cam1 = NIVision.IMAQdxOpenCamera("cam0", NIVision.IMAQdxCameraControlMode.CameraControlModeController);
-        		}
-        		catch (Exception e) {}
+    			Util.consoleLog("dev=%d name=%s path=%s", cameraInfo.dev, cameraInfo.name, cameraInfo.path);
+    			
+    			camera = new UsbCamera("cam" + cameraInfo.dev, cameraInfo.dev);
+    			
+    			updateCameraSettings(camera);
+    			
+    			cameras.add(camera);
     		}
-    		
-    		// trace the camera ids.
-    		
-    		Util.consoleLog("cam1=%d, cam2=%d", cam1, cam2);
+
+            initialized = true;
             
-            // Frame that will contain camera image.
-            frame = NIVision.imaqCreateImage(NIVision.ImageType.IMAGE_RGB, 0);
-            
-            // Server that we'll give the image to.
-            server = CameraServer.getInstance();
-            server.setQuality(50);
-    
             // Set starting camera.
-            currentCamera = cam1;
-            
-            ChangeCamera(currentCamera);
+
+            ChangeCamera();
 		}
 		catch (Throwable e) {Util.logException(e);}
 	}
 	
+	/**
+	 * Update camera with current settings fields values.
+	 */
+	public void updateCameraSettings(UsbCamera camera) 
+	{
+		Util.consoleLog();
+
+		camera.setResolution(imageWidth, imageHeight);
+		camera.setFPS((int) frameRate);
+		camera.setExposureManual(exposure);
+		camera.setWhiteBalanceManual(whitebalance);
+		camera.setBrightness(brightness);
+	}
+
 	// Run thread to read and feed camera images. Called by Thread.start().
+	
 	public void run()
 	{
+		Util.consoleLog();
+		
+		if (!initialized) return;
+		
 		try
 		{
 			Util.consoleLog();
 
-			while (true)
+			while (!isInterrupted())
 			{
-				if (!cameraChangeInProgress) UpdateCameraImage();
+				if (!changingCamera) UpdateCameraImage();
 		
 				Timer.delay(1 / frameRate);
 			}
@@ -121,68 +157,93 @@ public class CameraFeed extends Thread
 	
 	/**
 	 * Get last image read from camera.
-	 * @return Image Last image from camera.
+	 * @return Mat Last image from camera.
 	 */
-	public Image CurrentImage()
+	public Mat getCurrentImage()
 	{
 		Util.consoleLog();
 		
-		return frame;
+	    synchronized (this) 
+	    {
+	    	return image.clone();
+	    }
 	}
 	
 	/**
-	 * Stop feed, ie close camera stream.
+	 * Stop image feed, ie close cameras stop feed thread, release the
+	 * singleton cameraFeed object.
 	 */
 	public void EndFeed()
 	{
+		if (!initialized) return;
+
 		try
 		{
     		Util.consoleLog();
-    
-    		if (currentCamera != -1) NIVision.IMAQdxStopAcquisition(currentCamera);
+
+    		Thread.currentThread().interrupt();
+    		
+    		for(int i = 0; i < cameras.size(); ++i) 
+    		{
+    			currentCamera = cameras.get(i);
+    			currentCamera.free();
+    		}
+    		
+    		currentCamera = null;
+
+    		mjpegServer = null;
+	
+    		cameraFeed = null;
 		}
 		catch (Throwable e)	{Util.logException(e);}
 	}
 	
 	/**
-	 * Change the camera to get images from to a different one 
-	 * @param newId Camera number to change to. Use cam1 or cam2.
+	 * Change the camera to get images from the other camera. 
 	 */
-	public void ChangeCamera(int newId)
+	public void ChangeCamera()
     {
-		Util.consoleLog("newid=%d", newId);
+		Util.consoleLog();
 		
-		if (newId == -1) return;
+		if (!initialized) return;
 		
-		try
+		changingCamera = true;
+		
+		if (currentCamera == null)
+			currentCamera = cameras.get(currentCameraIndex);
+		else
 		{
-    		cameraChangeInProgress = true;
-
-    		NIVision.IMAQdxStopAcquisition(currentCamera);
-    		
-        	NIVision.IMAQdxConfigureGrab(newId);
-        	
-        	NIVision.IMAQdxStartAcquisition(newId);
-        	
-        	currentCamera = newId;
-        	
-        	cameraChangeInProgress = false;
+			currentCameraIndex++;
+			
+			if (currentCameraIndex == cameras.size()) currentCameraIndex = 0;
+			
+			currentCamera =  cameras.get(currentCameraIndex);
 		}
-		catch (Throwable e)	{Util.logException(e);}
+		
+		Util.consoleLog("current=(%d) %s", currentCameraIndex, currentCamera.getName());
+		
+	    synchronized (this) 
+	    {
+	    	imageSource.setSource(currentCamera);
+	    }
+	    
+	    changingCamera = false;
+	    
+	    Util.consoleLog("end");
     }
     
-	 // Get an image from current camera and give it to the server.
-    private void UpdateCameraImage()
+	// Get an image from current camera and give it to the server.
+    
+	private void UpdateCameraImage()
     {
-    	try
-    	{
-    		if (currentCamera != -1)
-    		{	
-            	NIVision.IMAQdxGrab(currentCamera, frame, 1);
-                
-            	server.setImage(frame);
-    		}
+		if (currentCamera != null)
+		{	
+		    synchronized (this) 
+		    {
+		    	imageSource.grabFrame(image);
+		    }
+		    
+		    imageOutputStream.putFrame(image);
 		}
-		catch (Throwable e) {Util.logException(e);}
     }
 }

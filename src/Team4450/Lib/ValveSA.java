@@ -4,20 +4,20 @@ package Team4450.Lib;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
- * Interface class for Festo Single Action pneumatic valve.
+ * Wrapper class for Single Action pneumatic valve.
  * Single action opens against a spring. When you call open power is applied and
  * opens the valve against the spring and remains on. When close is called, power
  * is turned off and the spring closes the valve.
  */
 
-public class FestoSA
+public class ValveSA
 {
 	private final Solenoid valveOpenSide;
 
 	/**
 	 * @param port DIO port wired to valve. Assumes PCM with CAN Id 0.
 	 */
-	public FestoSA(int port)
+	public ValveSA(int port)
 	{
 	  	Util.consoleLog("port=%d", port); 
 
@@ -28,7 +28,7 @@ public class FestoSA
 	 * @param pcmCanId PCM CAN Id number.
 	 * @param port DIO port wired to valve.
 	 */
-	public FestoSA(int pcmCanId, int port)
+	public ValveSA(int pcmCanId, int port)
 	{
 	  	Util.consoleLog("port=%d", port); 
 
@@ -36,7 +36,7 @@ public class FestoSA
 	}
 
 	/**
-	 * Release FestoSA resources.
+	 * Release resources.
 	 */
 	public void dispose()
 	{

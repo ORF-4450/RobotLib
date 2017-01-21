@@ -22,6 +22,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.UsbCameraInfo;
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.can.CANJNI;
 
@@ -292,7 +295,8 @@ public class Util
 	 */
 	public static void logException(Throwable e)
 	{
-		DriverStation.reportError(e.getMessage(), false);
+		DriverStation.reportError(e.toString(), false);
+		
 		e.printStackTrace(Util.logPrintStream);
 	}
 
@@ -312,7 +316,7 @@ public class Util
 			timeStamp.order(ByteOrder.LITTLE_ENDIAN);
 			timeStamp.asIntBuffer().put(0,0x00000000);
 			
-			CANJNI.FRCNetworkCommunicationCANSessionMuxReceiveMessage(targetID.asIntBuffer(), 0x1fffffff, timeStamp);
+			CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetID.asIntBuffer(), 0x1fffffff, timeStamp);
 		
 			long retval = timeStamp.getInt();
 			
@@ -357,6 +361,7 @@ public class Util
 		
 		pdp0_timeStamp1 = checkMessage(0x08041400,0);
 		
+		
 		for(int i = 0; i < 63; ++i) 
 		{
 			pcm_timeStamp1[i] = checkMessage(0x09041400, i);
@@ -377,5 +382,21 @@ public class Util
 		}
 		
 		return retval;
+	}
+	
+	/**
+	 * Write a list of usb cameras known to the RoboRio to the log.
+	 */
+	public static void listCameras()
+	{
+		UsbCameraInfo	cameraInfo, cameraList[];
+		
+		cameraList = UsbCamera.enumerateUsbCameras();
+		
+		for(int i = 0; i < cameraList.length; ++i) 
+		{
+			cameraInfo = cameraList[i];
+			Util.consoleLog("dev=%d name=%s path=%s", cameraInfo.dev, cameraInfo.name, cameraInfo.path);
+		}
 	}
 }
