@@ -2,27 +2,9 @@ language: java
 jdk:
   - oraclejdk8
 sudo: required
-before_install:
-  - sudo apt-add-repository ppa:wpilib/toolchain -y
-  - sudo apt update -qq
-  - sudo apt install frc-toolchain -y
 before_script:
-  - mkdir /tmp/wpilib
-  - mkdir /tmp/opencv
-  - wget https://github.com/wpilibsuite/allwpilib/archive/v2017.2.1.tar.gz -O /tmp/wpilib/wpilib.tar.gz
-  - wget https://github.com/wpilibsuite/opencv/archive/v3.1.0-beta-3.tar.gz -O /tmp/opencv/opencv.tar.gz
-  - cd /tmp/wpilib
-  - tar -xzf wpilib.tar.gz
-  - ls
-  - cd allwpilib-2017.2.1
-  - ls
-  - ./gradlew build
-  - cd /tmp/opencv
-  - tar -xzf opencv.tar.gz
-  - ls
-  - cd opencv-v3.1.0-beta-3
-  - ls
-  - ./gradlew.sh build
+  - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/wpilibJavaFinal/2016.5.1/wpilibJavaFinal-2016.5.1.jar -O wpilib.jar
+  - wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-java/3.1.0/opencv-java-3.1.0.jar -O opencv.jar
 deploy:
   provider: releases
   api_key: "6cfb3f538a73ed7ced83a2932257109399c12aaf"
