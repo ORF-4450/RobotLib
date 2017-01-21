@@ -4,7 +4,10 @@
 	<target name="test" description="Test creating jar file" depends="CreateJar">
 		<echo>Testing jar compiling...</echo>
 	</target>
-	<target name="CreateJar" description="Create Jar file">
+	<target name="Compile" description="Compile java code">
+		 <javac srcdir="src/" destdir="$bin/classes/"/>
+	</target>
+	<target name="CreateJar" description="Create Jar file" depends="Compile">
 		<jar jarfile="dist/RobotLib.jar" basedir="bin/" includes="**/*.class" />
 		<jar jarfile="dist/RobotLib-sources.jar" basedir="src/" includes="**/*.java"/>
 	</target>
