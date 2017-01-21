@@ -1,0 +1,17 @@
+language: java
+jdk:
+  - oraclejdk8
+before_script:
+  - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/wpilibJavaFinal/2016.5.1/wpilibJavaFinal-2016.5.1.jar -O wpilib.jar
+  - wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-java/3.1.0/opencv-java-3.1.0.jar -O opencv.jar
+  - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.1/cscore-1.0.1-arm.jar -O cscore.jar
+  - readlink -f wpilib.jar
+deploy:
+  provider: releases
+  api_key: "6cfb3f538a73ed7ced83a2932257109399c12aaf"
+  file:
+    - "$TRAVIS_BUILD_DIR/dist/RoboLib.jar"
+    - "$TRAVIS_BUILD_DIR/dist/RoboLib-sources.jar"
+  skip_cleanup: true
+  on:
+    tags: true
