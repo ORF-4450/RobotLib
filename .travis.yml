@@ -8,8 +8,10 @@ before_script:
   - wget https://github.com/wpilibsuite/opencv/archive/v3.1.0-beta-3.tar.gz -O /tmp/opencv/opencv.tar.gz
   - tar -xzf /tmp/wpilib/wpilib.tar.gz
   - tar -xzf /tmp/opencv/opencv.tar.gz
-  - ./tmp/wpilib/gradlew build
-  - ./tmp/opencv/gradlew build
+  - cd tmp/wpilib
+  - ./gradlew build
+  - cd ../opencv
+  - ./gradlew build
 deploy:
   provider: releases
   api_key: "6cfb3f538a73ed7ced83a2932257109399c12aaf"
