@@ -5,6 +5,7 @@
 		<echo>Test build complete! No errors!</echo>
 	</target>
 	<target name="Compile" description="Compile java code">
+		<echo>Compiling to class files</echo>
 		<mkdir dir="bin"/>
 		<mkdir dir="bin/classes"/>
 		<javac srcdir="src/" destdir="bin/classes/" includeantruntime="false">
