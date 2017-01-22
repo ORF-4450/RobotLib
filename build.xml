@@ -18,7 +18,7 @@
 	</target>
 	<target name="CreateJar" description="Create Jar file" depends="Compile">
 		<echo>Creating jar file</echo>
-		<jar jarfile="dist/RobotLib.jar" basedir="bin/" includes="**/*.class" />
+		<jar jarfile="dist/RobotLib.jar" basedir="bin/classes/" includes="**/*.class" />
 		<jar jarfile="dist/RobotLib-sources.jar" basedir="src/" includes="**/*.java"/>
 	</target>
 	<target name = "DeployToUser" description="Creates jar and moves to autoimport location" depends="CreateJar">
