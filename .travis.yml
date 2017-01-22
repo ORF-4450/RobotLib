@@ -24,4 +24,5 @@ deploy:
   - "$TRAVIS_BUILD_DIR/dist/RobotLib-sources.jar"
   skip_cleanup: true
   on:
+    tags: on
     branch: release
