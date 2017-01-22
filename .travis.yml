@@ -20,8 +20,8 @@ deploy:
   api_key:
     secure: QIQ+D9FEp17LxWNdCB1jC3te0wajbz4cyWUbwkETu5CZPvv6cHWA/NAVjW7/sc6AwuOhpwfdJAOxwdUnoyhaAw3bkoQ2i8QkAAzN+sfrdYX0BGPN6PB/0TD3CbY9bHVMeNJV9PuxjQXZ9hz3c6ZxutVjfMa6UXHXtNdCaTYQBPbzaeNmuNDov+c1POsmPB+uHVds136eE/q+zsyhmTS9VBfs2kdm29aGE21esN6VcedjoJB0zadalHgHPyFJDFGKBXPZoUDm+nN62r+URBOoAxdLEteKepFxuKphOeUCPM8fi2AWfmSbZyOKosYy+qQOctPUPI+vX05Etx7nNTlulFbxJQPcOXkmSwmF7X6dLCQxxwoS5a7Cesab2usmv2in1pbskOnVT2Uf3DOVBXP/GCSs6B7P1uMU0AGN1V39kp3w0vR7JZCW2BhE0MrkfRpfD5iCJGqtjEBqB0CdDu1zQicPSSBETJK7NN8dd25Vow4ALjSyHYnmAgxOSqajRqXblOW9Ews5zrfmQB31VUW3UfTHwP/QqPXVmsOIUNydydWkM93uxHO4OgpQs+t1DhKbojkVzf0QvSJSLo15jz0mSwAnYM0x8AxBK8RsuKDtIQCOH0kIZT+acHNzQ1kcnz8DXUYvJcqaneD02O2t/VhGfMv0fwCRm+uGSMR2ckqFJ/I=
   file: 
-  - "$TRAVIS_BUILD_DIR/dist/RoboLib.jar"
-  - "$TRAVIS_BUILD_DIR/dist/RoboLib-sources.jar"
+  - "$TRAVIS_BUILD_DIR/dist/RobotLib.jar"
+  - "$TRAVIS_BUILD_DIR/dist/RobotLib-sources.jar"
   skip_cleanup: true
   on:
     branch: release
