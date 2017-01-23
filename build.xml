@@ -2,7 +2,7 @@
 <!-- Configuration of the Ant build system to generate a Jar file --> 
 <project name="RobotLib" default="DeployToUser">
 	<target name="test" description="Test creating jar file" depends="CreateJar">
-		<echo>Test build complete! No errors!</echo>
+		<echo>Test build of jar file complete!</echo>
 	</target>
 	<target name="Compile" description="Compile java code">
 		<echo>Compiling to class files</echo>
