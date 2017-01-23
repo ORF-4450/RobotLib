@@ -1,5 +1,5 @@
 # RobotLib
-[![Build Status](https://travis-ci.org/MoSadie/RobotLib.svg?branch=master)](https://travis-ci.org/MoSadie/RobotLib)
+[![Build Status](https://travis-ci.org/ORF-4450/RobotLib.svg?branch=master)](https://travis-ci.org/ORF-4450/RobotLib)
 FRC Team 4450 Robot Control program library classes.
 
 These are the library classes created by the Olympia Robotics Federation (FRC Team 4450).
