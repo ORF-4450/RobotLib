@@ -1,0 +1,27 @@
+language: java
+jdk:
+- oraclejdk8
+before_script:
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/athena/2017.2.1/athena-2017.2.1.jar
+  -O wpilib.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilib/networktables/java/NetworkTables/3.1.2/NetworkTables-3.1.2-desktop.jar
+  -O networktables.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-java/3.1.0/opencv-java-3.1.0.jar
+  -O opencv.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.1/cscore-1.0.1-arm.jar
+  -O cscore.jar
+before_deploy:
+- rm wpilib.jar
+- rm networktables.jar
+- rm opencv.jar
+- rm cscore.jar
+deploy:
+  provider: releases
+  api_key:
+    secure: t19lJK7dUKmHlAvZefqi+9Y9l7PCyqYw/FLzka2WMJFHdzrHljxB05lqSj/8h6/SCSqOsnQIj2QcZuyWOE+12baCZRWS3HEHXbNmce1xBQQwElmROw6k7gNgcNMo6uMofjQQg17SBRnvgne0cco5NbVuJfNNwTvu1BTCiqeyg1V0uuWcyvDNO9gnSmC/FOA3RQ2rtx0FpnM6MqSrEsGVRG5APpVlfF35TKZsXHGBB6glVeib5leLaT4FcgGTEHHDe+sYGDzi3HgkQ0Q4naWaVfcGk5UZ4L7liYvSVynK8VeTy+wk9a3qO1Vtgkyrs8pTrWiKVCYo3igzOG6CDjDCojwPb4hKwwmH3veglxstmh0fFkG9LzkGztRYR1GVrf8AH6YDxh93vEF7NfYzkwybDi3NGlhq5jLkcfm2LrMcvmPYBEpnzQMKHjOGn9E5M4xZdEVcYYpq7yJHABP9MzN1HQ4HUT4577CU6KrUnzVime7kBbUrA9k9QWCih0K8UcUYTxcCyW2biwDkWLDKIjW3fZjlY3eac5t8d1HVzBK8OQ8AY//o2YVKDnb9Cc+WP56leKS4sLtlr0fAjhO9DwPHe37v+mhZ8Ra/5fM7Bt9yfLmzeLWe7wzv1omdO8ZxNMHlgRD4mtWFBrWxvz70Mrw1xNx0KW4qTKcUHg6ybNo9q3E=
+  file: 
+  - "$TRAVIS_BUILD_DIR/dist/RobotLib.jar"
+  - "$TRAVIS_BUILD_DIR/dist/RobotLib-sources.jar"
+  skip_cleanup: true
+  on:
+    tags: on
