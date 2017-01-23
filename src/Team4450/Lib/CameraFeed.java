@@ -18,7 +18,7 @@ import edu.wpi.first.wpilibj.Timer;
  * USB camera feed task. Runs as a thread separate from Robot class.
  * Manages one or more usb cameras feeding their images to the 
  * CameraServer class to send to the DS.
- * We create one or more usb of our camera objects and start them capturing
+ * We create one or more usb camera objects and start them capturing
  * images. We then loop on a thread getting the current image from
  * the currently selected camera and pass the image to the camera
  * server which passes the image to the driver station.
@@ -122,7 +122,7 @@ public class CameraFeed extends Thread
 	/**
 	 * Update camera with current settings fields values.
 	 */
-	public void updateCameraSettings(UsbCamera camera) 
+	private void updateCameraSettings(UsbCamera camera) 
 	{
 		Util.consoleLog();
 
@@ -199,7 +199,8 @@ public class CameraFeed extends Thread
 	}
 	
 	/**
-	 * Change the camera to get images from the other camera. 
+	 * Change the camera to get images from the next camera in the list of cameras.
+	 * At end of list loops around to the first. 
 	 */
 	public void ChangeCamera()
     {

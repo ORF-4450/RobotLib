@@ -6,7 +6,7 @@ This library is delivered via jar file for use in our robot control programs.
 ***************************************************************************************************************
 Version 1.0
 
-*	RobotLib is live and adopted starting with Robot10 project for 2018.
+*	RobotLib is live and adopted starting with Robot10 project for 2017.
 
 R. Corn
 January 21, 2017
