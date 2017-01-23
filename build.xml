@@ -1,11 +1,28 @@
 <?xml version="1.0" ?>
 <!-- Configuration of the Ant build system to generate a Jar file --> 
-<project name="RobotLib" default="CreateJar">
-  <target name="CreateJar" description="Create Jar file">
-        <jar jarfile="dist/RobotLib.jar" basedir="bin/" includes="**/*.class" />
-  		<jar jarfile="dist/RobotLib-sources.jar" basedir="src/" includes="**/*.java"/>
-  	
+<project name="RobotLib" default="DeployToUser">
+	<target name="test" description="Test creating jar file" depends="CreateJar">
+		<echo>Test build of jar file complete!</echo>
+	</target>
+	<target name="Compile" description="Compile java code">
+		<echo>Compiling to class files</echo>
+		<mkdir dir="bin"/>
+		<mkdir dir="bin/classes"/>
+		<javac srcdir="src/" destdir="bin/classes/" includeantruntime="false">
+			<classpath>
+      				<fileset dir="/home/travis/build/MoSadie/RobotLib">
+					<include name="**/*.jar"/>
+    				</fileset>
+    			</classpath>
+		</javac>
+	</target>
+	<target name="CreateJar" description="Create Jar file" depends="Compile">
+		<echo>Creating jar file</echo>
+		<jar jarfile="dist/RobotLib.jar" basedir="bin/classes/" includes="**/*.class" />
+		<jar jarfile="dist/RobotLib-sources.jar" basedir="src/" includes="**/*.java"/>
+	</target>
+	<target name = "DeployToUser" description="Creates jar and moves to autoimport location" depends="CreateJar">
 		<copy file="dist/RobotLib.jar" todir="${user.home}\wpilib\user\java\lib" />
 		<copy file="dist/RobotLib-sources.jar" todir="${user.home}\wpilib\user\java\lib" />
-  </target>
+	</target>
 </project>
