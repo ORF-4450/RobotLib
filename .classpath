@@ -12,5 +12,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
+	<classpathentry kind="var" path="NAVX_FRC_LIB/lib/navx_frc.jar" sourcepath="/NAVX_FRC_LIB/src"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
