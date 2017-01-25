@@ -1,11 +1,12 @@
 <?xml version="1.0" ?>
 <!-- Configuration of the Ant build system to generate a Jar file --> 
 <project name="RobotLib" default="DeployToUser">
+	<property environment="env"/>
 	<target name="test" description="Test creating jar file" depends="CreateJar">
 		<echo>Test build of jar file complete!</echo>
 	</target>
-	<target name="Compile" description="Compile java code" unless="${TRAVIS}">
-		<echo>Compiling to class files</echo>
+	<target name="Compile" description="Compile java code" unless="${env.TRAVIS}">
+		<echo>Compiling to class files locally.</echo>
 		<mkdir dir="bin"/>
 		<mkdir dir="bin/classes"/>
 		<javac srcdir="src/" destdir="bin/classes/" includeantruntime="false">
@@ -16,8 +17,8 @@
     			</classpath>
 		</javac>
 	</target>
-	<target name="TravisCompile" description="Compile java code" if="${TRAVIS}">
-			<echo>Compiling to class files</echo>
+	<target name="TravisCompile" description="Compile java code" if="${env.TRAVIS}">
+			<echo>Compiling to class files on travis.</echo>
 			<mkdir dir="bin"/>
 			<mkdir dir="bin/classes"/>
 			<javac srcdir="src/" destdir="bin/classes/" includeantruntime="false">
