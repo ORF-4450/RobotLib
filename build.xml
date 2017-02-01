@@ -39,7 +39,7 @@
     		</classpath>
 		</javac>
 		
-		<property name="userLibs" value="navx-mxp/roborio/java/lib"/>
+		<property name="userLibs" location="/navx-mxp/roborio/java/lib"/>
 
 	</target>
 
