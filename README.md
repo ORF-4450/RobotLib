@@ -6,6 +6,14 @@ FRC Team 4450 Robot Control program library classes.
 These are the library classes created by the Olympia Robotics Federation (FRC Team 4450).
 This library is delivered via jar file for use in our robot control programs.
 ***************************************************************************************************************
+Version 1.1
+
+*	Fix errors and clean up library build process.
+*	Add wrapper class for NavX MXP navigation board.
+
+R. Corn
+January 31, 2017
+
 Version 1.0.1
 
 *   Setup the project to use Travis-CI to compile and release any tagged commits.

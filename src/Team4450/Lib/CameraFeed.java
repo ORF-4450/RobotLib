@@ -247,4 +247,20 @@ public class CameraFeed extends Thread
 		    imageOutputStream.putFrame(image);
 		}
     }
+	
+	/**
+	 * Write a list of usb cameras known to the RoboRio to the log.
+	 */
+	public static void listCameras()
+	{
+		UsbCameraInfo	cameraInfo, cameraList[];
+		
+		cameraList = UsbCamera.enumerateUsbCameras();
+		
+		for(int i = 0; i < cameraList.length; ++i) 
+		{
+			cameraInfo = cameraList[i];
+			Util.consoleLog("dev=%d name=%s path=%s", cameraInfo.dev, cameraInfo.name, cameraInfo.path);
+		}
+	}
 }
