@@ -16,6 +16,7 @@ before_script:
   -O cscore.jar
 - wget http://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip -O navx-mxp.zip
 - unzip navx-mxp.zip -d navx-mxp
+- ls
 before_deploy:
 - rm wpilib.jar
 - rm networktables.jar
