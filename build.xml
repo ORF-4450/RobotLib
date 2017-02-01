@@ -38,6 +38,9 @@
 				</fileset>
     		</classpath>
 		</javac>
+		
+		<property name="userLibs" value="navx-mxp/roborio/java/lib"/>
+
 	</target>
 
 	<target name="CreateJar" description="Create Jar files" depends="Compile, TravisCompile">

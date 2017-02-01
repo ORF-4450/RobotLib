@@ -1,6 +1,10 @@
 language: java
 jdk:
 - oraclejdk8
+addons:
+  apt:
+    packages:
+    - unzip
 before_script:
 - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/athena/2017.2.1/athena-2017.2.1.jar
   -O wpilib.jar
@@ -10,11 +14,14 @@ before_script:
   -O opencv.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.1/cscore-1.0.1-arm.jar
   -O cscore.jar
+- wget http://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip -O navx-mxp.zip
+- unzip navx-mxp.zip
 before_deploy:
 - rm wpilib.jar
 - rm networktables.jar
 - rm opencv.jar
 - rm cscore.jar
+- rm navx-mxp.zip
 deploy:
   provider: releases
   api_key:
