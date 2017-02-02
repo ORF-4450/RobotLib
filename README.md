@@ -12,7 +12,7 @@ Version 1.1
 *	Add wrapper class for NavX MXP navigation board.
 
 R. Corn
-January 31, 2017
+February 1, 2017
 
 Version 1.0.1
 
