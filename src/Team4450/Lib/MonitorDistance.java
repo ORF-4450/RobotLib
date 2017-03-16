@@ -18,6 +18,9 @@ class MonitorDistance extends Thread
     SampleRobot 	robot;
     private static 	MonitorDistance	monitorDistance;
 
+	private double	rangeInches;
+	private double	rangeFeet;
+
     // Create single instance of this class and return that single instance to any callers.
     // This is the singleton class model. You don't use new, you use getInstance.
       
@@ -43,12 +46,19 @@ class MonitorDistance extends Thread
         this.setName("MonitorDistance");
     }
     
+    public double getRangeFeet()
+    {
+    	return rangeFeet;
+    }
+    
+    public double getRangeInches()
+    {
+    	return rangeInches;
+    }
+
     public void run()
     {
         Ultrasonic ultra = new Ultrasonic(5,7);
-
-		double rangeInches;
-		double rangeFeet;
 
 		try
 		{

@@ -72,7 +72,7 @@ public class ValveDA
 	}
 
 	/**
-	 * Open the valve (pressurize port).
+	 * Open the valve (pressurize port. This is A side).
 	 */
 	public void Open()
 	{
@@ -96,7 +96,7 @@ public class ValveDA
 	}
 
 	/**
-	 * Close the valve (pressurize port+1).
+	 * Close the valve (pressurize port+1. This is B side).
 	 */
 	public void Close()
 	{
