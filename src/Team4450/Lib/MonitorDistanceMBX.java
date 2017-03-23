@@ -17,7 +17,7 @@ public class MonitorDistanceMBX extends Thread
 {
     SampleRobot		robot;
     private static 	MonitorDistanceMBX	monitorDistance;
-
+    private int		port = 1;
 	private double	rangeInches;
 	private double	rangeFeet;
 
@@ -25,19 +25,36 @@ public class MonitorDistanceMBX extends Thread
     // This is the singleton class model. You don't use new, you use getInstance.
       
     /**
-     * Get a reference to global MonitorDistanceMBX Thread object.
+     * Get a reference to global MonitorDistanceMBX Thread object. Defaults to
+     * Analog port 1 for ultrasonic sensor.
      * @param robot SampleRobot instance calling this function (use 'this').
      * @return Reference to global MonitorDistanceMBX object.
      */
     
     public static MonitorDistanceMBX getInstance(SampleRobot robot) 
     {
-  	 Util.consoleLog();
+    	Util.consoleLog();
       	
-       if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot);
+    	if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot);
           
-       return monitorDistance;
+    	return monitorDistance;
     }
+    
+     /**
+      * Get a reference to global MonitorDistanceMBX Thread object.
+      * @param robot SampleRobot instance calling this function (use 'this').
+      * @param port Analog port number for ultasonic sensor.
+      * @return Reference to global MonitorDistanceMBX object.
+      */
+      
+     public static MonitorDistanceMBX getInstance(SampleRobot robot, int port) 
+     {
+    	 Util.consoleLog();
+        	
+         if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot, port);
+            
+         return monitorDistance;
+      }
 
     private MonitorDistanceMBX(SampleRobot robot)
 	{
@@ -45,11 +62,29 @@ public class MonitorDistanceMBX extends Thread
         this.robot = robot;
         this.setName("MonitorDistanceMBX");
     }
+
+    private MonitorDistanceMBX(SampleRobot robot, int port)
+	{
+		Util.consoleLog();
+        this.robot = robot;
+        this.port = port;
+        this.setName("MonitorDistanceMBX");
+    }
+    
+    /**
+     * Return last measured range to surface.
+     * @return Range in feet.
+     */
     
     public double getRangeFeet()
     {
     	return rangeFeet;
     }
+    
+    /**
+     * Return last measured range to surface.
+     * @return Range in inches.
+     */
     
     public double getRangeInches()
     {
@@ -58,7 +93,7 @@ public class MonitorDistanceMBX extends Thread
     
     public void run()
     {
-        AnalogInput 	ultra = new AnalogInput(1);
+        AnalogInput 	ultra = new AnalogInput(port);
 
 		try
 		{
@@ -70,18 +105,16 @@ public class MonitorDistanceMBX extends Thread
 				{
 					rangeInches = ultra.getVoltage() / .0098;
 					rangeFeet = rangeInches / 12;
-                    
-					//Util.consoleLog("range=" + Util.format(rangeFeet));
 
-					if (rangeFeet > 20) rangeFeet = 0.0;
+					if (rangeFeet > 20) rangeInches = rangeFeet = 0.0;
 					
 					//SmartDashboard.putString("Range", String.format("%f", rangeFeet));
-					LCD.printLine(3, "range=%f, voltage=%f", rangeFeet, ultra.getVoltage());
+					//LCD.printLine(3, "range=%f, voltage=%f", rangeFeet, ultra.getVoltage());
 				}
 				else
 				{
 					//SmartDashboard.putString("Range", "0.0");
-					LCD.printLine(3, "range=%f", 0.0);
+					//LCD.printLine(3, "range=%f", 0.0);
 				}
 
 				Timer.delay(1.0);
