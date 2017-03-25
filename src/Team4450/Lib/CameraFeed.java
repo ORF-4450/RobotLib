@@ -208,6 +208,8 @@ public class CameraFeed extends Thread
 		
 		if (!initialized) return;
 		
+		if (cameras.isEmpty()) return;
+		
 		changingCamera = true;
 		
 		if (currentCamera == null)
