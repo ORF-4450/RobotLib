@@ -20,6 +20,7 @@ public class MonitorDistanceMBX extends Thread
     private int		port = 1;
 	private double	rangeInches;
 	private double	rangeFeet;
+	private double	delay = 1.0;	// Seconds.
 
     // Create single instance of this class and return that single instance to any callers.
     // This is the singleton class model. You don't use new, you use getInstance.
@@ -72,6 +73,26 @@ public class MonitorDistanceMBX extends Thread
     }
     
     /**
+     * Set the delay between samples of the sensor.
+     * @param delay Delay in seconds.
+     */
+    
+    public void setDelay(double delay)
+    {
+    	this.delay = delay;
+    }
+    
+    /**
+     * Returns the current sample delay.
+     * @return Delay in seconds.
+     */
+    
+    public double getDelay()
+    {
+    	return delay;
+    }
+    
+    /**
      * Return last measured range to surface.
      * @return Range in feet.
      */
@@ -107,17 +128,10 @@ public class MonitorDistanceMBX extends Thread
 					rangeFeet = rangeInches / 12;
 
 					if (rangeFeet > 20) rangeInches = rangeFeet = 0.0;
-					
-					//SmartDashboard.putString("Range", String.format("%f", rangeFeet));
-					//LCD.printLine(3, "range=%f, voltage=%f", rangeFeet, ultra.getVoltage());
 				}
 				else
-				{
-					//SmartDashboard.putString("Range", "0.0");
-					//LCD.printLine(3, "range=%f", 0.0);
-				}
 
-				Timer.delay(1.0);
+				Timer.delay(delay);
 			}
 		}
 		catch (Throwable e) {Util.logException(e);}

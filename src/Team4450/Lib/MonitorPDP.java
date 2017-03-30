@@ -20,7 +20,7 @@ public class MonitorPDP extends Thread
   private PowerDistributionPanel	pdp;
   private double					sampleInterval = 1.0;	// Seconds
   private boolean					alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
-  
+  private boolean					ports[] = new boolean[16];
   
   // Create single instance of this class and return that single instance to any callers.
   // This is the singleton class model. You don't use new, you use getInstance.
@@ -93,6 +93,17 @@ public class MonitorPDP extends Thread
   {
 	  return sampleInterval;
   }
+
+  /**
+   * Enable PDP port to be monitored.
+   * @param port Port number 0..15.
+   * @param enabled True to monitor port.
+   */
+  
+  public void enablePort(int port, boolean enabled)
+  {
+	  ports[port] = enabled;
+  }
   
   /**
    * Is PDP alarm active?
@@ -162,12 +173,13 @@ public class MonitorPDP extends Thread
 				  overloadAlarm = true;
 			  }
 			  
-			  // check the PDP output port current levels.
+			  // check the PDP output port current levels for enabled ports.
 			  
 			  for (int i = 0; i < 16; i++)
 			  {
-				 if (((i < 4 && i > 11) && pdp.getCurrent(i) > 40) | ((i > 3 && i < 12) && pdp.getCurrent(i) > 30))
-					  Util.consoleLog("pdp port %d current warning: %.1famps", i,  pdp.getCurrent(i));
+				  if (ports[i])
+    				  if (((i < 4 && i > 11) && pdp.getCurrent(i) > 40) | ((i > 3 && i < 12) && pdp.getCurrent(i) > 30))
+    					  Util.consoleLog("pdp port %d current warning: %.1famps", i,  pdp.getCurrent(i));
 			  }
 			  
 			  // Check driver station brownout flag.
@@ -180,6 +192,8 @@ public class MonitorPDP extends Thread
 				  overloadAlarm = true;
 			  }
 				  
+			  // flash DS leds for alarms.
+			  
 			  if (alarmInProgress && lowBatteryAlarm)
 			  {
 				  if (alarmFlash)
@@ -211,6 +225,6 @@ public class MonitorPDP extends Thread
 			  Timer.delay(sampleInterval);
           }
 	  }
-	  catch (Throwable e)	{Util.logException(e);}
+	  catch (Throwable e) {Util.logException(e);}
   }
 }

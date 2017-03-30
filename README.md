@@ -6,6 +6,13 @@ FRC Team 4450 Robot Control program library classes.
 These are the library classes created by the Olympia Robotics Federation (FRC Team 4450).
 This library is delivered via jar file for use in our robot control programs.
 ***************************************************************************************************************
+Version 1.3
+
+*	More updates to distance monitoring classes. Add PDP monitoring class.
+
+R. Corn
+March 30, 2017
+
 Version 1.2
 
 *	Updates to distance monitoring classes.
