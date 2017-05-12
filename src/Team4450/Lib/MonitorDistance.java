@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.SampleRobot;
  * Uses old style ultrasonic sensor.
  */
 
-class MonitorDistance extends Thread
+public class MonitorDistance extends Thread
 {
     SampleRobot 	robot;
     private int		port;

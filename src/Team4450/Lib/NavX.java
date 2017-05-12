@@ -3,6 +3,9 @@ package Team4450.Lib;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
@@ -12,8 +15,11 @@ public class NavX
 {
 	private static NavX		navx;
 	private AHRS			ahrs;
+	private static double 	totalAngle = 0;
+
+	public enum PortType {SPI, I2C, I2C_MXP, USB};
 	
-	public enum PinType { DigitalIO, PWM, AnalogIn, AnalogOut };
+	public enum PinType {DigitalIO, PWM, AnalogIn, AnalogOut};
 	    
 	private final int MAX_NAVX_MXP_DIGIO_PIN_NUMBER      = 9;
 	private final int MAX_NAVX_MXP_ANALOGIN_PIN_NUMBER   = 3;
@@ -22,32 +28,73 @@ public class NavX
 	private final int NUM_ROBORIO_ONBOARD_PWM_PINS       = 10;
 	private final int NUM_ROBORIO_ONBOARD_ANALOGIN_PINS  = 4;
 	    
-	private NavX()
+	private NavX(PortType portType)
 	{
 		Util.consoleLog();
 		
 		// NavX is plugged into the RoboRio MXP port.
 		
-		ahrs = new AHRS(SPI.Port.kMXP);
+		switch (portType)
+		{
+			case SPI:
+				ahrs = new AHRS(SPI.Port.kMXP);
+				break;
+				
+			case I2C:
+				ahrs = new AHRS(I2C.Port.kOnboard);
+				break;
+
+			case I2C_MXP:
+				ahrs = new AHRS(I2C.Port.kMXP);
+				break;
+
+			case USB:
+				ahrs = new AHRS(SerialPort.Port.kUSB);
+				
+				Timer.delay(1);	// delay to ensure USB port is opened.
+				
+				break;
+				
+			default:
+				ahrs = new AHRS(SPI.Port.kMXP);
+		}
 	}
 	
 	/**
 	 * Return global instance of NavX object. First call creates the NavX global
 	 * object and starts the calibration process. Calibration can take up 10 seconds.
+	 * Uses SPI PortType to access the NavX.
 	 * @return NavX object reference.
 	 */
 	public static NavX getInstance()
 	{
 		Util.consoleLog();
 		
-		if (navx == null) navx = new NavX();
+		if (navx == null) navx = new NavX(PortType.SPI);
+		
+		return navx;
+	}
+	
+	/**
+	 * Return global instance of NavX object. First call creates the NavX global
+	 * object and starts the calibration process. Calibration can take up 10 seconds.
+	 * @param PortType Specify the interface port to be used to access the NavX.
+	 * @return NavX object reference.
+	 */
+	public static NavX getInstance(PortType portType)
+	{
+		Util.consoleLog();
+		
+		if (navx == null) navx = new NavX(portType);
 		
 		return navx;
 	}
 	
 	/**
 	 * Return global instance of NavX AHRS object. AHRS is
-	 * Attitude/Heading Reference System.
+	 * Attitude/Heading Reference System. AHRS object is the
+	 * NavX library and provides access to all NavX methods and
+	 * properties.
 	 * @return AHRS object reference.
 	 */
 	public AHRS getAHRS()
@@ -82,6 +129,35 @@ public class NavX
 		return ahrs.getRate();
 	}
 
+	/**
+	 * Return current robot heading (0-360) relative to direction robot was
+	 * pointed at last reset.
+	 * @return Robot heading.
+	 */
+	public double getHeading()
+	{
+		double heading;
+		
+		heading = ahrs.getAngle() + totalAngle;
+		
+		heading = heading - ((int) (heading / 360) * 360);
+		
+		if (heading < 0) heading += 360;
+		
+		return heading;
+	}
+	
+	/**
+	 * Set heading tracking angle to offset value.
+	 * @param offset Offset from 0-360 that is used to adjust the
+	 * heading to the direction the robot is pointing relative to
+	 * the direction the driver is looking.
+	 */
+	public void setHeading(double offset)
+	{
+		totalAngle = offset;
+	}
+	
 	/**
 	 * Returns connected state of NavX device.
 	 * @return True if connected.
@@ -124,11 +200,13 @@ public class NavX
 	 */
 	public void resetYaw()
 	{
+		totalAngle += ahrs.getAngle();
+		
         ahrs.zeroYaw();
 	}	
 		
 	/**
-	 * Return RoboRio channel number for a NavX pin.
+	 * Return RoboRio channel number for a NavX pin. Not for NavX-Mini.
 	 * @param type PinType of pin to get channel for.
 	 * @param io_pin_number Pin number to get channel for.
 	 * @return RoboRio channel number.
