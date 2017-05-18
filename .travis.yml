@@ -6,7 +6,7 @@ addons:
     packages:
     - unzip
 before_script:
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/athena/2017.2.1/athena-2017.2.1.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/athena/2017.3.1/athena-2017.3.1.jar
   -O wpilib.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilib/networktables/java/NetworkTables/3.1.2/NetworkTables-3.1.2-desktop.jar
   -O networktables.jar
