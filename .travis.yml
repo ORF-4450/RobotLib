@@ -12,7 +12,7 @@ before_script:
   -O networktables.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-java/3.1.0/opencv-java-3.1.0.jar
   -O opencv.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.1/cscore-1.0.1-arm.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.2/cscore-1.0.2-arm.jar
   -O cscore.jar
 - wget http://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip -O navx-mxp.zip
 - unzip navx-mxp.zip -d navx-mxp
