@@ -6,13 +6,21 @@ addons:
     packages:
     - unzip
 before_script:
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/athena/2017.2.1/athena-2017.2.1.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/athena/2017.3.1/athena-2017.3.1.jar
   -O wpilib.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/athena-jni/2017.3.1/athena-jni-2017.3.1.jar
+  -O wpilib-jni.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilib/networktables/java/NetworkTables/3.1.2/NetworkTables-3.1.2-desktop.jar
   -O networktables.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-java/3.1.0/opencv-java-3.1.0.jar
   -O opencv.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.1/cscore-1.0.1-arm.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-jni/3.1.0/opencv-jni-3.1.0-linux-arm.jar
+  -O opencv-jni.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-headers/3.1.0/opencv-headers-3.1.0.jar
+  -O opencv-headers.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-natives/3.1.0/opencv-natives-3.1.0-linux-arm.jar
+  -O opencv-natives.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.2/cscore-1.0.2-arm.jar
   -O cscore.jar
 - wget http://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip -O navx-mxp.zip
 - unzip navx-mxp.zip -d navx-mxp
