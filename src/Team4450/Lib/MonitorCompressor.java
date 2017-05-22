@@ -1,6 +1,7 @@
 
 package Team4450.Lib;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -17,6 +18,8 @@ public class MonitorCompressor extends Thread
 {
   private final Compressor			compressor = new Compressor(0);
   private static MonitorCompressor	monitorCompressor;
+  private static AnalogInput		pressureSensor;
+  public double						delay = 2.0;
 
   // Create single instance of this class and return that single instance to any callers.
   // This is the singleton class model. You don't use new, you use getInstance.
@@ -30,17 +33,58 @@ public class MonitorCompressor extends Thread
   {
 	 Util.consoleLog();
     	
-     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor();
+     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(-1);
         
      return monitorCompressor;
   }
-
-  private MonitorCompressor()
+  
+  /**
+   * Get a reference to global MonitorCompressor Thread object. Monitor pressure
+   * on analog I/O port.
+   * @pararm pressureSensorPort Analog input port sensor is plugged into.
+   * @return Reference to global MonitorCompressor object.
+   */
+    
+  public static MonitorCompressor getInstance(int pressureSensorPort) 
   {
-	  Util.consoleLog();
+  	 Util.consoleLog();
+      	
+     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(pressureSensorPort);
+          
+     return monitorCompressor;
+  }
+
+  private MonitorCompressor(int pressureSensorPort)
+  {
+	  Util.consoleLog("port=%d", pressureSensorPort);
 	  this.setName("MonitorCompressor");
+	  
+	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
   }
     
+  /**
+   * If monitoring pressure, return the current pressure.
+   * @return Current pressure in PSI.
+   */
+  public int getPressure()
+  {
+	  if (pressureSensor != null) return (int) convertV2PSI(pressureSensor.getVoltage());
+	  
+	  return 0;
+  }
+  
+  public double getVoltate()
+  {
+	  if (pressureSensor != null) return pressureSensor.getVoltage();
+    
+	  return 0;
+  }
+  
+  public double convertV2PSI(double voltage)
+  {
+	  return voltage * 37.5;
+  }
+  
   /**
    * Start monitoring. Called by Thread.start().
    */
@@ -63,7 +107,9 @@ public class MonitorCompressor extends Thread
 				Util.consoleLog("compressor on=%b", saveState);
 			}
 			
-			Timer.delay(2.0);
+			if (pressureSensor != null) SmartDashboard.putNumber("AirPressure", (int) convertV2PSI(pressureSensor.getVoltage()));
+			
+			Timer.delay(delay);
 		}
 	}
 	catch (Throwable e) {Util.logException(e);}
