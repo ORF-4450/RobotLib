@@ -289,7 +289,7 @@ public class Util
 	}
 
 	/**
-	 * Write exception message to console window and exception stack trace to
+	 * Write exception message to DS console window and exception stack trace to
 	 * log file.
 	 * @param e The exception to log.
 	 */

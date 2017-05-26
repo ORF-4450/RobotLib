@@ -19,8 +19,9 @@ public class MonitorCompressor extends Thread
   private final Compressor			compressor = new Compressor(0);
   private static MonitorCompressor	monitorCompressor;
   private static AnalogInput		pressureSensor;
-  public double						delay = 2.0;
-
+  private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
+  private boolean					lowPressureAlarm = false, ledState = false;
+  
   // Create single instance of this class and return that single instance to any callers.
   // This is the singleton class model. You don't use new, you use getInstance.
     
@@ -58,6 +59,8 @@ public class MonitorCompressor extends Thread
   {
 	  Util.consoleLog("port=%d", pressureSensorPort);
 	  this.setName("MonitorCompressor");
+
+	  SmartDashboard.putBoolean("LowPressure", false);
 	  
 	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
   }
@@ -82,7 +85,36 @@ public class MonitorCompressor extends Thread
   
   public double convertV2PSI(double voltage)
   {
-	  return voltage * 37.5;
+	  return voltage * 37.5 + correction;
+  }
+  
+  public void setDelay(double seconds)
+  {
+	  if (delay < 0.5) delay = 1.0;
+	  
+	  delay = seconds;
+  }
+  
+  /**
+   * Set correction value to be added to the pressure to make it
+   * match the gauge.
+   * @param psi Correction value in PSI.
+   */
+  public void setCorrection(double psi)
+  {
+	  correction = psi;
+  }
+  
+  /**
+   * Enable low pressure alarm LED on DS by setting pressure at which
+   * alarm will trigger.
+   * @param psi The low pressure in PSI.
+   */
+  public void SetLowPressureAlarm(double psi)
+  {
+	  if (psi < 0) psi = 0;
+	  
+	  lowPressureThreshold = psi;
   }
   
   /**
@@ -91,6 +123,7 @@ public class MonitorCompressor extends Thread
   public void run()
   {      
 	boolean	saveState = false, compressorState;
+	double	pressure;
 	
 	try
 	{
@@ -107,7 +140,35 @@ public class MonitorCompressor extends Thread
 				Util.consoleLog("compressor on=%b", saveState);
 			}
 			
-			if (pressureSensor != null) SmartDashboard.putNumber("AirPressure", (int) convertV2PSI(pressureSensor.getVoltage()));
+			if (pressureSensor != null) 
+			{
+				pressure = convertV2PSI(pressureSensor.getVoltage());
+				
+				SmartDashboard.putNumber("AirPressure", (int) pressure);
+			
+				if (lowPressureThreshold > 0)
+				{
+					if (pressure <= lowPressureThreshold)
+					{
+						if (!lowPressureAlarm) DriverStation.reportError(String.format("low air pressure alarm: %dpsi", (int) pressure), false);
+
+						lowPressureAlarm = true;
+					}
+					else
+					{
+						if (lowPressureAlarm) DriverStation.reportError("low air pressure alarm cleared", false);
+						
+						lowPressureAlarm = false;
+					}
+					
+					if (lowPressureAlarm)
+						ledState = !ledState;
+					else
+						ledState = false;
+
+					SmartDashboard.putBoolean("LowPressure", ledState);
+				}
+			}
 			
 			Timer.delay(delay);
 		}
