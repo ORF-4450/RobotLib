@@ -11,7 +11,8 @@ import edu.wpi.first.wpilibj.Compressor;
  * Compressor monitoring task.
  * Runs as a separate thread from our MyRobot class. Runs until our
  * program is terminated from the RoboRio. Displays compressor on/off
- * LED on DS.
+ * LED on DS. Can also monitor an air pressure sensor and report the
+ * pressure to the DS.
  */
 
 public class MonitorCompressor extends Thread
@@ -26,7 +27,8 @@ public class MonitorCompressor extends Thread
   // This is the singleton class model. You don't use new, you use getInstance.
     
   /**
-   * Get a reference to global MonitorCompressor Thread object.
+   * Get a reference to global MonitorCompressor Thread object. Only monitors compressor on/off
+   * and sets DS LED named Compressor accordingly.
    * @return Reference to global MonitorCompressor object.
    */
   
@@ -40,9 +42,11 @@ public class MonitorCompressor extends Thread
   }
   
   /**
-   * Get a reference to global MonitorCompressor Thread object. Monitor pressure
-   * on analog I/O port.
-   * @pararm pressureSensorPort Analog input port sensor is plugged into.
+   * Get a reference to global MonitorCompressor Thread object. Monitors compressor on/off
+   * and sets DS LED named Compressor accordingly. Also monitors pressure on analog I/O port.
+   * Pressure is displyed on DS gauge called AirPressure. Can also do an alarm LED called 
+   * LowPressure if you set the low pressure threshold.
+   * @pararm pressureSensorPort Analog input port pressure sensor is plugged into.
    * @return Reference to global MonitorCompressor object.
    */
     
@@ -76,6 +80,10 @@ public class MonitorCompressor extends Thread
 	  return 0;
   }
   
+  /**
+   * Return the pressure sensor current voltage.
+   * @return Sensor voltage.
+   */
   public double getVoltate()
   {
 	  if (pressureSensor != null) return pressureSensor.getVoltage();
@@ -83,14 +91,24 @@ public class MonitorCompressor extends Thread
 	  return 0;
   }
   
+  /**
+   * Convert the pressure sensor voltage to PSI.
+   * @param voltage Input voltage from sensor.
+   * @return Pressure in PSI.
+   */
   public double convertV2PSI(double voltage)
   {
 	  return voltage * 37.5 + correction;
   }
   
+  /**
+   * Set the delay of the sampling loop. Longer delay works when only monitoring compressor on/off.
+   * Shorter delay may be appropriate when monitoring pressure.
+   * @param seconds Delay in second between samples. Minimum .5 second. Defaults to 2 seconds.
+   */
   public void setDelay(double seconds)
   {
-	  if (delay < 0.5) delay = 1.0;
+	  if (delay < 0.5) delay = 0.5;
 	  
 	  delay = seconds;
   }
@@ -107,7 +125,7 @@ public class MonitorCompressor extends Thread
   
   /**
    * Enable low pressure alarm LED on DS by setting pressure at which
-   * alarm will trigger.
+   * alarm will trigger. Expects LED to be named LowPressure.
    * @param psi The low pressure in PSI.
    */
   public void SetLowPressureAlarm(double psi)
