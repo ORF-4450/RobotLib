@@ -15,12 +15,13 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class MonitorDistanceMBX extends Thread
 {
-    SampleRobot		robot;
-    private static 	MonitorDistanceMBX	monitorDistance;
-    private int		port = 1;
-	private double	rangeInches;
-	private double	rangeFeet;
-	private double	delay = 1.0;	// Seconds.
+    SampleRobot				robot;
+    private static 			MonitorDistanceMBX	monitorDistance;
+    private int				port = 1;
+    private AnalogInput 	ultra;
+	private double			rangeInches;
+	private double			rangeFeet;
+	private double			delay = 1.0;	// Seconds.
 
     // Create single instance of this class and return that single instance to any callers.
     // This is the singleton class model. You don't use new, you use getInstance.
@@ -41,36 +42,65 @@ public class MonitorDistanceMBX extends Thread
     	return monitorDistance;
     }
     
-     /**
-      * Get a reference to global MonitorDistanceMBX Thread object.
-      * @param robot SampleRobot instance calling this function (use 'this').
-      * @param port Analog port number for ultasonic sensor.
-      * @return Reference to global MonitorDistanceMBX object.
-      */
+    /**
+     * Get a reference to global MonitorDistanceMBX Thread object.
+     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param port Analog port number for ultasonic sensor.
+     * @return Reference to global MonitorDistanceMBX object.
+     */
       
-     public static MonitorDistanceMBX getInstance(SampleRobot robot, int port) 
-     {
-    	 Util.consoleLog();
+    public static MonitorDistanceMBX getInstance(SampleRobot robot, int port) 
+    {
+    	Util.consoleLog();
         	
-         if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot, port);
+        if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot, port);
             
-         return monitorDistance;
-      }
+        return monitorDistance;
+    }
+    
+    /**
+     * Get a reference to global MonitorDistanceMBX Thread object.
+     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param port AnalogInput AnalogInput instance for ultasonic sensor.
+     * @return Reference to global MonitorDistanceMBX object.
+     */
+      
+    public static MonitorDistanceMBX getInstance(SampleRobot robot, AnalogInput ultraSonic) 
+    {
+    	Util.consoleLog();
+        	
+        if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot, ultraSonic);
+            
+        return monitorDistance;
+    }
 
     private MonitorDistanceMBX(SampleRobot robot)
 	{
-		Util.consoleLog();
+		Util.consoleLog("port=%d", port);
         this.robot = robot;
         this.setName("MonitorDistanceMBX");
+
+        ultra = new AnalogInput(port);
     }
 
     private MonitorDistanceMBX(SampleRobot robot, int port)
 	{
-		Util.consoleLog();
+		Util.consoleLog("port=%d", port);
         this.robot = robot;
         this.port = port;
         this.setName("MonitorDistanceMBX");
-    }
+    
+        ultra = new AnalogInput(port);
+	}
+
+    private MonitorDistanceMBX(SampleRobot robot, AnalogInput ultraSonic)
+	{
+		Util.consoleLog("port=%d", ultraSonic.getChannel());
+        this.robot = robot;
+        this.setName("MonitorDistanceMBX");
+    
+        ultra = ultraSonic;
+	}
     
     /**
      * Set the delay between samples of the sensor.
@@ -114,8 +144,6 @@ public class MonitorDistanceMBX extends Thread
     
     public void run()
     {
-        AnalogInput 	ultra = new AnalogInput(port);
-
 		try
 		{
 			Util.consoleLog();

@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.Compressor;
  * Runs as a separate thread from our MyRobot class. Runs until our
  * program is terminated from the RoboRio. Displays compressor on/off
  * LED on DS. Can also monitor an air pressure sensor and report the
- * pressure to the DS.
+ * pressure to the DS. Assumes compressor is plugged into the first
+ * PCM, device id 0.
  */
 
 public class MonitorCompressor extends Thread
@@ -46,7 +47,7 @@ public class MonitorCompressor extends Thread
    * and sets DS LED named Compressor accordingly. Also monitors pressure on analog I/O port.
    * Pressure is displyed on DS gauge called AirPressure. Can also do an alarm LED called 
    * LowPressure if you set the low pressure threshold.
-   * @pararm pressureSensorPort Analog input port pressure sensor is plugged into.
+   * @pararm pressureSensorPort Analog input port number pressure sensor is plugged into.
    * @return Reference to global MonitorCompressor object.
    */
     
@@ -55,6 +56,24 @@ public class MonitorCompressor extends Thread
   	 Util.consoleLog();
       	
      if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(pressureSensorPort);
+          
+     return monitorCompressor;
+  }
+  
+  /**
+   * Get a reference to global MonitorCompressor Thread object. Monitors compressor on/off
+   * and sets DS LED named Compressor accordingly. Also monitors pressure on analog I/O port.
+   * Pressure is displyed on DS gauge called AirPressure. Can also do an alarm LED called 
+   * LowPressure if you set the low pressure threshold.
+   * @pararm pressureSensor AnalogInput instance for port pressure sensor is plugged into.
+   * @return Reference to global MonitorCompressor object.
+   */
+    
+  public static MonitorCompressor getInstance(AnalogInput pressureSensor) 
+  {
+  	 Util.consoleLog();
+      	
+     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(pressureSensor);
           
      return monitorCompressor;
   }
@@ -67,6 +86,16 @@ public class MonitorCompressor extends Thread
 	  SmartDashboard.putBoolean("LowPressure", false);
 	  
 	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
+  }
+
+  private MonitorCompressor(AnalogInput pressureSensor)
+  {
+	  Util.consoleLog("port=%d", pressureSensor.getChannel());
+	  this.setName("MonitorCompressor");
+
+	  SmartDashboard.putBoolean("LowPressure", false);
+	  
+	  this.pressureSensor = pressureSensor;
   }
     
   /**

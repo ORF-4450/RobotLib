@@ -15,10 +15,11 @@ import edu.wpi.first.wpilibj.SampleRobot;
 
 public class MonitorDistance extends Thread
 {
-    SampleRobot 	robot;
-    private int		port;
-    private double	delay = 1.0;	// seconds.
-    private static 	MonitorDistance	monitorDistance;
+    SampleRobot 		robot;
+    private int			port;
+    private Ultrasonic	ultra;
+    private double		delay = 1.0;	// seconds.
+    private static 		MonitorDistance	monitorDistance;
 
 	private double	rangeInches;
 	private double	rangeFeet;
@@ -60,12 +61,41 @@ public class MonitorDistance extends Thread
     	return monitorDistance;
     }
     
+    /**
+     * Get a reference to global MonitorDistance Thread object.
+     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param ultraSonic Ultrasonic sensor instance.
+     * @return Reference to global MonitorDistance object.
+     */
+  
+    public static MonitorDistance getInstance(SampleRobot robot, Ultrasonic ultraSonic) 
+    {
+    	Util.consoleLog();
+    	
+    	if (monitorDistance == null) monitorDistance = new MonitorDistance(robot, ultraSonic);
+        
+    	return monitorDistance;
+    }
+    
 	private MonitorDistance(SampleRobot robot, int port)
 	{
-		Util.consoleLog();
+		Util.consoleLog("ports=%d,%d", port, port + 1);
+		
         this.robot = robot;
         this.port = port;
         this.setName("MonitorDistance");
+
+        ultra = new Ultrasonic(port, port + 1);
+    }
+    
+	private MonitorDistance(SampleRobot robot, Ultrasonic ultraSonic)
+	{
+		Util.consoleLog();
+		
+        this.robot = robot;
+        this.setName("MonitorDistance");
+
+        ultra = ultraSonic;
     }
     
     /**
@@ -110,12 +140,8 @@ public class MonitorDistance extends Thread
 
     public void run()
     {
-        Ultrasonic ultra = new Ultrasonic(port, port + 1);
-
 		try
 		{
-			Util.consoleLog("ports=%d,%d", port, port + 1);
-
 			ultra.setAutomaticMode(true);
 
 			while (true)
