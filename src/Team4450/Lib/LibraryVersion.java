@@ -15,6 +15,5 @@ public class LibraryVersion
 	private LibraryVersion()
 	{		
 		
-		
 	}
 }
