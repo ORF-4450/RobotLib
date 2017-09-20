@@ -20,7 +20,7 @@ public class MonitorCompressor extends Thread
 {
   private final Compressor			compressor = new Compressor(0);
   private static MonitorCompressor	monitorCompressor;
-  private static AnalogInput		pressureSensor;
+  private AnalogInput				pressureSensor;
   private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
   private boolean					lowPressureAlarm = false, ledState = false;
   
@@ -45,9 +45,9 @@ public class MonitorCompressor extends Thread
   /**
    * Get a reference to global MonitorCompressor Thread object. Monitors compressor on/off
    * and sets DS LED named Compressor accordingly. Also monitors pressure on analog I/O port.
-   * Pressure is displyed on DS gauge called AirPressure. Can also do an alarm LED called 
+   * Pressure is displayed on DS gauge called AirPressure. Can also do an alarm LED called 
    * LowPressure if you set the low pressure threshold.
-   * @pararm pressureSensorPort Analog input port number pressure sensor is plugged into.
+   * @param pressureSensorPort Analog input port number pressure sensor is plugged into.
    * @return Reference to global MonitorCompressor object.
    */
     
@@ -63,9 +63,9 @@ public class MonitorCompressor extends Thread
   /**
    * Get a reference to global MonitorCompressor Thread object. Monitors compressor on/off
    * and sets DS LED named Compressor accordingly. Also monitors pressure on analog I/O port.
-   * Pressure is displyed on DS gauge called AirPressure. Can also do an alarm LED called 
+   * Pressure is displayed on DS gauge called AirPressure. Can also do an alarm LED called 
    * LowPressure if you set the low pressure threshold.
-   * @pararm pressureSensor AnalogInput instance for port pressure sensor is plugged into.
+   * @param pressureSensor AnalogInput instance for port pressure sensor is plugged into.
    * @return Reference to global MonitorCompressor object.
    */
     
