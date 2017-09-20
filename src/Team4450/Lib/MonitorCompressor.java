@@ -95,7 +95,7 @@ public class MonitorCompressor extends Thread
 
 	  SmartDashboard.putBoolean("LowPressure", false);
 	  
-	  this.pressureSensor = pressureSensor;
+	  this.pressureSensor = pressureSensor;	  
   }
     
   /**

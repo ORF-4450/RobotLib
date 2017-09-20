@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.networktables.NetworkTable;
 /**
  * Wrapper class for NavX MXP navigation sensor board.
  */
+
 public class NavX
 {
 	private static NavX		navx;
