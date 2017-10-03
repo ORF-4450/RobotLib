@@ -22,9 +22,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.UsbCameraInfo;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.can.CANJNI;
 
