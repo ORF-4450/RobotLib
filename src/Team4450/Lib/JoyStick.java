@@ -95,10 +95,10 @@ public class JoyStick
 		if (button != null) AddButton(button);
 	}
 	
-	// Add additonal button to be monitored.
+	// Add additional button to be monitored.
 	
 	/**
-	 * Add additonal JoystickButton button to be monitored.
+	 * Add additional JoystickButton button to be monitored.
 	 * @param button id value identifying button to add.
 	 * @return New button added or existing button.
 	 */

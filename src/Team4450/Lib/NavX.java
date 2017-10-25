@@ -132,7 +132,7 @@ public class NavX
 
 	/**
 	 * Return current robot heading (0-360) relative to direction robot was
-	 * pointed at last reset.
+	 * pointed at last reset (setHeading).
 	 * @return Robot heading.
 	 */
 	public double getHeading()
