@@ -79,7 +79,7 @@ public class NavX
 	/**
 	 * Return global instance of NavX object. First call creates the NavX global
 	 * object and starts the calibration process. Calibration can take up 10 seconds.
-	 * @param PortType Specify the interface port to be used to access the NavX.
+	 * @param portType Specify the interface port to be used to access the NavX.
 	 * @return NavX object reference.
 	 */
 	public static NavX getInstance(PortType portType)
@@ -211,7 +211,7 @@ public class NavX
 	 * @param type PinType of pin to get channel for.
 	 * @param io_pin_number Pin number to get channel for.
 	 * @return RoboRio channel number.
-	 * @throws IllegalArgumentException
+	 * @throws IllegalArgumentException.
 	 */
 	public int getChannelFromPin( PinType type, int io_pin_number ) throws IllegalArgumentException 
 	{

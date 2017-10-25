@@ -61,7 +61,7 @@ public class MonitorDistanceMBX extends Thread
     /**
      * Get a reference to global MonitorDistanceMBX Thread object.
      * @param robot SampleRobot instance calling this function (use 'this').
-     * @param port AnalogInput AnalogInput instance for ultasonic sensor.
+     * @param ultraSonic AnalogInput instance for ultra sonic sensor.
      * @return Reference to global MonitorDistanceMBX object.
      */
       

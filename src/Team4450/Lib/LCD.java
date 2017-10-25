@@ -15,7 +15,7 @@ public class LCD
 
 	/**
 	 * Get a reference to the global instance of LCD class.
-	 * @return
+	 * @return Reference to global LCD class instance.
 	 */
 	public LCD getInstance()
 	{

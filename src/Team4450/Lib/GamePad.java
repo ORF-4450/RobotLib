@@ -117,7 +117,7 @@ public class GamePad
 	
 	/**
 	 * Find GamePadButton button by id in the list of registered buttons.
-	 * @param buttonID Enum value identifying button to find.
+	 * @param button Enum value identifying button to find.
 	 * @return Button or null if not found.
 	 */
 	

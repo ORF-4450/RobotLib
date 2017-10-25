@@ -24,7 +24,7 @@ public class JoyStick
 	
 	/**
 	 * Constructor which adds all JoyStick buttons to be monitored.
-	 * @param joyStick JoyStick object representing the GamePad.
+	 * @param joystick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the JoyStick object.
 	 * @param caller calling class instance (use 'this').
 	 */
@@ -79,7 +79,7 @@ public class JoyStick
 	
 	/**
 	 * Constructor which adds single JoyStick button to be monitored.
-	 * @param joyStick JoyStick object representing the GamePad.
+	 * @param joystick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the JoyStick object.
 	 * @param button Enum value identifying button to add.
 	 * @param caller Calling class instance (use 'this').
@@ -99,7 +99,7 @@ public class JoyStick
 	
 	/**
 	 * Add additional JoystickButton button to be monitored.
-	 * @param button id value identifying button to add.
+	 * @param button Id value identifying button to add.
 	 * @return New button added or existing button.
 	 */
 	public JoyStickButton AddButton(JoyStickButtonIDs button)
@@ -119,7 +119,7 @@ public class JoyStick
 	
 	/**
 	 * Find JoyStick button by id in the list of registered buttons.
-	 * @param buttonID id value identifying button to find.
+	 * @param button Id value identifying button to find.
 	 * @return Button reference or null if not found.
 	 */
 	public JoyStickButton FindButton(JoyStickButtonIDs button)

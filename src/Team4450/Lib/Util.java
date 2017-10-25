@@ -50,6 +50,7 @@ public class Util
 	/**
 	 * Read properties file from RobRio disk into a Properties object.
 	 * @return A Properties object.
+	 * @throws IOException
 	 */
 	public static Properties readProperties() throws IOException
 	{
@@ -82,6 +83,7 @@ public class Util
         /**
          *  Initializes our logging system.
          *  Call before using any logging methods.
+         *  @throws IOException
          */
         static public void setup() throws IOException 
         {
@@ -93,7 +95,7 @@ public class Util
             // If we decide to redirect system.out to our log handler, then following
             // code will delete the default log handler for the console to prevent
             // a recursive loop. We would only redirect system.out if we only want to
-            // log to the file. If we delete the console hanlder we can skip setting
+            // log to the file. If we delete the console handler we can skip setting
             // the formatter...otherwise we set our formatter on the console logger.
             
             Logger rootLogger = Logger.getLogger("");
@@ -223,6 +225,7 @@ public class Util
 
 	/**
      * Returns program location where call to this method is located.
+     * @return String containing program location of method called from.
      */
     public static String currentMethod()
     {
