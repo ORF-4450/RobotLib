@@ -4,12 +4,16 @@
 
 package Team4450.Lib;
 
+/**
+ * Provides static access to current version of the library.
+ */
+
 public class LibraryVersion
 {
 	/**
 	 * Returns current version of RobotLib.
 	 */
-	public static final String version = "1.7.1 (09.27.17)";	
+	public static final String version = "1.7.1 (10.29.17)";	
 
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()

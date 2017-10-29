@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Power Distribution Panel monitoring task.
- * Runs as a separate thread from the Robot class. Runs until our
+ * Runs as a separate thread from the Robot class. Runs until robot
  * program is terminated from the RoboRio.
  */
 

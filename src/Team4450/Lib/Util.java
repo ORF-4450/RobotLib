@@ -25,6 +25,10 @@ import java.util.ArrayList;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.can.CANJNI;
 
+/**
+ * Provides a set of utility functions.
+ */
+
 public class Util
 {
 	/**

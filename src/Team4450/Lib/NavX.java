@@ -18,8 +18,18 @@ public class NavX
 	private AHRS			ahrs;
 	private static double 	totalAngle = 0;
 
+	/**
+	 * Identifies port the NavX is plugged into
+	 *
+	 */
+
 	public enum PortType {SPI, I2C, I2C_MXP, USB};
 	
+	/**
+	 * Specifies pin type when accesing NavX pins.
+	 *
+	 */
+
 	public enum PinType {DigitalIO, PWM, AnalogIn, AnalogOut};
 	    
 	private final int MAX_NAVX_MXP_DIGIO_PIN_NUMBER      = 9;

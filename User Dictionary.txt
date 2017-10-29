@@ -6,3 +6,6 @@ teleop
 gyro
 navx
 fwd
+mjpeg
+arraylist
+usb

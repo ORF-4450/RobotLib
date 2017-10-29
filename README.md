@@ -9,6 +9,7 @@ This library is delivered via jar file for use in our robot control programs.
 Version 1.7.1
 
 *	Minor adjustments to 1.7.0.
+*	Added Documentation.
 
 R Corn
 September 27, 2017

@@ -8,8 +8,11 @@ import java.util.Set;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-// This class handles the interface to the Joystick buttons. It monitors
-// the state of the JS buttons and raises events when button state changes.
+/** 
+ * This class provides an interface to the Joystick buttons. It monitors
+ * the state of the JS buttons and raises events when button state changes.
+ * Also provides stick axis information with dead zone applied.
+ */
 
 public class JoyStick
 {
@@ -301,7 +304,7 @@ public class JoyStick
 	}
   
     /**
-     *  Interface defintion for event listener. Actual listener implements
+     *  Java Interface definition for event listener. Actual listener implements
      *  the actions associated with button up and down events.
      */
 	public interface JoyStickEventListener extends EventListener 
@@ -322,7 +325,7 @@ public class JoyStick
 	}
    
     /**
-     * Remove the specifed JoyStickEventListener object from event notification.
+     * Remove the specified JoyStickEventListener object from event notification.
      * @param listener JoyStickEventListener object to remove.
      */
 	public void removeJoyStickEventListener(JoyStickEventListener listener) 

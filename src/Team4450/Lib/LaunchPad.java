@@ -18,9 +18,12 @@ import java.util.Set;
 //import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Joystick;
 
-// This class handles the interface to the TI Launch Pad device. It monitors
-// the state of the LP controls and raises events when control state changes.
-// It currently only supports buttons.
+/** 
+ * This class provides an interface to the TI Launch Pad device. It monitors
+ * the state of the LP controls and raises events when control state changes
+ * and provides direct access to control status. It currently only supports 
+ * buttons and rocker switches.
+ */
 
 public class LaunchPad
 {
@@ -269,7 +272,7 @@ public class LaunchPad
 	/**
 	 * For buttons, gets the latched state of a registered control. When buttons
 	 * are pressed, the latch state is toggled and retained. Latched is in effect
-	 * a presistent button press. Press and it latches, press again and it unlatches.
+	 * a persistent button press. Press and it latches, press again and it unlatches.
 	 * @param requestedControl Control id to check.
 	 * @return True if button latched, false if not.
 	 */
@@ -300,7 +303,7 @@ public class LaunchPad
     }
     
     /**
-     *  Interface defintion for event listener. Actual listener implements
+     *  Java Interface definition for event listener. Actual listener implements
      *  the actions associated with button up and down or switch change events.
      */
     public interface LaunchPadEventListener extends EventListener 

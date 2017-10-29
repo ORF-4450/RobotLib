@@ -10,6 +10,10 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.AnalogInput;
 
+/**
+ * Provides an interface to the REV Digit Board. Based on code from team 1493.
+ */
+
 public class RevDigitBoard
 {
 	// RevDigitBoard is a Singleton class. One instance only as there is only one RevDigitBoard per robot.
@@ -18,7 +22,7 @@ public class RevDigitBoard
 	// I2C address of the digit board is 0x70
 	private I2C i2c = new I2C(Port.kMXP, 0x70);
 	
-	// Buttons A and B are keyed to dgital inputs 19 and 20	
+	// Buttons A and B are keyed to digital inputs 19 and 20	
 	private DigitalInput buttonA = new DigitalInput(19);
 	private DigitalInput buttonB = new DigitalInput(20);
 	
