@@ -32,7 +32,7 @@ import edu.wpi.first.wpilibj.can.CANJNI;
 public class Util
 {
 	/**
-	 * Open print stream that writes to the log file. Example of use:
+	 * Open a print stream that writes to the log file. Example of use:
 	 * exception.printStackTrace(Util.logPrintStream);
 	 */
 	public static final PrintStream	logPrintStream = new PrintStream(new LoggingOutputStream());
@@ -40,7 +40,7 @@ public class Util
 	/**
 	 * Logging class for use by other classes to log though this custom logging scheme. All
 	 * logging should be done by calls to methods on this class instance or with the 
-	 * convenience methods of the Util class.
+	 * convenience methods elsewhere in the Util class.
 	 */
 	public final static Logger logger = Logger.getGlobal();
 	
@@ -76,7 +76,8 @@ public class Util
 	
 	/**
 	 * Configures and holds (static) classes for our custom logging system. 
-	 * Call setup() method to initialize logging.
+	 * Call setup() method to initialize logging. Logging is then done via
+	 * the logging convenince methods in the Util class.
 	 */
 	public static class CustomLogger 
 	{

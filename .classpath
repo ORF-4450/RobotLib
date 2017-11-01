@@ -13,13 +13,11 @@
 			<attribute name="javadoc_location" value="file:/C:/Users/rcorn/wpilib/java/current/javadoc/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="navx" sourcepath="/NAVX_FRC_LIB/src">
+	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
+	<classpathentry kind="var" path="navx">
 		<attributes>
-			<attribute name="javadoc_location" value="http://www.kauailabs.com/public_files/navx-mxp/apidocs/java/"/>
+			<attribute name="javadoc_location" value="file:/C:/Users/rcorn/navx-mxp/java/docs/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
-	<classpathentry kind="var" path="robotlib" sourcepath="/robotlib.sources"/>
-	<classpathentry kind="var" path="talonsrx"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

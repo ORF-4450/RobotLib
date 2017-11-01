@@ -26,7 +26,7 @@ public class NavX
 	public enum PortType {SPI, I2C, I2C_MXP, USB};
 	
 	/**
-	 * Specifies pin type when accesing NavX pins.
+	 * Specifies pin type when accessing NavX pins.
 	 *
 	 */
 
@@ -115,7 +115,7 @@ public class NavX
 	
 	/**
 	 * Return yaw angle from zero point.
-	 * @return Yaw angle in degrees, - is left of zero, + is right.
+	 * @return Yaw angle in degrees 0->180, - is left of zero, + is right.
 	 */
 	public float getYaw()
 	{
@@ -139,6 +139,7 @@ public class NavX
 	{
 		return ahrs.getRate();
 	}
+	
 
 	/**
 	 * Return current robot heading (0-360) relative to direction robot was
@@ -206,7 +207,7 @@ public class NavX
 	}
 	
 	/**
-	 * Reset Yaw zero reference to current direction the robot
+	 * Reset yaw zero reference to current direction the robot
 	 * is pointing.
 	 */
 	public void resetYaw()
