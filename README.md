@@ -6,7 +6,7 @@ FRC Team 4450 Robot Control program library classes.
 These are the library classes created by the Olympia Robotics Federation (FRC Team 4450).
 This library is delivered via jar file for use in our robot control programs.
 ***************************************************************************************************************
-Version 1.8
+Version 1.8.0
 
 *	Minor adjustments to 1.7.0.
 *	Added Documentation. Javadoc is included in RobotLib.jar.
