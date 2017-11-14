@@ -113,7 +113,7 @@ public class MonitorCompressor extends Thread
    * Return the pressure sensor current voltage.
    * @return Sensor voltage.
    */
-  public double getVoltate()
+  public double getVoltage()
   {
 	  if (pressureSensor != null) return pressureSensor.getVoltage();
     
