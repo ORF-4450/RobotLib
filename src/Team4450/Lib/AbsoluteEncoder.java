@@ -15,6 +15,7 @@ public class AbsoluteEncoder implements PIDSource
 	private AnalogInput		encoder;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private int				zeroAngleOffset = 0;
+	private boolean			pidOffsetMode = false;
 	
 	public AbsoluteEncoder(AnalogInput encoder)
 	{
@@ -59,6 +60,16 @@ public class AbsoluteEncoder implements PIDSource
 	}
 	
 	/**
+	 * Sets which angle value is returned to the pid controller, the angle from getAngle()
+	 * or getOffsetFromZero().
+	 * @param enabled True = use getOffsetFromZero(), false = use getAngle().
+	 */
+	public void setPidOffsetMode(boolean enabled)
+	{
+		pidOffsetMode = enabled;
+	}
+	
+	/**
 	 * Set the offset angle that represents zero. This value is added to
 	 * the angle returned by the encoder.
 	 * @param offset Offset angle 0-360.
@@ -78,7 +89,16 @@ public class AbsoluteEncoder implements PIDSource
 	}
 	
 	/**
-	 * Return the current angle of the encoder with offset applied.
+	 * Return the current unadjusted angle of the encoder.
+	 * @return Current angle 0-360.
+	 */
+	public int getRawAngle()
+	{
+		return (int) (encoder.getVoltage() * 72);
+	}
+	
+	/**
+	 * Return the current angle of the encoder with zero offset applied.
 	 * @return Current angle 0-360.
 	 */
 	public int getAngle()
@@ -88,6 +108,20 @@ public class AbsoluteEncoder implements PIDSource
 		angle = angle - zeroAngleOffset;
 		
 		if (angle < 0) angle += 360;
+		
+		return angle;
+	}
+	
+	/**
+	 * Return the current offset angle left(-) or right(+) of the encoder with reference
+	 * to the zero position (zero offset applied).
+	 * @return Current angle -180 to +180.
+	 */
+	public int getOffsetFromZero()
+	{
+		int	angle = (int) (encoder.getVoltage() * 72);
+		
+		angle = angle - zeroAngleOffset;
 		
 		return angle;
 	}
@@ -109,15 +143,18 @@ public class AbsoluteEncoder implements PIDSource
 	}
 	
 	/**
-	 * Return the current rotational rate of the encoder or current value (angle) to PID controllers.
-	 * Only angle implemented at this time.
-	 * @return Encoder Current angle or rate of change.
+	 * Return the current rotational rate of the encoder or current value (offset or angle) to PID controller.
+	 * Only offset and angle implemented at this time. The use of the offset from zero point or angle from
+	 * zero point controlled by setPidOffsetMode().
+	 * @return Encoder Current offset/angle or rate of change.
 	 */
 	@Override
 	public double pidGet()
 	{
 		if (pidSourceType == PIDSourceType.kRate)
 			return getRate();
+		else if (pidOffsetMode)
+			return getOffsetFromZero();
 		else
 			return getAngle();
 	}
