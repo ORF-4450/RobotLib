@@ -76,7 +76,7 @@ public class AbsoluteEncoder implements PIDSource
 	 */
 	public void setZeroAngleOffset(int offset)
 	{
-		this.zeroAngleOffset = offset;
+		zeroAngleOffset = offset;
 	}
 	
 	/**
@@ -119,9 +119,11 @@ public class AbsoluteEncoder implements PIDSource
 	 */
 	public int getOffsetFromZero()
 	{
-		int	angle = (int) (encoder.getVoltage() * 72);
+		//int	angle = (int) (encoder.getVoltage() * 72);
+		int		angle = getAngle();
 		
-		angle = angle - zeroAngleOffset;
+		//angle = angle - zeroAngleOffset;
+		if (angle > 180) angle -=360;
 		
 		return angle;
 	}

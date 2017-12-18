@@ -325,7 +325,7 @@ public class LaunchPad
     }
      
     /**
-     * Remove the specifed LaunchPadEventListener object from event notification.
+     * Remove the specified LaunchPadEventListener object from event notification.
      * @param listener LaunchPadEventListener object to remove.
      */
     public void removeLaunchPadEventListener(LaunchPadEventListener listener) 
