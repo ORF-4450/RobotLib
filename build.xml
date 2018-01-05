@@ -29,10 +29,10 @@
 		<echo>Compiling to class files on travis.</echo>
 		<mkdir dir="bin"/>
 		<mkdir dir="bin/classes"/>
-
+		<property environment="env"/>
 		<javac srcdir="src/" destdir="bin/classes/" includeantruntime="false" debug="true">
 			<classpath>
-  				<fileset dir="/home/travis/build/ORF-4450/RobotLib">
+  				<fileset dir="${env.TRAVIS_BUILD_DIR}">
 					<include name="**/*.jar"/>
 				</fileset>
     		</classpath>
