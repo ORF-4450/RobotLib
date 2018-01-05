@@ -1,6 +1,7 @@
 
 package Team4450.Lib;
 
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -10,19 +11,25 @@ import edu.wpi.first.wpilibj.Compressor;
  * Compressor monitoring task.
  * Runs as a separate thread from our MyRobot class. Runs until our
  * program is terminated from the RoboRio. Displays compressor on/off
- * LED on DS.
+ * LED on DS. Can also monitor an air pressure sensor and report the
+ * pressure to the DS. Assumes compressor is plugged into the first
+ * PCM, device id 0.
  */
 
 public class MonitorCompressor extends Thread
 {
   private final Compressor			compressor = new Compressor(0);
   private static MonitorCompressor	monitorCompressor;
-
+  private AnalogInput				pressureSensor;
+  private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
+  private boolean					lowPressureAlarm = false, ledState = false;
+  
   // Create single instance of this class and return that single instance to any callers.
   // This is the singleton class model. You don't use new, you use getInstance.
     
   /**
-   * Get a reference to global MonitorCompressor Thread object.
+   * Get a reference to global MonitorCompressor Thread object. Only monitors compressor on/off
+   * and sets DS LED named Compressor accordingly.
    * @return Reference to global MonitorCompressor object.
    */
   
@@ -30,23 +37,140 @@ public class MonitorCompressor extends Thread
   {
 	 Util.consoleLog();
     	
-     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor();
+     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(-1);
         
      return monitorCompressor;
   }
-
-  private MonitorCompressor()
+  
+  /**
+   * Get a reference to global MonitorCompressor Thread object. Monitors compressor on/off
+   * and sets DS LED named Compressor accordingly. Also monitors pressure on analog I/O port.
+   * Pressure is displayed on DS gauge called AirPressure. Can also do an alarm LED called 
+   * LowPressure if you set the low pressure threshold.
+   * @param pressureSensorPort Analog input port number pressure sensor is plugged into.
+   * @return Reference to global MonitorCompressor object.
+   */
+    
+  public static MonitorCompressor getInstance(int pressureSensorPort) 
   {
-	  Util.consoleLog();
+  	 Util.consoleLog();
+      	
+     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(pressureSensorPort);
+          
+     return monitorCompressor;
+  }
+  
+  /**
+   * Get a reference to global MonitorCompressor Thread object. Monitors compressor on/off
+   * and sets DS LED named Compressor accordingly. Also monitors pressure on analog I/O port.
+   * Pressure is displayed on DS gauge called AirPressure. Can also do an alarm LED called 
+   * LowPressure if you set the low pressure threshold.
+   * @param pressureSensor AnalogInput instance for port pressure sensor is plugged into.
+   * @return Reference to global MonitorCompressor object.
+   */
+    
+  public static MonitorCompressor getInstance(AnalogInput pressureSensor) 
+  {
+  	 Util.consoleLog();
+      	
+     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(pressureSensor);
+          
+     return monitorCompressor;
+  }
+
+  private MonitorCompressor(int pressureSensorPort)
+  {
+	  Util.consoleLog("port=%d", pressureSensorPort);
 	  this.setName("MonitorCompressor");
+
+	  SmartDashboard.putBoolean("LowPressure", false);
+	  
+	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
+  }
+
+  private MonitorCompressor(AnalogInput pressureSensor)
+  {
+	  Util.consoleLog("port=%d", pressureSensor.getChannel());
+	  this.setName("MonitorCompressor");
+
+	  SmartDashboard.putBoolean("LowPressure", false);
+	  
+	  this.pressureSensor = pressureSensor;	  
   }
     
+  /**
+   * If monitoring pressure, return the current pressure.
+   * @return Current pressure in PSI.
+   */
+  public int getPressure()
+  {
+	  if (pressureSensor != null) return (int) convertV2PSI(pressureSensor.getVoltage());
+	  
+	  return 0;
+  }
+  
+  /**
+   * Return the pressure sensor current voltage.
+   * @return Sensor voltage.
+   */
+  public double getVoltage()
+  {
+	  if (pressureSensor != null) return pressureSensor.getVoltage();
+    
+	  return 0;
+  }
+  
+  /**
+   * Convert the pressure sensor voltage to PSI.
+   * @param voltage Input voltage from sensor.
+   * @return Pressure in PSI.
+   */
+  public double convertV2PSI(double voltage)
+  {
+	  return voltage * 37.5 + correction;
+  }
+  
+  /**
+   * Set the delay of the sampling loop. Longer delay works when only monitoring compressor on/off.
+   * Shorter delay may be appropriate when monitoring pressure.
+   * @param seconds Delay in second between samples. Minimum .5 second. Defaults to 2 seconds.
+   */
+  public void setDelay(double seconds)
+  {
+	  if (delay < 0.5) delay = 0.5;
+	  
+	  delay = seconds;
+  }
+  
+  /**
+   * Set correction value to be added to the pressure to make it
+   * match the gauge.
+   * @param psi Correction value in PSI.
+   */
+  public void setCorrection(double psi)
+  {
+	  correction = psi;
+  }
+  
+  /**
+   * Enable low pressure alarm LED on DS by setting pressure at which
+   * alarm will trigger. Expects LED to be named LowPressure.
+   * @param psi The low pressure in PSI.
+   */
+  public void SetLowPressureAlarm(double psi)
+  {
+	  if (psi < 0) psi = 0;
+	  
+	  lowPressureThreshold = psi;
+  }
+  
   /**
    * Start monitoring. Called by Thread.start().
    */
   public void run()
   {      
 	boolean	saveState = false, compressorState;
+	double	pressure;
 	
 	try
 	{
@@ -63,7 +187,37 @@ public class MonitorCompressor extends Thread
 				Util.consoleLog("compressor on=%b", saveState);
 			}
 			
-			Timer.delay(2.0);
+			if (pressureSensor != null) 
+			{
+				pressure = convertV2PSI(pressureSensor.getVoltage());
+				
+				SmartDashboard.putNumber("AirPressure", (int) pressure);
+			
+				if (lowPressureThreshold > 0)
+				{
+					if (pressure <= lowPressureThreshold)
+					{
+						if (!lowPressureAlarm) DriverStation.reportError(String.format("low air pressure alarm: %dpsi", (int) pressure), false);
+
+						lowPressureAlarm = true;
+					}
+					else
+					{
+						if (lowPressureAlarm) DriverStation.reportError("low air pressure alarm cleared", false);
+						
+						lowPressureAlarm = false;
+					}
+					
+					if (lowPressureAlarm)
+						ledState = !ledState;
+					else
+						ledState = false;
+
+					SmartDashboard.putBoolean("LowPressure", ledState);
+				}
+			}
+			
+			Timer.delay(delay);
 		}
 	}
 	catch (Throwable e) {Util.logException(e);}

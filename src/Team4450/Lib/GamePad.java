@@ -9,7 +9,7 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
-* This class handles the interface to the GamePad buttons. It monitors
+* This class provides an interface to the GamePad buttons. It monitors
 * the state of the GP buttons and raises events when button state changes.
 */
 
@@ -95,7 +95,7 @@ public class GamePad
 	}
 	
 	/**
-	 * Add additonal GamePadButton button to be monitored.
+	 * Add additional GamePadButton button to be monitored.
 	 * @param button id value identifying button to add.
 	 * @return New button added or existing button.
 	 */
@@ -117,7 +117,7 @@ public class GamePad
 	
 	/**
 	 * Find GamePadButton button by id in the list of registered buttons.
-	 * @param buttonID Enum value identifying button to find.
+	 * @param button Enum value identifying button to find.
 	 * @return Button or null if not found.
 	 */
 	
@@ -365,7 +365,7 @@ public class GamePad
   // Event Handling classes.
 	
   /**
-   *  Event description class returned to event handlers.
+   *  GamePad event description class returned to event handlers.
    */
   public class GamePadEvent extends EventObject 
   {
@@ -381,7 +381,7 @@ public class GamePad
   }
   
   /**
-   *  Interface defintion for event listener. Actual listener implements
+   *  Java Interface definition for GP event listener. Actual listener implements
    *  the actions associated with button up and down events.
    */
   public interface GamePadEventListener extends EventListener 

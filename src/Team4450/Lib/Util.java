@@ -22,16 +22,17 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.UsbCameraInfo;
-import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.can.CANJNI;
+
+/**
+ * Provides a set of utility functions.
+ */
 
 public class Util
 {
 	/**
-	 * Open print stream that writes to the log file. Example of use:
+	 * Open a print stream that writes to the log file. Example of use:
 	 * exception.printStackTrace(Util.logPrintStream);
 	 */
 	public static final PrintStream	logPrintStream = new PrintStream(new LoggingOutputStream());
@@ -39,7 +40,7 @@ public class Util
 	/**
 	 * Logging class for use by other classes to log though this custom logging scheme. All
 	 * logging should be done by calls to methods on this class instance or with the 
-	 * convenience methods of the Util class.
+	 * convenience methods elsewhere in the Util class.
 	 */
 	public final static Logger logger = Logger.getGlobal();
 	
@@ -53,6 +54,7 @@ public class Util
 	/**
 	 * Read properties file from RobRio disk into a Properties object.
 	 * @return A Properties object.
+	 * @throws IOException
 	 */
 	public static Properties readProperties() throws IOException
 	{
@@ -74,7 +76,8 @@ public class Util
 	
 	/**
 	 * Configures and holds (static) classes for our custom logging system. 
-	 * Call setup() method to initialize logging.
+	 * Call setup() method to initialize logging. Logging is then done via
+	 * the logging convenince methods in the Util class.
 	 */
 	public static class CustomLogger 
 	{
@@ -85,6 +88,7 @@ public class Util
         /**
          *  Initializes our logging system.
          *  Call before using any logging methods.
+         *  @throws IOException
          */
         static public void setup() throws IOException 
         {
@@ -96,7 +100,7 @@ public class Util
             // If we decide to redirect system.out to our log handler, then following
             // code will delete the default log handler for the console to prevent
             // a recursive loop. We would only redirect system.out if we only want to
-            // log to the file. If we delete the console hanlder we can skip setting
+            // log to the file. If we delete the console handler we can skip setting
             // the formatter...otherwise we set our formatter on the console logger.
             
             Logger rootLogger = Logger.getLogger("");
@@ -226,6 +230,7 @@ public class Util
 
 	/**
      * Returns program location where call to this method is located.
+     * @return String containing program location of method called from.
      */
     public static String currentMethod()
     {
@@ -289,7 +294,7 @@ public class Util
 	}
 
 	/**
-	 * Write exception message to console window and exception stack trace to
+	 * Write exception message to DS console window and exception stack trace to
 	 * log file.
 	 * @param e The exception to log.
 	 */
@@ -382,21 +387,5 @@ public class Util
 		}
 		
 		return retval;
-	}
-	
-	/**
-	 * Write a list of usb cameras known to the RoboRio to the log.
-	 */
-	public static void listCameras()
-	{
-		UsbCameraInfo	cameraInfo, cameraList[];
-		
-		cameraList = UsbCamera.enumerateUsbCameras();
-		
-		for(int i = 0; i < cameraList.length; ++i) 
-		{
-			cameraInfo = cameraList[i];
-			Util.consoleLog("dev=%d name=%s path=%s", cameraInfo.dev, cameraInfo.name, cameraInfo.path);
-		}
 	}
 }

@@ -8,8 +8,11 @@ import java.util.Set;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-// This class handles the interface to the Joystick buttons. It monitors
-// the state of the JS buttons and raises events when button state changes.
+/** 
+ * This class provides an interface to the Joystick buttons. It monitors
+ * the state of the JS buttons and raises events when button state changes.
+ * Also provides stick axis information with dead zone applied.
+ */
 
 public class JoyStick
 {
@@ -24,7 +27,7 @@ public class JoyStick
 	
 	/**
 	 * Constructor which adds all JoyStick buttons to be monitored.
-	 * @param joyStick JoyStick object representing the GamePad.
+	 * @param joystick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the JoyStick object.
 	 * @param caller calling class instance (use 'this').
 	 */
@@ -79,7 +82,7 @@ public class JoyStick
 	
 	/**
 	 * Constructor which adds single JoyStick button to be monitored.
-	 * @param joyStick JoyStick object representing the GamePad.
+	 * @param joystick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the JoyStick object.
 	 * @param button Enum value identifying button to add.
 	 * @param caller Calling class instance (use 'this').
@@ -95,11 +98,11 @@ public class JoyStick
 		if (button != null) AddButton(button);
 	}
 	
-	// Add additonal button to be monitored.
+	// Add additional button to be monitored.
 	
 	/**
-	 * Add additonal JoystickButton button to be monitored.
-	 * @param button id value identifying button to add.
+	 * Add additional JoystickButton button to be monitored.
+	 * @param button Id value identifying button to add.
 	 * @return New button added or existing button.
 	 */
 	public JoyStickButton AddButton(JoyStickButtonIDs button)
@@ -119,7 +122,7 @@ public class JoyStick
 	
 	/**
 	 * Find JoyStick button by id in the list of registered buttons.
-	 * @param buttonID id value identifying button to find.
+	 * @param button Id value identifying button to find.
 	 * @return Button reference or null if not found.
 	 */
 	public JoyStickButton FindButton(JoyStickButtonIDs button)
@@ -301,7 +304,7 @@ public class JoyStick
 	}
   
     /**
-     *  Interface defintion for event listener. Actual listener implements
+     *  Java Interface definition for event listener. Actual listener implements
      *  the actions associated with button up and down events.
      */
 	public interface JoyStickEventListener extends EventListener 
@@ -322,7 +325,7 @@ public class JoyStick
 	}
    
     /**
-     * Remove the specifed JoyStickEventListener object from event notification.
+     * Remove the specified JoyStickEventListener object from event notification.
      * @param listener JoyStickEventListener object to remove.
      */
 	public void removeJoyStickEventListener(JoyStickEventListener listener) 

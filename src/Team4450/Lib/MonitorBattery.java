@@ -29,11 +29,11 @@ public class MonitorBattery extends Thread
       
   public static MonitorBattery getInstance(DriverStation ds) 
   {
-  	Util.consoleLog();
+	  Util.consoleLog();
     	
-  	if (monitorBattery == null) monitorBattery = new MonitorBattery(ds);
+  	  if (monitorBattery == null) monitorBattery = new MonitorBattery(ds);
         
-    return monitorBattery;
+  	  return monitorBattery;
   }
 
   // Private constructor means callers must use getInstance.
@@ -50,42 +50,42 @@ public class MonitorBattery extends Thread
    */
   public void run()
   {        
-		boolean alarmFlash = false;
+	  boolean alarmFlash = false;
 
-		try
-		{
-			Util.consoleLog();
-
-			// Check battery voltage every 10 seconds. If voltage below threshold
-			// shift to one second interval and flash dashboard led. Voltage can
-			// sag below threshold under load and then come back up so this code 
-			// will turn off the led warning if voltage goes back above threshold.
-
-			while (true)
-			{
-				if (ds.getBatteryVoltage() < LOW_BATTERY)
-				{
-					if (alarmFlash)
-					{
-						alarmFlash = false;
-					}
-					else
-					{
-						alarmFlash = true;
-					}
-
-					SmartDashboard.putBoolean("Low Battery", alarmFlash);
-
-					Timer.delay(1.0);
-				}
-				else
-				{
-					SmartDashboard.putBoolean("Low Battery", false);
-
-					Timer.delay(10.0);
-				}
-			}
-		}
-		catch (Throwable e)	{Util.logException(e);}
-	}
+	  try
+	  {
+		  Util.consoleLog();
+        
+          // Check battery voltage every 10 seconds. If voltage below threshold
+          // shift to one second interval and flash dashboard led. Voltage can
+          // sag below threshold under load and then come back up so this code 
+          // will turn off the led warning if voltage goes back above threshold.
+        
+		  while (true)
+          {
+			  if (ds.getBatteryVoltage() < LOW_BATTERY)
+			  {
+				  if (alarmFlash)
+				  {
+					  alarmFlash = false;
+				  }
+				  else
+				  {
+					  alarmFlash = true;
+				  }
+        
+				  SmartDashboard.putBoolean("Low Battery", alarmFlash);
+        
+				  Timer.delay(1.0);
+			  }
+			  else
+			  {
+				  SmartDashboard.putBoolean("Low Battery", false);
+        
+				  Timer.delay(10.0);
+			  }
+          }
+	  }
+	  catch (Throwable e)	{Util.logException(e);}
+  }
 }

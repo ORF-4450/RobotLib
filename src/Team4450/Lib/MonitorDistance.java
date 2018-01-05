@@ -13,47 +13,135 @@ import edu.wpi.first.wpilibj.SampleRobot;
  * Uses old style ultrasonic sensor.
  */
 
-class MonitorDistance extends Thread
+public class MonitorDistance extends Thread
 {
-    SampleRobot 	robot;
-    private static 	MonitorDistance	monitorDistance;
+    SampleRobot 		robot;
+    private int			port;
+    private Ultrasonic	ultra;
+    private double		delay = 1.0;	// seconds.
+    private static 		MonitorDistance	monitorDistance;
+
+	private double	rangeInches;
+	private double	rangeFeet;
 
     // Create single instance of this class and return that single instance to any callers.
     // This is the singleton class model. You don't use new, you use getInstance.
+    
+    /**
+     * Get a reference to global MonitorDistance Thread object.
+     * @param robot SampleRobot instance calling this function (use 'this').
+  	 * Defaults to DIO port 0 for first wire. Port + 1 will be allocated
+   	 * for the second wire.
+     * @return Reference to global MonitorDistance object.
+     */
+      
+    public static MonitorDistance getInstance(SampleRobot robot) 
+    {
+    	 Util.consoleLog();
+        	
+         if (monitorDistance == null) monitorDistance = new MonitorDistance(robot, 0);
+            
+         return monitorDistance;
+    }
       
     /**
      * Get a reference to global MonitorDistance Thread object.
      * @param robot SampleRobot instance calling this function (use 'this').
+	 * @param port DIO port for first wire. Port + 1 will be allocated
+	 * for the second wire.
      * @return Reference to global MonitorDistance object.
      */
     
-    public static MonitorDistance getInstance(SampleRobot robot) 
+    public static MonitorDistance getInstance(SampleRobot robot, int port) 
     {
-  	 Util.consoleLog();
+    	Util.consoleLog();
       	
-       if (monitorDistance == null) monitorDistance = new MonitorDistance(robot);
+    	if (monitorDistance == null) monitorDistance = new MonitorDistance(robot, port);
           
-       return monitorDistance;
+    	return monitorDistance;
     }
     
-	private MonitorDistance(SampleRobot robot)
+    /**
+     * Get a reference to global MonitorDistance Thread object.
+     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param ultraSonic Ultrasonic sensor instance.
+     * @return Reference to global MonitorDistance object.
+     */
+  
+    public static MonitorDistance getInstance(SampleRobot robot, Ultrasonic ultraSonic) 
+    {
+    	Util.consoleLog();
+    	
+    	if (monitorDistance == null) monitorDistance = new MonitorDistance(robot, ultraSonic);
+        
+    	return monitorDistance;
+    }
+    
+	private MonitorDistance(SampleRobot robot, int port)
+	{
+		Util.consoleLog("ports=%d,%d", port, port + 1);
+		
+        this.robot = robot;
+        this.port = port;
+        this.setName("MonitorDistance");
+
+        ultra = new Ultrasonic(port, port + 1);
+    }
+    
+	private MonitorDistance(SampleRobot robot, Ultrasonic ultraSonic)
 	{
 		Util.consoleLog();
+		
         this.robot = robot;
         this.setName("MonitorDistance");
+
+        ultra = ultraSonic;
     }
     
+    /**
+     * Set the delay between samples of the sensor.
+     * @param delay Delay in seconds.
+     */
+    
+    public void setDelay(double delay)
+    {
+    	this.delay = delay;
+    }
+    
+    /**
+     * Returns the current sample delay.
+     * @return Delay in seconds.
+     */
+    
+    public double getDelay()
+    {
+    	return delay;
+    }
+    
+    /**
+     * Return last measured range to surface.
+     * @return Range in feet.
+     */
+    
+    public double getRangeFeet()
+    {
+    	return rangeFeet;
+    }
+    
+    /**
+     * Return last measured range to surface.
+     * @return Range in inches.
+     */
+
+    public double getRangeInches()
+    {
+    	return rangeInches;
+    }
+
     public void run()
     {
-        Ultrasonic ultra = new Ultrasonic(5,7);
-
-		double rangeInches;
-		double rangeFeet;
-
 		try
 		{
-			Util.consoleLog();
-
 			ultra.setAutomaticMode(true);
 
 			while (true)
@@ -62,21 +150,11 @@ class MonitorDistance extends Thread
 				{
 					rangeInches = ultra.getRangeInches();
 					rangeFeet = rangeInches / 12;
-                    
-					//Util.consoleLog("range=" + Util.format(rangeFeet));
 
-					if (rangeFeet > 55) rangeFeet = 0.0;
-					
-					//SmartDashboard.putString("Range", String.format("%f", rangeFeet));
-					LCD.printLine(3, "range=%f", rangeFeet);
-				}
-				else
-				{
-					//SmartDashboard.putString("Range", "0.0");
-					LCD.printLine(3, "range=%f", 0.0);
+					if (rangeFeet > 55) rangeFeet = rangeInches = 0.0;
 				}
 
-				Timer.delay(1.0);
+				Timer.delay(delay);
 			}
 		}
 		catch (Throwable e) {Util.logException(e);}
