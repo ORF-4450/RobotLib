@@ -6,7 +6,8 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
  * Wrapper class for NavX MXP navigation sensor board.
@@ -274,39 +275,40 @@ public class NavX
 	 */
 	public void dumpValuesToNetworkTables()
 	{
-		NetworkTable table = NetworkTable.getTable("NavX");
+		NetworkTableInstance instance = NetworkTableInstance.getDefault();
+		NetworkTable table = instance.getTable("NavX");
 		
-        table.putBoolean(  "IMU_Connected",        ahrs.isConnected());
-        if (!ahrs.isConnected()) return;
+		table.getEntry(    "IMU_Connected")       .setBoolean(ahrs.isConnected());
+		if (!ahrs.isConnected()) return;
 
         /* Sensor Board Information                                                 */
-        table.putString(   "IMU_FirmwareVersion",  ahrs.getFirmwareVersion());
+        table.getEntry(    "IMU_FirmwareVersion") .setString( ahrs.getFirmwareVersion());
         
-        table.putBoolean(  "IMU_IsCalibrating",    ahrs.isCalibrating());
-        table.putNumber(   "IMU_Yaw",              ahrs.getYaw());
-        table.putNumber(   "IMU_Pitch",            ahrs.getPitch());
-        table.putNumber(   "IMU_Roll",             ahrs.getRoll());
+        table.getEntry(    "IMU_IsCalibrating")   .setBoolean(ahrs.isCalibrating());
+        table.getEntry(    "IMU_Yaw")             .setNumber( ahrs.getYaw());
+        table.getEntry(    "IMU_Pitch")           .setNumber( ahrs.getPitch());
+        table.getEntry(    "IMU_Roll")            .setNumber( ahrs.getRoll());
                 
         /* Display tilt-corrected, Magnetometer-based heading (requires             */
         /* magnetometer calibration to be useful)                                   */
                 
-        table.putNumber(   "IMU_CompassHeading",   ahrs.getCompassHeading());
+        table.getEntry(    "IMU_CompassHeading")  .setNumber( ahrs.getCompassHeading());
              
         /* Display 9-axis Heading (requires magnetometer calibration to be useful)  */
-        table.putNumber(   "IMU_FusedHeading",     ahrs.getFusedHeading());
-
+        table.getEntry(    "IMU_FusedHeading")    .setNumber( ahrs.getFusedHeading());
+ 
         /* These functions are compatible w/the WPI Gyro Class, providing a simple  */
         /* path for upgrading from the Kit-of-Parts gyro to the navx MXP            */
         
-        table.putNumber(   "IMU_TotalYaw",         ahrs.getAngle());
-        table.putNumber(   "IMU_YawRateDPS",       ahrs.getRate());
+        table.getEntry(    "IMU_TotalYaw")        .setNumber( ahrs.getAngle());
+        table.getEntry(    "IMU_YawRateDPS")      .setNumber( ahrs.getRate());
 
         /* Display Processed Acceleration Data (Linear Acceleration, Motion Detect) */
         
-        table.putNumber(   "IMU_Accel_X",          ahrs.getWorldLinearAccelX());
-        table.putNumber(   "IMU_Accel_Y",          ahrs.getWorldLinearAccelY());
-        table.putBoolean(  "IMU_IsMoving",         ahrs.isMoving());
-        table.putBoolean(  "IMU_IsRotating",       ahrs.isRotating());
+        table.getEntry(    "IMU_Accel_X")         .setNumber( ahrs.getWorldLinearAccelX());
+        table.getEntry(    "IMU_Accel_Y")         .setNumber( ahrs.getWorldLinearAccelY());
+        table.getEntry(    "IMU_IsMoving")        .setBoolean(ahrs.isMoving());
+        table.getEntry(    "IMU_IsRotating")      .setBoolean(ahrs.isRotating());
 
         /* Display estimates of velocity/displacement.  Note that these values are  */
         /* not expected to be accurate enough for estimating robot position on a    */
@@ -314,46 +316,46 @@ public class NavX
         /* of these errors due to single (velocity) integration and especially      */
         /* double (displacement) integration.                                       */
         
-        table.putNumber(   "IMU_Velocity_X",           ahrs.getVelocityX());
-        table.putNumber(   "IMU_Velocity_Y",           ahrs.getVelocityY());
-        table.putNumber(   "IMU_Displacement_X",       ahrs.getDisplacementX());
-        table.putNumber(   "IMU_Displacement_Y",       ahrs.getDisplacementY());
+        table.getEntry(    "IMU_Velocity_X")      .setNumber( ahrs.getVelocityX());
+        table.getEntry(    "IMU_Velocity_Y")      .setNumber( ahrs.getVelocityY());
+        table.getEntry(    "IMU_Displacement_X")  .setNumber( ahrs.getDisplacementX());
+        table.getEntry(    "IMU_Displacement_Y")  .setNumber( ahrs.getDisplacementY());
         
         /* Display Raw Gyro/Accelerometer/Magnetometer Values                       */
         /* NOTE:  These values are not normally necessary, but are made available   */
         /* for advanced users.  Before using this data, please consider whether     */
         /* the processed data (see above) will suit your needs.                     */
         
-        table.putNumber(   "IMU_RawGyro_X",        ahrs.getRawGyroX());
-        table.putNumber(   "IMU_RawGyro_Y",        ahrs.getRawGyroY());
-        table.putNumber(   "IMU_RawGyro_Z",        ahrs.getRawGyroZ());
-        table.putNumber(   "IMU_RawAccel_X",       ahrs.getRawAccelX());
-        table.putNumber(   "IMU_RawAccel_Y",       ahrs.getRawAccelY());
-        table.putNumber(   "IMU_RawAccel_Z",       ahrs.getRawAccelZ());
-        table.putNumber(   "IMU_RawMag_X",         ahrs.getRawMagX());
-        table.putNumber(   "IMU_RawMag_Y",         ahrs.getRawMagY());
-        table.putNumber(   "IMU_RawMag_Z",         ahrs.getRawMagZ());
-        table.putNumber(   "IMU_Temp_C",           ahrs.getTempC());
-        table.putNumber(   "IMU_Timestamp",        ahrs.getLastSensorTimestamp());
+        table.getEntry(    "IMU_RawGyro_X")       .setNumber( ahrs.getRawGyroX());
+        table.getEntry(    "IMU_RawGyro_Y")       .setNumber( ahrs.getRawGyroY());
+        table.getEntry(    "IMU_RawGyro_Z")       .setNumber( ahrs.getRawGyroZ());
+        table.getEntry(    "IMU_RawAccel_X")      .setNumber( ahrs.getRawAccelX());
+        table.getEntry(    "IMU_RawAccel_Y")      .setNumber( ahrs.getRawAccelY());
+        table.getEntry(    "IMU_RawAccel_Z")      .setNumber( ahrs.getRawAccelZ());
+        table.getEntry(    "IMU_RawMag_X")        .setNumber( ahrs.getRawMagX());
+        table.getEntry(    "IMU_RawMag_Y")        .setNumber( ahrs.getRawMagY());
+        table.getEntry(    "IMU_RawMag_Z")        .setNumber( ahrs.getRawMagZ());
+        table.getEntry(    "IMU_Temp_C")          .setNumber( ahrs.getTempC());
+        table.getEntry(    "IMU_Timestamp")       .setNumber( ahrs.getLastSensorTimestamp());
         
         /* Omnimount Yaw Axis Information                                           */
         /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
         AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
-        table.putString(   "IMU_YawAxisDirection", yaw_axis.up ? "Up" : "Down" );
-        table.putNumber(   "IMU_YawAxis",          yaw_axis.board_axis.getValue() );
+        table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
+        table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
         
         /* Quaternion Data                                                          */
         /* Quaternions are fascinating, and are the most compact representation of  */
         /* orientation data.  All of the Yaw, Pitch and Roll Values can be derived  */
         /* from the Quaternions.  If interested in motion processing, knowledge of  */
         /* Quaternions is highly recommended.                                       */
-        table.putNumber(   "IMU_QuaternionW",      ahrs.getQuaternionW());
-        table.putNumber(   "IMU_QuaternionX",      ahrs.getQuaternionX());
-        table.putNumber(   "IMU_QuaternionY",      ahrs.getQuaternionY());
-        table.putNumber(   "IMU_QuaternionZ",      ahrs.getQuaternionZ());
-        
+        table.getEntry(    "IMU_QuaternionW")     .setNumber( ahrs.getQuaternionW());
+        table.getEntry(    "IMU_QuaternionX")     .setNumber( ahrs.getQuaternionX());
+        table.getEntry(    "IMU_QuaternionY")     .setNumber( ahrs.getQuaternionY());
+        table.getEntry(    "IMU_QuaternionZ")     .setNumber( ahrs.getQuaternionZ());
+         
         /* Connectivity Debugging Support                                           */
-        table.putNumber(   "IMU_Byte_Count",       ahrs.getByteCount());
-        table.putNumber(   "IMU_Update_Count",     ahrs.getUpdateCount());
+        table.getEntry(    "IMU_Byte_Count")      .setNumber( ahrs.getByteCount());
+        table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
 	}
 }

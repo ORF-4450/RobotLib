@@ -2,7 +2,7 @@
 package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -14,7 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MonitorBattery extends Thread
 {
-  private final DriverStation	ds;
+  private final RobotController	rc;
   private final double		  	LOW_BATTERY = 11.7;
   private static MonitorBattery	monitorBattery;
 
@@ -23,25 +23,25 @@ public class MonitorBattery extends Thread
     
   /**
    * Get a reference to global MonitorBattery Thread object.
-   * @param ds Driver Station instance.
+   * @param rc Robot Controller instance.
    * @return Reference to global MonitorBattery object.
    */
       
-  public static MonitorBattery getInstance(DriverStation ds) 
+  public static MonitorBattery getInstance(RobotController rc) 
   {
 	  Util.consoleLog();
     	
-  	  if (monitorBattery == null) monitorBattery = new MonitorBattery(ds);
+  	  if (monitorBattery == null) monitorBattery = new MonitorBattery(rc);
         
   	  return monitorBattery;
   }
 
   // Private constructor means callers must use getInstance.
 
-  private MonitorBattery(DriverStation ds)
+  private MonitorBattery(RobotController rc)
   {
 	  Util.consoleLog();
-	  this.ds = ds;
+	  this.rc = rc;
 	  this.setName("MonitorBattery");
   }
     
@@ -63,7 +63,7 @@ public class MonitorBattery extends Thread
         
 		  while (true)
           {
-			  if (ds.getBatteryVoltage() < LOW_BATTERY)
+			  if (rc.getBatteryVoltage() < LOW_BATTERY)
 			  {
 				  if (alarmFlash)
 				  {

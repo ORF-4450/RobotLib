@@ -264,7 +264,7 @@ public class LaunchPad
 	public boolean GetCurrentState(LaunchPadControlIDs requestedControl)
 	{
         for (LaunchPadControl control: controls) 
-        	if (control.equals(requestedControl)) return control.currentState;
+        	if (control.id.equals(requestedControl)) return control.currentState;
         
         return false;
 	}

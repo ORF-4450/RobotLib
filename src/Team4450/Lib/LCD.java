@@ -122,7 +122,7 @@ public class LCD
 
 		if (column > 1)
 		{
-			StringBuffer oldMessage = new StringBuffer(SmartDashboard.getString(lcdLine));
+			StringBuffer oldMessage = new StringBuffer(SmartDashboard.getString(lcdLine,""));
 			String newMessage = String.format(message, parms);
 			oldMessage.replace(column, newMessage.length() + column, newMessage);
 			SmartDashboard.putString(lcdLine, oldMessage.toString());

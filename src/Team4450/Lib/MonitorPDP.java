@@ -2,8 +2,8 @@
 package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -14,7 +14,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MonitorPDP extends Thread
 {
-  private final DriverStation		ds;
   private final double		  		LOW_BATTERY = 11, MAX_CURRENT = 180;
   private static MonitorPDP			monitorPDP;
   private PowerDistributionPanel	pdp;
@@ -27,49 +26,45 @@ public class MonitorPDP extends Thread
     
   /**
    * Get a reference to global MonitorPDP Thread object.
-   * @param ds Driver Station instance.
    * @return Reference to global MonitorPDP object.
    */
       
-  public static MonitorPDP getInstance(DriverStation ds) 
+  public static MonitorPDP getInstance() 
   {
 	  Util.consoleLog();
     	
-  	  if (monitorPDP == null) monitorPDP = new MonitorPDP(ds);
+  	  if (monitorPDP == null) monitorPDP = new MonitorPDP();
         
   	  return monitorPDP;
   }
   
   /**
    * Get a reference to global MonitorPDP Thread object.
-   * @param ds Driver Station instance.
    * @param pdp PowerDistributionPanel instance.
    * @return Reference to global MonitorPDP object.
    */
         
-  public static MonitorPDP getInstance(DriverStation ds, PowerDistributionPanel pdp) 
+  public static MonitorPDP getInstance(PowerDistributionPanel pdp) 
   {
   	  Util.consoleLog();
       	
-   	  if (monitorPDP == null) monitorPDP = new MonitorPDP(ds, pdp);
+   	  if (monitorPDP == null) monitorPDP = new MonitorPDP(pdp);
           
    	  return monitorPDP;
   }
 
   // Private constructors means callers must use getInstance.
   
-  private MonitorPDP(DriverStation ds)
+  private MonitorPDP()
   {
 	  Util.consoleLog();
-	  this.ds = ds;
 	  pdp = new PowerDistributionPanel();
 	  this.setName("MonitorPDP");
   }
 
-  private MonitorPDP(DriverStation ds, PowerDistributionPanel pdp)
+  private MonitorPDP(PowerDistributionPanel pdp)
   {
 	  Util.consoleLog();
-	  this.ds = ds;
 	  this.pdp = pdp;
 	  this.setName("MonitorPDP");
   }
@@ -184,7 +179,7 @@ public class MonitorPDP extends Thread
 			  
 			  // Check driver station brownout flag.
 			  
-			  if (ds.isBrownedOut())
+			  if (RobotController.isBrownedOut())
 			  {
 				  Util.consoleLog("brownout warning: %.1fv", pdp.getVoltage());
 			  
