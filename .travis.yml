@@ -10,8 +10,10 @@ before_script:
   -O wpilib.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/wpilibj-jni/2018.1.1/wpilibj-jni-2018.1.1-all.jar
   -O wpilib-jni.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilib/networktables/java/NetworkTables/3.1.7/NetworkTables-3.1.7-desktop.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/ntcore/ntcore-java/4.0.0/ntcore-java-4.0.0.jar
   -O networktables.jar
+- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/ntcore/ntcore-jni/4.0.0/ntcore-jni-4.0.0-all.jar
+  -O networktable-jni.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-java/3.1.0/opencv-java-3.1.0.jar
   -O opencv.jar
 - wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-jni/3.1.0/opencv-jni-3.1.0-linux-arm.jar
