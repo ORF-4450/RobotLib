@@ -4,7 +4,8 @@ import edu.wpi.first.wpilibj.PIDOutput;
 
 public class PIDOutputShim implements PIDOutput
 {
-	PIDOutput	pidOutput;
+	public PIDOutput	pidOutput;
+	private boolean		disableOutput;
 	
 	public PIDOutputShim(PIDOutput pidOutput)
 	{
@@ -15,6 +16,15 @@ public class PIDOutputShim implements PIDOutput
 	public void pidWrite(double output)
 	{
 		Util.consoleLog("%f", output);
-		pidOutput.pidWrite(output);
+		
+		if (disableOutput)
+			pidOutput.pidWrite(0);
+		else
+			pidOutput.pidWrite(output);
+	}
+	
+	public void disableOutput(boolean disabled)
+	{
+		disableOutput = disabled;
 	}
 }
