@@ -60,7 +60,7 @@ public class AbsoluteEncoder implements PIDSource
 	}
 	
 	/**
-	 * Sets which angle value is returned to the pid controller, the angle from getAngle()
+	 * Sets which angle value is returned to the PID controller, the angle from getAngle()
 	 * or getOffsetFromZero().
 	 * @param enabled True = use getOffsetFromZero(), false = use getAngle().
 	 */
@@ -71,7 +71,8 @@ public class AbsoluteEncoder implements PIDSource
 	
 	/**
 	 * Set the offset angle that represents zero. This value is added to
-	 * the angle returned by the encoder.
+	 * the angle returned by the encoder so that the encoder reads zero
+	 * when the wheel is pointed straight ahead.
 	 * @param offset Offset angle 0-360.
 	 */
 	public void setZeroAngleOffset(int offset)
@@ -99,11 +100,11 @@ public class AbsoluteEncoder implements PIDSource
 	
 	/**
 	 * Return the current angle of the encoder with zero offset applied.
-	 * @return Current angle 0-360.
+	 * @return Current adjusted angle 0-360.
 	 */
 	public int getAngle()
 	{
-		int	angle = (int) (encoder.getVoltage() * 72);
+		int	angle = getRawAngle();
 		
 		angle = angle - zeroAngleOffset;
 		
@@ -119,10 +120,8 @@ public class AbsoluteEncoder implements PIDSource
 	 */
 	public int getOffsetFromZero()
 	{
-		//int	angle = (int) (encoder.getVoltage() * 72);
-		int		angle = getAngle();
+		int	angle = getAngle();
 		
-		//angle = angle - zeroAngleOffset;
 		if (angle > 180) angle -=360;
 		
 		return angle;
@@ -145,10 +144,10 @@ public class AbsoluteEncoder implements PIDSource
 	}
 	
 	/**
-	 * Return the current rotational rate of the encoder or current value (offset or angle) to PID controller.
+	 * Return the current rotational rate of the encoder or current value (offset or angle) to a PID controller.
 	 * Only offset and angle implemented at this time. The use of the offset from zero point or angle from
 	 * zero point controlled by setPidOffsetMode().
-	 * @return Encoder Current offset/angle or rate of change.
+	 * @return Encoder Current offset/angle or rate of change (not implemented).
 	 */
 	@Override
 	public double pidGet()
