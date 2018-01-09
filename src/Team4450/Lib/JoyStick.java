@@ -226,19 +226,20 @@ public class JoyStick
     	    		
     	            for (JoyStickButton button: buttons) 
     	            {
-          	    		if (joyStick.getRawButton(button.id.value))
+          	    		if (joyStick.getRawButtonPressed(button.id.value))
           				{
           					previousState = button.currentState;
           					button.currentState = true;
           						
-          					if (!previousState)
+          					if (!previousState) //TODO Double check this
           					{
           						button.latchedState = !button.latchedState;
           						
           						notifyButtonDown(button);
           					}
           				}
-          				else
+          	    		
+          				if (joyStick.getRawButtonReleased(button.id.value))
           				{
           					previousState = button.currentState;
           					button.currentState = false;
