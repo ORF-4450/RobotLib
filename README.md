@@ -11,9 +11,17 @@ c:\users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
 ***************************************************************************************************************
+Version 1.11
+
+*	Fix problem with log file numbering. Quit working with 2018 update. Had to fix the Java library call as it 
+	changed	with the update.
+	
+R Corn
+March 7, 2018
+
 Version 1.10
 
-* Inital release for the 2018 season.
+* 	Initial release for the 2018 season.
 
 S Flo & R Corn
 January 17, 2018

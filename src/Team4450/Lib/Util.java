@@ -123,7 +123,7 @@ public class Util
             //if (true) throw new IOException("Test Exception");
             
             if (new File("/home/lvuser/Logging.txt.99").exists() != true)
-            	fileTxt = new FileHandler("/home/lvuser/Logging.txt");
+            	fileTxt = new FileHandler("/home/lvuser/Logging.txt", 0, 99);
             else
             	throw new IOException("Max number of log files reached.");
             
