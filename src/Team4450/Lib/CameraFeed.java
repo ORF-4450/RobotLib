@@ -143,8 +143,6 @@ public class CameraFeed extends Thread
 		
 		try
 		{
-			Util.consoleLog();
-
 			while (!isInterrupted())
 			{
 				if (!changingCamera) UpdateCameraImage();
@@ -165,7 +163,10 @@ public class CameraFeed extends Thread
 		
 	    synchronized (this) 
 	    {
-	    	return image.clone();
+	    	if (image == null)
+	    		return null;
+	    	else
+	    		return image.clone();
 	    }
 	}
 	
@@ -181,7 +182,8 @@ public class CameraFeed extends Thread
 		{
     		Util.consoleLog();
 
-    		Thread.currentThread().interrupt();
+    		//Thread.currentThread().interrupt();
+    		cameraFeed.interrupt();
     		
     		for(int i = 0; i < cameras.size(); ++i) 
     		{
@@ -220,7 +222,7 @@ public class CameraFeed extends Thread
 			
 			if (currentCameraIndex == cameras.size()) currentCameraIndex = 0;
 			
-			currentCamera =  cameras.get(currentCameraIndex);
+			currentCamera = cameras.get(currentCameraIndex);
 		}
 		
 		Util.consoleLog("current=(%d) %s", currentCameraIndex, currentCamera.getName());
@@ -239,15 +241,21 @@ public class CameraFeed extends Thread
     
 	private void UpdateCameraImage()
     {
-		if (currentCamera != null)
-		{	
-		    synchronized (this) 
-		    {
-		    	imageSource.grabFrame(image);
-		    }
-		    
-		    imageOutputStream.putFrame(image);
+		long	result;
+		
+		try
+		{
+			if (currentCamera != null)
+			{	
+			    synchronized (this) 
+			    {
+			    	result = imageSource.grabFrame(image);
+			    }
+			    
+			    if (result != 0) imageOutputStream.putFrame(image);
+			}
 		}
+		catch (Throwable e)	{Util.logException(e);}
     }
 	
 	/**
@@ -257,12 +265,16 @@ public class CameraFeed extends Thread
 	{
 		UsbCameraInfo	cameraInfo, cameraList[];
 		
-		cameraList = UsbCamera.enumerateUsbCameras();
-		
-		for(int i = 0; i < cameraList.length; ++i) 
+		try
 		{
-			cameraInfo = cameraList[i];
-			Util.consoleLog("dev=%d name=%s path=%s", cameraInfo.dev, cameraInfo.name, cameraInfo.path);
+			cameraList = UsbCamera.enumerateUsbCameras();
+			
+			for(int i = 0; i < cameraList.length; ++i) 
+			{
+				cameraInfo = cameraList[i];
+				Util.consoleLog("dev=%d name=%s path=%s", cameraInfo.dev, cameraInfo.name, cameraInfo.path);
+			}
 		}
+		catch (Throwable e)	{Util.logException(e);}
 	}
 }

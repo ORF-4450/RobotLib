@@ -292,7 +292,18 @@ public class Util
 		// logs to the console as well as our log file on RR disk.
 		logger.log(Level.INFO, String.format("robot: %s", currentMethod(2)));
 	}
-
+    
+	/**
+	 * Handler for uncaught exceptions. Records thread name and exception to log file.
+	 * @param t Thread where exception was thrown.
+	 * @param e Exception that was  thrown.
+	 */
+	public static void uncaughtException(Thread t, Throwable e) 
+	{
+        consoleLog("Uncaught exception from thread " + t);
+        logException(e);
+    }
+    
 	/**
 	 * Write exception message to DS console window and exception stack trace to
 	 * log file.
