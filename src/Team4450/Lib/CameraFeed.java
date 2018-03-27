@@ -141,6 +141,8 @@ public class CameraFeed extends Thread
 		
 		if (!initialized) return;
 		
+		if (cameras.isEmpty()) return;
+		
 		try
 		{
 			while (!isInterrupted())
