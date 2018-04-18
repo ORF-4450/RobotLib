@@ -127,7 +127,7 @@ public class MonitorCompressor extends Thread
    */
   public double convertV2PSI(double voltage)
   {
-	  return voltage * 37.5 + correction;
+	  return voltage * 42.9 + correction;
   }
   
   /**

@@ -328,7 +328,7 @@ public class GamePad
     	            	}
     	            }
     	            
-    	            sleep(50);
+    	            sleep(30);
     	    	}
 	    	}
 	    	catch (InterruptedException e) {}
