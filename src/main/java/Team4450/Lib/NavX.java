@@ -116,7 +116,7 @@ public class NavX
 	
 	/**
 	 * Return yaw angle from zero point.
-	 * @return Yaw angle in degrees 0->180, - is left of zero, + is right.
+	 * @return Yaw angle in degrees 0 to 180, - is left of zero, + is right.
 	 */
 	public float getYaw()
 	{
@@ -223,7 +223,7 @@ public class NavX
 	 * @param type PinType of pin to get channel for.
 	 * @param io_pin_number Pin number to get channel for.
 	 * @return RoboRio channel number.
-	 * @throws IllegalArgumentException.
+	 * @throws IllegalArgumentException
 	 */
 	public int getChannelFromPin( PinType type, int io_pin_number ) throws IllegalArgumentException 
 	{

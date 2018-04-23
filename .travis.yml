@@ -1,44 +1,12 @@
 language: java
 jdk:
 - oraclejdk8
-addons:
-  apt:
-    packages:
-    - unzip
-before_script:
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/wpilibj-java/2018.1.1/wpilibj-java-2018.1.1.jar
-  -O wpilib.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/wpilibj/wpilibj-jni/2018.1.1/wpilibj-jni-2018.1.1-all.jar
-  -O wpilib-jni.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/ntcore/ntcore-java/4.0.0/ntcore-java-4.0.0.jar
-  -O networktables.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/first/ntcore/ntcore-jni/4.0.0/ntcore-jni-4.0.0-all.jar
-  -O networktable-jni.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-java/3.1.0/opencv-java-3.1.0.jar
-  -O opencv.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-jni/3.1.0/opencv-jni-3.1.0-linux-arm.jar
-  -O opencv-jni.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-headers/3.1.0/opencv-headers-3.1.0.jar
-  -O opencv-headers.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/org/opencv/opencv-natives/3.1.0/opencv-natives-3.1.0-linux-arm.jar
-  -O opencv-natives.jar
-- wget http://first.wpi.edu/FRC/roborio/maven/release/edu/wpi/cscore/java/cscore/1.0.2/cscore-1.0.2-arm.jar
-  -O cscore.jar
-- wget http://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip -O navx-mxp.zip
-- unzip navx-mxp.zip -d navx-mxp
-before_deploy:
-- rm wpilib.jar
-- rm networktables.jar
-- rm opencv.jar
-- rm cscore.jar
-- rm navx-mxp.zip
 deploy:
   provider: releases
   api_key:
     secure: t19lJK7dUKmHlAvZefqi+9Y9l7PCyqYw/FLzka2WMJFHdzrHljxB05lqSj/8h6/SCSqOsnQIj2QcZuyWOE+12baCZRWS3HEHXbNmce1xBQQwElmROw6k7gNgcNMo6uMofjQQg17SBRnvgne0cco5NbVuJfNNwTvu1BTCiqeyg1V0uuWcyvDNO9gnSmC/FOA3RQ2rtx0FpnM6MqSrEsGVRG5APpVlfF35TKZsXHGBB6glVeib5leLaT4FcgGTEHHDe+sYGDzi3HgkQ0Q4naWaVfcGk5UZ4L7liYvSVynK8VeTy+wk9a3qO1Vtgkyrs8pTrWiKVCYo3igzOG6CDjDCojwPb4hKwwmH3veglxstmh0fFkG9LzkGztRYR1GVrf8AH6YDxh93vEF7NfYzkwybDi3NGlhq5jLkcfm2LrMcvmPYBEpnzQMKHjOGn9E5M4xZdEVcYYpq7yJHABP9MzN1HQ4HUT4577CU6KrUnzVime7kBbUrA9k9QWCih0K8UcUYTxcCyW2biwDkWLDKIjW3fZjlY3eac5t8d1HVzBK8OQ8AY//o2YVKDnb9Cc+WP56leKS4sLtlr0fAjhO9DwPHe37v+mhZ8Ra/5fM7Bt9yfLmzeLWe7wzv1omdO8ZxNMHlgRD4mtWFBrWxvz70Mrw1xNx0KW4qTKcUHg6ybNo9q3E=
   file: 
-  - "$TRAVIS_BUILD_DIR/dist/RobotLib.jar"
-  - "$TRAVIS_BUILD_DIR/dist/RobotLib-sources.jar"
+  - "$TRAVIS_BUILD_DIR/build/libs/RobotLib.jar"
   skip_cleanup: true
   on:
     tags: on

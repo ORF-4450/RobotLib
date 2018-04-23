@@ -1,0 +1,41 @@
+plugins {
+    id "java"
+    id "eclipse"
+    id "idea"
+    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
+}
+
+def TEAM = 4450 //Unused
+def ROBOT_CLASS = "Team4450.RobotLib.LibraryVersion" //Unused
+
+// Define my targets (RoboRIO) and artifacts (deployable files)
+// This is added by GradleRIO's backing project EmbeddedTools.
+deploy {
+    targets {
+        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
+            team = TEAM
+        }
+    }
+    artifacts {
+        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
+            targets << "roborio"
+        }
+    }
+}
+
+// Defining my dependencies. In this case, WPILib (+ friends), CTRE Phoenix (Talon SRX)
+// and NavX.
+dependencies {
+    compile wpilib()
+    compile ctre()
+    compile navx()
+}
+
+// Sets up jar file with all source files inside it.
+jar {
+    from sourceSets.main.allSource
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.4'
+}

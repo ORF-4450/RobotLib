@@ -10,3 +10,9 @@ dist/
 
 # Backups
 *.zip
+
+# Gradle cache
+.gradle/
+
+# Eclipse folder
+.settings/
