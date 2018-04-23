@@ -22,8 +22,7 @@ public class JoyStick
 	private					Set<JoyStickButton> buttons = new HashSet<JoyStickButton>();
 	private Thread			monitorJoyStickThread;
 	private String			joyStickName = "";
-	
-	public  double			deadZone = 0.1;
+	private double			deadZone = 0.1, deadZoneX = 0, deadZoneY = 0, invertX = 1.0, invertY = 1.0;
 	
 	/**
 	 * Constructor which adds all JoyStick buttons to be monitored.
@@ -98,8 +97,6 @@ public class JoyStick
 		if (button != null) AddButton(button);
 	}
 	
-	// Add additional button to be monitored.
-	
 	/**
 	 * Add additional JoystickButton button to be monitored.
 	 * @param button Id value identifying button to add.
@@ -167,6 +164,66 @@ public class JoyStick
 		
 		if (monitorJoyStickThread != null) monitorJoyStickThread.interrupt();
 	}
+	
+	/**
+	 * Set global axis dead zone. Applied if no axis specific dead zone is set.
+	 * @param dz Dead zone value, 0.0 -> 1.0.
+	 * @throws Exception
+	 */
+	public void deadZone(double dz) throws Exception
+	{
+		if (dz < 0.0 || dz > 1.0) throw new IllegalArgumentException("Dead Zone out of range.");
+		
+		deadZone = dz;
+	}
+	
+	/**
+	 * Set X axis dead zone.
+	 * @param dzX Dead zone value, 0.0 -> 1.0.
+	 * @throws Exception
+	 */
+	public void deadZoneX(double dzX) throws Exception
+	{
+		if (dzX < 0.0 || dzX > 1.0) throw new IllegalArgumentException("Dead Zone out  of range.");
+		
+		deadZoneX = dzX;
+	}
+	
+	/**
+	 * Set Y axis dead zone.
+	 * @param dzY Dead zone value, 0.0 -> 1.0.
+	 * @throws Exception
+	 */
+	public void deadZoneY(double dzY) throws Exception
+	{
+		if (dzY < 0.0 || dzY > 1.0) throw new IllegalArgumentException("Dead Zone out of range.");
+		
+		deadZoneY = dzY;
+	}
+	
+	/**
+	 * Invert the X axis output.
+	 * @param invert True is invert, false is normal.
+	 */
+	public void invertX(boolean invert)
+	{
+		if (invert)
+			invertX = -1.0;
+		else
+			invertX = 1.0;
+	}
+	
+	/**
+	 * Invert the Y axis output.
+	 * @param invert True is invert, false is normal.
+	 */
+	public void invertY(boolean invert)
+	{
+		if (invert)
+			invertY = -1.0;
+		else
+			invertY = 1.0;
+	}
 
 	/**
 	 * Get JoyStick X axis deflection value.
@@ -177,8 +234,13 @@ public class JoyStick
 		double x;
 		
 		x = joyStick.getX();
-		if (Math.abs(x) < deadZone) x = 0.0;
-		return x;
+		
+		if (deadZoneX > 0.0 && Math.abs(x) < deadZoneX)
+			x = 0.0;
+		else if (deadZone > 0.0 && Math.abs(x) < deadZone)
+			x = 0.0;
+		
+		return x * invertX;
 	}
 	
 	/**
@@ -190,8 +252,13 @@ public class JoyStick
 		double y;
 		
 		y = joyStick.getY();
-		if (Math.abs(y) < deadZone) y = 0.0;
-		return y;
+		
+		if (deadZoneY > 0.0 && Math.abs(y) < deadZoneY)
+			y = 0.0;
+		else if (deadZone > 0.0 && Math.abs(y) < deadZone)
+			y = 0.0;
+		
+		return y * invertY;
 	}
 	
 	// JoyStick Button Monitor thread.
