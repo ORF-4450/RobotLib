@@ -247,7 +247,7 @@ public class LaunchPad
     	            	}
     	            }
     	            
-    	            sleep(50);
+    	            sleep(35);
     	    	}
 	    	}
 	    	catch (InterruptedException e) {}

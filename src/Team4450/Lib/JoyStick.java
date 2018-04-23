@@ -226,7 +226,7 @@ public class JoyStick
     	    		
     	            for (JoyStickButton button: buttons) 
     	            {
-          	    		if (joyStick.getRawButtonPressed(button.id.value))
+          	    		if (joyStick.getRawButton(button.id.value))
           				{
           					previousState = button.currentState;
           					button.currentState = true;
@@ -238,8 +238,7 @@ public class JoyStick
           						notifyButtonDown(button);
           					}
           				}
-          	    		
-          				if (joyStick.getRawButtonReleased(button.id.value))
+          	    		else
           				{
           					previousState = button.currentState;
           					button.currentState = false;
@@ -274,7 +273,7 @@ public class JoyStick
 	/**
 	 * Gets the latched state of a registered button. When buttons
 	 * are pressed, the latch state is toggled and retained. Latched is in effect
-	 * a presistent button press. Press and it latches, press again and it unlatches.
+	 * a persistent button press. Press and it latches, press again and it unlatches.
 	 * @param requestedbutton Button id to check.
 	 * @return True if button latched, false if not.
 	 */

@@ -11,6 +11,43 @@ c:\users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
 ***************************************************************************************************************
+Version 1.10.4
+
+*	Fixed bug in JoyStick class introduced in update to 2018 (v1.10) that caused the ghost JS button press problem.
+*	Adjusted pressure sensor conversion factor to better match gauge readings.
+
+S Flo & R Corn
+April 18, 2018
+
+Version 1.10.3
+
+*	Fixed CameraFeed not to run image feed thread if no cameras are detected.
+
+R Corn
+March 24, 2018
+
+Version 1.10.2
+
+*	Fix bug in CameraFeed class that caused JVM crash at robot code start up.
+
+R Corn
+March 19, 2018
+
+Version 1.10.1
+
+*	Fix problem with log file numbering. Quit working with 2018 update. Had to fix the Java library call as it 
+	changed	with the update.
+	
+R Corn
+March 7, 2018
+
+Version 1.10
+
+* 	Initial release for the 2018 season.
+
+S Flo & R Corn
+January 17, 2018
+
 Version 1.9.3
 
 *	Minor fixes and clean up of AbsoluteEncoder class.
