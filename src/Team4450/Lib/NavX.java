@@ -17,7 +17,9 @@ public class NavX
 {
 	private static NavX		navx;
 	private AHRS			ahrs;
-	private static double 	totalAngle = 0;
+	private double 			totalAngle = 0, zeroHeading;
+	private boolean			zeroHeadingNotInitialized;
+	private double			yawResetDelay = .175;
 
 	/**
 	 * Identifies port the NavX is plugged into
@@ -115,12 +117,32 @@ public class NavX
 	}
 	
 	/**
-	 * Return yaw angle from zero point.
-	 * @return Yaw angle in degrees 0->180, - is left of zero, + is right.
+	 * Return yaw angle from zero point, which is direction robot was pointing when
+	 * resetYaw() last called. Uses Navx internal function which is updated on a
+	 * timed basis (update rate). There can be a delay between calling zeroYaw()
+	 * and getting a zero returned from getYaw(), as much as 150ms.
+	 * @return Yaw angle in degrees -180 to +180, - is left of zero, + is right.
 	 */
 	public float getYaw()
 	{
 		return ahrs.getYaw();
+	}
+	
+	/**
+	 * Return yaw2 angle from zero point, which is direction robot was pointing when
+	 * resetYaw2() last called. No delay between zeroYaw2() and this call returning
+	 * zero.
+	 * @return Yaw angle in degrees -180 to +180, - is left of zero, + is right.
+	 */
+	public double getYaw2()
+	{
+		double	heading;
+		
+		heading = ahrs.getAngle() + totalAngle;
+		
+		if (zeroHeadingNotInitialized) zeroHeading = heading;
+
+		return Util.clampValue(heading - zeroHeading, 180);
 	}
 	
 	/**
@@ -141,10 +163,9 @@ public class NavX
 		return ahrs.getRate();
 	}
 	
-
 	/**
 	 * Return current robot heading (0-360) relative to direction robot was
-	 * pointed at last reset (setHeading).
+	 * pointed at last heading reset (setHeading).
 	 * @return Robot heading.
 	 */
 	public double getHeading()
@@ -209,7 +230,10 @@ public class NavX
 	
 	/**
 	 * Reset yaw zero reference to current direction the robot
-	 * is pointing.
+	 * is pointing. getYaw may not return zero immediately after
+	 * calling this function as zeroYaw takes a varying amount of time
+	 * to be reflected in getYaw return. Manufacturer suggests it could
+	 * be up to 150ms but we have observed 300ms in some cases.
 	 */
 	public void resetYaw()
 	{
@@ -217,6 +241,64 @@ public class NavX
 		
         ahrs.zeroYaw();
 	}	
+	
+	/**
+	 * Reset yaw zero reference to current direction the robot
+	 * is pointing and wait for reset to complete. Set wait time
+	 * with setYawResetWait(). Defaults to 175ms.
+	 */
+	public void resetYawWait()
+	{
+		resetYaw();
+		
+        Timer.delay(yawResetDelay);
+	}	
+	
+	/**
+	 * Set yaw reset wait time.
+	 * @param delayMs Delay in milliseconds (0-1000).
+	 */
+	public void setYawResetWait(double waitMs)
+	{
+		Util.checkRange(waitMs, 0, 1000, "Yaw wait");
+		
+		yawResetDelay = waitMs;
+	}
+	
+	/**
+	 * Reset yaw zero reference to current direction the robot
+	 * is pointing and wait for reset to complete. Wait is determined
+	 * by watching getYaw to return a value 0->tolerance (degrees).
+	 * Checked every 10ms or until wait max is reached.
+	 * @param tolerance Tolerance (degrees) to determine reset complete (0-10).
+	 * @param maxWaits Max number of waits (each 10ms) to reach tolerance (1, 50).
+	 */
+	public void resetYawWait(double tolerance, int maxWaits)
+	{
+		int		waits = 0;
+		
+		Util.checkRange(tolerance, 0, 10, "Tolerance");
+		Util.checkRange(maxWaits, 0, 50, "Max waits");
+		
+		resetYaw();
+		
+		while (!Util.checkRange(Math.abs(ahrs.getYaw()), 0, tolerance) && waits < maxWaits)
+		{
+			Timer.delay(.010);
+			waits++;
+		}
+		
+		Util.consoleLog("wait=%dms  yaw=%.2f", waits, Math.abs(ahrs.getYaw()));
+	}
+	
+	/**
+	 * Reset yaw2 zero reference to the current direction the robot is pointing.
+	 * Happens immediately and getYaw2() will return zero without delay.
+	 */
+	public void resetYaw2()
+	{
+		zeroHeading = ahrs.getAngle() + totalAngle;
+	}
 		
 	/**
 	 * Return RoboRio channel number for a NavX pin. Not for NavX-Mini.
@@ -283,6 +365,7 @@ public class NavX
 
         /* Sensor Board Information                                                 */
         table.getEntry(    "IMU_FirmwareVersion") .setString( ahrs.getFirmwareVersion());
+        table.getEntry(    "IMU_UpdateRate(hz)")  .setNumber( ahrs.getActualUpdateRate());
         
         table.getEntry(    "IMU_IsCalibrating")   .setBoolean(ahrs.isCalibrating());
         table.getEntry(    "IMU_Yaw")             .setNumber( ahrs.getYaw());

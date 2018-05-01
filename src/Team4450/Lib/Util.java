@@ -399,4 +399,100 @@ public class Util
 		
 		return retval;
 	}
+	
+	/**
+	 * Check a double value to be within a min/max range.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 * @return True if value in range, false if not.
+	 */
+	public static boolean checkRange(double value, double min, double max)
+	{
+		if (value < min || value > max) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * Check a double value to be within a min/max range. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 */
+	public static void checkRange(double value, double min, double max, String errorMessage)
+	{
+		if (!checkRange(value, min, max)) throw new IllegalArgumentException(errorMessage);
+	}
+	
+	/**
+	 * Check a integer value to be within a min/max range.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 * @return True if value in range, false if not.
+	 */
+	public static boolean checkRange(int value, int min, int max)
+	{
+		if (value < min || value > max) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * Check a integer value to be within a min/max range. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 */
+	public static void checkRange(int value, int min, int max, String errorMessage)
+	{
+		if (!checkRange(value, min, max)) throw new IllegalArgumentException(errorMessage);
+	}
+
+	/**
+	 * Constrain an integer value to be inside the range specified by min/max.
+	 * @param value Value to test
+	 * @param min Smallest valid value.
+	 * @param max Largest valid value
+	 * @return The value or min/max.
+	 */
+	public static int clampValue(int value, int min, int max)
+	{
+		return Math.max(Math.min(value, max), min);
+	}
+	
+	/**
+	 * Constrain an integer value to be inside the range -magnitude to +magnitude.
+	 * @param value Value to test
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return The value or +- magnitude.
+	 */
+	public static int clampValue(int value, int magnitude)
+	{
+		return clampValue(value, -magnitude, magnitude);
+	}
+
+	/**
+	 * Constrain a double value to be inside the range specified by min/max.
+	 * @param value Value to test
+	 * @param min Smallest valid value.
+	 * @param max Largest valid value
+	 * @return The value or min/max.
+	 */
+	public static double clampValue(double value, double min, double max)
+	{
+		return Math.min(Math.max(value, min), max);
+	}
+	
+	/**
+	 * Constrain an double value to be inside the range -magnitude to +magnitude.
+	 * @param value Value to test
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return The value or +- magnitude.
+	 */
+	public static double clampValue(double value, double magnitude)
+	{
+		return clampValue(value, -magnitude, magnitude);
+	}
 }

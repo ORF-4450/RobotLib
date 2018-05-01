@@ -172,7 +172,7 @@ public class JoyStick
 	 */
 	public void deadZone(double dz) throws Exception
 	{
-		if (dz < 0.0 || dz > 1.0) throw new IllegalArgumentException("Dead Zone out of range.");
+		Util.checkRange(dz, 0.0, 1.0, "Dead Zone.");
 		
 		deadZone = dz;
 	}
@@ -184,7 +184,7 @@ public class JoyStick
 	 */
 	public void deadZoneX(double dzX) throws Exception
 	{
-		if (dzX < 0.0 || dzX > 1.0) throw new IllegalArgumentException("Dead Zone out  of range.");
+		Util.checkRange(dzX, 0.0, 1.0, "Dead Zone.");
 		
 		deadZoneX = dzX;
 	}
@@ -196,7 +196,7 @@ public class JoyStick
 	 */
 	public void deadZoneY(double dzY) throws Exception
 	{
-		if (dzY < 0.0 || dzY > 1.0) throw new IllegalArgumentException("Dead Zone out of range.");
+		Util.checkRange(dzY, 0.0, 1.0, "Dead Zone.");
 		
 		deadZoneY = dzY;
 	}
