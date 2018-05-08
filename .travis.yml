@@ -6,7 +6,7 @@ before_install:
 after_success:
  - ./gradle javadoc
  - cd docs
- - zip javadoc.zip
+ - zip javadoc
  - cd ..
 deploy:
   provider: releases
