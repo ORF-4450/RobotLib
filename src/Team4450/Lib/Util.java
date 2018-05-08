@@ -426,7 +426,7 @@ public class Util
 	}
 	
 	/**
-	 * Check a integer value to be within a min/max range.
+	 * Check an integer value to be within a min/max range.
 	 * @param value Value to test.
 	 * @param min Lowest valid value.
 	 * @param max Maximum valid value.
@@ -440,7 +440,7 @@ public class Util
 	}
 	
 	/**
-	 * Check a integer value to be within a min/max range. Throws exception with error message if not.
+	 * Check an integer value to be within a min/max range. Throws exception with error message if not.
 	 * @param value Value to test.
 	 * @param min Lowest valid value.
 	 * @param max Maximum valid value.
@@ -448,6 +448,48 @@ public class Util
 	public static void checkRange(int value, int min, int max, String errorMessage)
 	{
 		if (!checkRange(value, min, max)) throw new IllegalArgumentException(errorMessage);
+	}
+	
+	/**
+	 * Check an integer value to be inside the range -magnitude to +magnitude.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return True if value >= -magnitude and <= + magnitude.
+	 */
+	public static boolean checkRange(int value, int magnitude)
+	{
+		return checkRange(value, -magnitude, +magnitude);
+	}
+	
+	/**
+	 * Check an integer value to be inside the range -magnitude to +magnitude. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 */
+	public static void checkRange(int value, int magnitude, String errorMessage)
+	{
+		if (!checkRange(value,magnitude)) throw new IllegalArgumentException(errorMessage);
+	}
+	
+	/**
+	 * Check a double value to be inside the range -magnitude to +magnitude.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return True if value >= -magnitude and <= + magnitude.
+	 */
+	public static boolean checkRange(double value, double magnitude)
+	{
+		return checkRange(value, -magnitude, +magnitude);
+	}
+	
+	/**
+	 * Check a double value to be inside the range -magnitude to +magnitude. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 */
+	public static void checkRange(double value, double magnitude, String errorMessage)
+	{
+		if (!checkRange(value,magnitude)) throw new IllegalArgumentException(errorMessage);
 	}
 
 	/**

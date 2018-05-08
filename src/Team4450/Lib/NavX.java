@@ -17,7 +17,7 @@ public class NavX
 {
 	private static NavX		navx;
 	private AHRS			ahrs;
-	private double 			totalAngle = 0, zeroHeading;
+	private double 			totalAngle = 0, zeroHeading, targetHeading;
 	private boolean			zeroHeadingNotInitialized;
 	private double			yawResetDelay = .175;
 
@@ -155,6 +155,22 @@ public class NavX
 	}
 	
 	/**
+	 * Returns Yaw angle between target heading set by setTargetHeading()
+	 * and the current robot heading.
+	 * @return Yaw angle 0-180, - is yaw left of target, + is yaw right of target.
+	 */
+	public double getHeadingYaw()
+	{
+		double	yaw;
+		
+		yaw = getHeading() - targetHeading ;
+		
+		if (yaw > 180) yaw = 360 - yaw;
+		
+		return yaw;
+	}
+	
+	/**
 	 * Return yaw rate.
 	 * @return Yaw rate in degrees/second.
 	 */
@@ -183,13 +199,24 @@ public class NavX
 	
 	/**
 	 * Set heading tracking angle to offset value.
-	 * @param offset Offset from 0-360 that is used to adjust the
+	 * @param offset Offset from 0-359 that is used to adjust the
 	 * heading to the direction the robot is pointing relative to
-	 * the direction the driver is looking.
+	 * the direction the driver is looking. Typically called at the
+	 * start of autonomous per the starting direction of the robot.
+	 * 0 degrees is straight down the field.
 	 */
 	public void setHeading(double offset)
 	{
+		Util.checkRange(offset, 0, 359, "offset");
+
 		totalAngle = offset;
+	}
+	
+	public void setTargetHeading(double heading)
+	{
+		Util.checkRange(heading, 0, 359, "heading");
+		
+		targetHeading = heading;
 	}
 	
 	/**
@@ -255,14 +282,28 @@ public class NavX
 	}	
 	
 	/**
-	 * Set yaw reset wait time.
-	 * @param delayMs Delay in milliseconds (0-1000).
+	 * Reset yaw zero reference to current direction the robot
+	 * is pointing and wait the specified time for reset to complete.
+	 * @param wait Wait time in milliseconds (0-2000).
 	 */
-	public void setYawResetWait(double waitMs)
+	public void resetYawWait(double wait)
 	{
-		Util.checkRange(waitMs, 0, 1000, "Yaw wait");
+		Util.checkRange(wait, 0, 2000, "Yaw wait");
+
+		resetYaw();
 		
-		yawResetDelay = waitMs;
+        Timer.delay(wait);
+	}
+	
+	/**
+	 * Set yaw reset wait time.
+	 * @param delayMs Wait time in milliseconds (0-2000).
+	 */
+	public void setYawResetWait(double wait)
+	{
+		Util.checkRange(wait, 0, 2000, "Yaw wait");
+		
+		yawResetDelay = wait;
 	}
 	
 	/**
@@ -271,24 +312,27 @@ public class NavX
 	 * by watching getYaw to return a value 0->tolerance (degrees).
 	 * Checked every 10ms or until wait max is reached.
 	 * @param tolerance Tolerance (degrees) to determine reset complete (0-10).
-	 * @param maxWaits Max number of waits (each 10ms) to reach tolerance (1, 50).
+	 * @param wait Number of milliseconds to wait (10, 5000-10ms resolution).
 	 */
-	public void resetYawWait(double tolerance, int maxWaits)
+	public void resetYawWait(double tolerance, int wait)
 	{
-		int		waits = 0;
+		int		waits = 0, waitCount;
 		
 		Util.checkRange(tolerance, 0, 10, "Tolerance");
-		Util.checkRange(maxWaits, 0, 50, "Max waits");
+		Util.checkRange(wait, 10, 5000, "wait ms");
+		
+		waitCount = wait / 10;
 		
 		resetYaw();
 		
-		while (!Util.checkRange(Math.abs(ahrs.getYaw()), 0, tolerance) && waits < maxWaits)
+		while (!Util.checkRange(Math.abs(ahrs.getYaw()), 0, tolerance) && waitCount > 0)
 		{
 			Timer.delay(.010);
 			waits++;
+			waitCount--;
 		}
 		
-		Util.consoleLog("wait=%dms  yaw=%.2f", waits, Math.abs(ahrs.getYaw()));
+		Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, Math.abs(ahrs.getYaw()));
 	}
 	
 	/**
