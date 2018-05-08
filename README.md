@@ -6,7 +6,18 @@ FRC Team 4450 Robot Control program library classes.
 These are the library classes created by the Olympia Robotics Federation (FRC Team 4450).
 This library is delivered via jar file for use in our robot control programs.
 
-Download the RobotLib jar files to your WpiLib user library directory located at:
+## How to download
+### GradleRIO
+Add this to your build.gradle file:
+
+>dependencies {
+>	...
+>	compile 'com.github.MoSadie:RobotLib:Gradle-Test-SNAPSHOT'	//TODO Update this to correct repo and tag.
+>}
+
+
+### WpiLib Library Manager (Manual)
+Download the RobotLib jar files from [here](releases/latest) to your WpiLib user library directory located at:
 c:\users\yourusername\wpilib\user\java\lib. 
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
