@@ -5,10 +5,7 @@ before_install:
  - chmod +x gradlew
 after_success:
  - ./gradle javadoc
- - cd docs
- - ls
- - zip javadoc
- - cd ..
+ - zip -r javadoc.zip docs
 deploy:
   provider: releases
   api_key:
