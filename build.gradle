@@ -2,6 +2,7 @@ plugins {
     id "java"
     id "eclipse"
     id "idea"
+	id "maven"
     id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
 }
 
@@ -31,9 +32,22 @@ dependencies {
     compileOnly navx()
 }
 
-// Sets up jar file with all source files inside it.
-jar {
+// Create Sources Jar
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
     from sourceSets.main.allSource
+}
+
+// Create Javadoc Jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+// Additional artifacts to publish for JitPack
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
 
 // When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project, docs folder can be configured to auto-publish to GitHub.
