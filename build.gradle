@@ -38,6 +38,11 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+// When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project, docs folder can be configured to auto-publish to GitHub.
+javadoc {
+    destinationDir = new File("docs")
+}
+
 // Create Javadoc Jar
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
@@ -48,11 +53,6 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
-}
-
-// When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project, docs folder can be configured to auto-publish to GitHub.
-javadoc {
-    destinationDir = new File("docs")
 }
 
 task wrapper(type: Wrapper) {
