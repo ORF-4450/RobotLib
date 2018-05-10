@@ -120,7 +120,7 @@ public class NavX
 	 * resetYaw() last called. Uses Navx internal function which is updated on a
 	 * timed basis (update rate). There can be a delay between calling zeroYaw()
 	 * and getting a zero returned from getYaw(), as much as 150ms.
-	 * @return Yaw angle in degrees -180 to +180, - is left of zero, + is right.
+	 * @return Yaw angle in degrees -179 to +179, - is left of zero, + is right.
 	 */
 	public float getYaw()
 	{
@@ -139,7 +139,7 @@ public class NavX
 	/**
 	 * Returns Yaw angle between target heading set by setTargetHeading()
 	 * and the current robot heading.
-	 * @return Yaw angle 0-180, - is yaw left of target, + is yaw right of target.
+	 * @return Yaw angle 0-180, - is yaw left of target heading, + is yaw right of target.
 	 */
 	public double getHeadingYaw()
 	{
@@ -165,7 +165,7 @@ public class NavX
 	}
 	
 	/**
-	 * Return current robot heading (0-360) relative to direction robot was
+	 * Return current robot heading (0-359) relative to direction robot was
 	 * pointed at last heading reset (setHeading).
 	 * @return Robot heading.
 	 */
@@ -188,7 +188,7 @@ public class NavX
 	 * heading to the direction the robot is pointing relative to
 	 * the direction the driver is looking. Typically called at the
 	 * start of autonomous per the starting direction of the robot.
-	 * 0 degrees is straight down the field.
+	 * 0 degrees is always straight down the field.
 	 */
 	public void setHeading(double offset)
 	{
@@ -196,11 +196,18 @@ public class NavX
 
 		totalAngle = offset;
 	}
-	
+
+	/**
+	 * Set target heading for yaw measured from current heading. 
+	 * @param heading Target heading 0-359. Cannot be more than 179
+	 * degrees from robot current heading.
+	 */
 	public void setTargetHeading(double heading)
 	{
 		Util.checkRange(heading, 0, 359, "heading");
 		
+		if (360 - (getHeading() - heading) > 180) throw new IllegalArgumentException("target heading > 180 from current heading");
+			
 		targetHeading = heading;
 	}
 	
