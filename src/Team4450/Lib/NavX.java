@@ -17,8 +17,7 @@ public class NavX
 {
 	private static NavX		navx;
 	private AHRS			ahrs;
-	private double 			totalAngle = 0, zeroHeading, targetHeading;
-	private boolean			zeroHeadingNotInitialized;
+	private double 			totalAngle = 0, targetHeading = 0;
 	private double			yawResetDelay = .175;
 
 	/**
@@ -129,23 +128,6 @@ public class NavX
 	}
 	
 	/**
-	 * Return yaw2 angle from zero point, which is direction robot was pointing when
-	 * resetYaw2() last called. No delay between zeroYaw2() and this call returning
-	 * zero.
-	 * @return Yaw angle in degrees -180 to +180, - is left of zero, + is right.
-	 */
-	public double getYaw2()
-	{
-		double	heading;
-		
-		heading = ahrs.getAngle() + totalAngle;
-		
-		if (zeroHeadingNotInitialized) zeroHeading = heading;
-
-		return Util.clampValue(heading - zeroHeading, 180);
-	}
-	
-	/**
 	 * Return total yaw angle accumulated since last reset.
 	 * @return Total yaw angle in degrees.
 	 */
@@ -163,9 +145,12 @@ public class NavX
 	{
 		double	yaw;
 		
-		yaw = getHeading() - targetHeading ;
+		yaw = getHeading() - targetHeading;
 		
-		if (yaw > 180) yaw = 360 - yaw;
+		if (yaw >= 180)
+			yaw = -(360 - yaw);
+		else if (yaw <= -180) 
+			yaw = 360 + yaw;
 		
 		return yaw;
 	}
@@ -335,15 +320,6 @@ public class NavX
 		Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, Math.abs(ahrs.getYaw()));
 	}
 	
-	/**
-	 * Reset yaw2 zero reference to the current direction the robot is pointing.
-	 * Happens immediately and getYaw2() will return zero without delay.
-	 */
-	public void resetYaw2()
-	{
-		zeroHeading = ahrs.getAngle() + totalAngle;
-	}
-		
 	/**
 	 * Return RoboRio channel number for a NavX pin. Not for NavX-Mini.
 	 * @param type PinType of pin to get channel for.

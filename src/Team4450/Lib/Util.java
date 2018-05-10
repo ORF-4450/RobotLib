@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.can.CANJNI;
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * Provides a set of utility functions.
@@ -409,6 +410,8 @@ public class Util
 	 */
 	public static boolean checkRange(double value, double min, double max)
 	{
+		if (min > max) throw new BoundaryException("min is greater than max");
+		
 		if (value < min || value > max) return false;
 		
 		return true;
@@ -434,6 +437,8 @@ public class Util
 	 */
 	public static boolean checkRange(int value, int min, int max)
 	{
+		if (min > max) throw new BoundaryException("min is greater than max");
+		
 		if (value < min || value > max) return false;
 		
 		return true;
@@ -451,7 +456,7 @@ public class Util
 	}
 	
 	/**
-	 * Check an integer value to be inside the range -magnitude to +magnitude.
+	 * Check an integer value to be in the range -magnitude to +magnitude.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
 	 * @return True if value >= -magnitude and <= + magnitude.
@@ -462,7 +467,7 @@ public class Util
 	}
 	
 	/**
-	 * Check an integer value to be inside the range -magnitude to +magnitude. Throws exception with error message if not.
+	 * Check an integer value to be in the range -magnitude to +magnitude. Throws exception with error message if not.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
 	 */
@@ -472,7 +477,7 @@ public class Util
 	}
 	
 	/**
-	 * Check a double value to be inside the range -magnitude to +magnitude.
+	 * Check a double value to be in the range -magnitude to +magnitude.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
 	 * @return True if value >= -magnitude and <= + magnitude.
@@ -483,7 +488,7 @@ public class Util
 	}
 	
 	/**
-	 * Check a double value to be inside the range -magnitude to +magnitude. Throws exception with error message if not.
+	 * Check a double value to be in the range -magnitude to +magnitude. Throws exception with error message if not.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
 	 */
@@ -493,7 +498,7 @@ public class Util
 	}
 
 	/**
-	 * Constrain an integer value to be inside the range specified by min/max.
+	 * Constrain an integer value to be in the range specified by min/max.
 	 * @param value Value to test
 	 * @param min Smallest valid value.
 	 * @param max Largest valid value
@@ -505,7 +510,7 @@ public class Util
 	}
 	
 	/**
-	 * Constrain an integer value to be inside the range -magnitude to +magnitude.
+	 * Constrain an integer value to be in the range -magnitude to +magnitude.
 	 * @param value Value to test
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
 	 * @return The value or +- magnitude.
@@ -516,7 +521,7 @@ public class Util
 	}
 
 	/**
-	 * Constrain a double value to be inside the range specified by min/max.
+	 * Constrain a double value to be in the range specified by min/max.
 	 * @param value Value to test
 	 * @param min Smallest valid value.
 	 * @param max Largest valid value
@@ -528,7 +533,7 @@ public class Util
 	}
 	
 	/**
-	 * Constrain an double value to be inside the range -magnitude to +magnitude.
+	 * Constrain an double value to be in the range -magnitude to +magnitude.
 	 * @param value Value to test
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
 	 * @return The value or +- magnitude.
