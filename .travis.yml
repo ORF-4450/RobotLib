@@ -3,8 +3,6 @@ jdk:
 - oraclejdk8
 before_install:
  - chmod +x gradlew
-after_success:
- - ./gradle javadocJar
 deploy:
   provider: releases
   api_key:
