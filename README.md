@@ -11,9 +11,9 @@ This library is delivered via jar file for use in our robot control programs.
 Add this to your build.gradle file:
 
 >dependencies {
->	...
->	compile 'com.github.MoSadie:RobotLib:Gradle-Test-SNAPSHOT'	//TODO Update this to correct repo and tag.
->}
+	//... The rest of the dependencies
+	compile 'com.github.MoSadie:RobotLib:Gradle-Test-SNAPSHOT'	//TODO Update this to correct repo and tag.
+}
 
 
 ### WpiLib Library Manager (Manual)
