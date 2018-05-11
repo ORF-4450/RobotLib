@@ -199,14 +199,19 @@ public class NavX
 
 	/**
 	 * Set target heading for yaw measured from current heading. 
-	 * @param heading Target heading 0-359. Cannot be more than 179
+	 * @param heading Target heading 0-359. Cannot be more than 180
 	 * degrees from robot current heading.
 	 */
 	public void setTargetHeading(double heading)
 	{
+		double	gap;
+		
 		Util.checkRange(heading, 0, 359, "heading");
 		
-		if (360 - (getHeading() - heading) > 180) throw new IllegalArgumentException("target heading > 180 from current heading");
+		gap = getHeading() - heading;
+		
+		if (Math.abs(gap) > 180)
+			if (360 - gap > 180) throw new IllegalArgumentException("target heading > 180 from current heading");
 			
 		targetHeading = heading;
 	}
