@@ -8,19 +8,33 @@ This library is delivered via jar file for use in our robot control programs.
 
 ## How to download
 ### GradleRIO
-Add this to your build.gradle file:
-
-	dependencies {
-		//... The rest of the dependencies
-		compile 'com.github.MoSadie:RobotLib:Gradle-Test-SNAPSHOT'	//TODO Update this to correct repo and tag.
-	}
-
+Add the repository jitpack.io:
+```
+repositories {
+	maven { url 'https://jitpack.io' }
+}
+```
+Then add this library as a dependency in your build.gradle file:
+```
+dependencies {
+	//... The rest of the dependencies
+	compile 'com.github.MoSadie:RobotLib:d1de93266b'	//TODO Update this to correct repo and tag.
+}
+```
+Javadocs, source attachment, and importing the jars will be done automatically.
 
 ### WpiLib Library Manager (Manual)
 Download the RobotLib jar files from [here](releases/latest) to your WpiLib user library directory located at:
 c:\users\yourusername\wpilib\user\java\lib. 
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
+
+## How to update
+### GradleRIO
+Change the tag at the end of the string to the latest version and rebuild (./gradlew.bat build) the project while connected to the internet.
+
+### WpiLib Library Manager (Manual)
+Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
 Version 1.10.4
 
