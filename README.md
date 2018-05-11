@@ -33,7 +33,7 @@ configure project build path item for RobotLib to locate the javadoc in archive 
 ### GradleRIO
 Change the tag at the end of the string to the latest version and rebuild the project while connected to the internet.
 
-### WpiLib Library Manager (Manual)
+### WpiLib Library Manager
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
 Version 1.10.4
