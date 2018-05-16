@@ -83,6 +83,8 @@ public class SynchronousPID
      */
     public double calculate(double input, double dt) 
     {
+    	//Util.consoleLog();
+    	
         if (dt < 1E-6) dt = 1E-6;
         
         m_last_input = input;
@@ -205,6 +207,8 @@ public class SynchronousPID
      */
     public double get()
     {
+    	//Util.consoleLog();
+    	
         return m_result;
     }
 

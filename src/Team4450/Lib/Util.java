@@ -494,7 +494,7 @@ public class Util
 	 */
 	public static void checkRange(double value, double magnitude, String errorMessage)
 	{
-		if (!checkRange(value,magnitude)) throw new IllegalArgumentException(errorMessage);
+		if (!checkRange(value, magnitude)) throw new IllegalArgumentException(errorMessage);
 	}
 
 	/**

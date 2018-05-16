@@ -139,11 +139,13 @@ public class NavX
 	/**
 	 * Returns Yaw angle between target heading set by setTargetHeading()
 	 * and the current robot heading.
-	 * @return Yaw angle 0-180, - is yaw left of target heading, + is yaw right of target.
+	 * @return Yaw angle (0-180), - is yaw left of target heading, + is yaw right of target.
 	 */
 	public double getHeadingYaw()
 	{
 		double	yaw;
+		
+		//Util.consoleLog();
 		
 		yaw = getHeading() - targetHeading;
 		
@@ -204,14 +206,14 @@ public class NavX
 	 */
 	public void setTargetHeading(double heading)
 	{
-		double	gap;
+		//double	gap;
 		
-		Util.checkRange(heading, 0, 359, "heading");
+		Util.checkRange(heading, 0, 359.9999, "target heading");
 		
-		gap = getHeading() - heading;
-		
-		if (Math.abs(gap) > 180)
-			if (360 - gap > 180) throw new IllegalArgumentException("target heading > 180 from current heading");
+//		gap = getHeading() - heading;
+//		
+//		if (Math.abs(gap) > 180)
+//			if (360 - gap > 180) throw new IllegalArgumentException("target heading > 180 from current heading");
 			
 		targetHeading = heading;
 	}
