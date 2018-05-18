@@ -167,8 +167,8 @@ public class NavX
 	}
 	
 	/**
-	 * Return current robot heading (0-359) relative to direction robot was
-	 * pointed at last heading reset (setHeading).
+	 * Return current robot heading (0-359.n) relative to direction robot was
+	 * pointed at last heading reset (setHeading). Will return fractional angle.
 	 * @return Robot heading.
 	 */
 	public double getHeading()
@@ -180,8 +180,20 @@ public class NavX
 		heading = heading - ((int) (heading / 360) * 360);
 		
 		if (heading < 0) heading += 360;
+
+		//LCD.printLine(9, "angle=%.2f  totangle=%.2f  hdg=%.2f", ahrs.getAngle(), totalAngle, heading);
 		
 		return heading;
+	}
+	
+	/**
+	 * Return current robot heading (0-359) relative to direction robot was
+	 * pointed at last heading reset (setHeading).
+	 * @return Robot heading.
+	 */
+	public int getHeadingInt()
+	{
+		return (int) getHeading();
 	}
 	
 	/**
