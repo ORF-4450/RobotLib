@@ -13,8 +13,10 @@ configure project build path item for RobotLib to locate the javadoc in archive 
 ***************************************************************************************************************
 Version 1.11
 
-*	Enhance JoyStick class with dead zone by axis, inverted mode for each axis to support new standard of + motor
-   values meaning forward direction.
+*	Enhance JoyStick class with dead zone by axis, optional inverted mode for each axis to support new standard of + motor
+	values meaning forward direction.
+*	Enhance NavX class to report yaw from a target heading to support navigation by heading.
+*	Added a number of numeric editing functions to the Util class. Range checking and clamping.
 
 R Corn
 April 23, 2018
