@@ -46,6 +46,24 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
+Version 1.11.1
+
+*	Update Javadoc.
+
+R Corn
+May 24, 2018
+
+Version 1.11
+
+*	Enhance JoyStick class with dead zone by axis, optional inverted mode for each axis to support new standard of + motor
+	values meaning forward direction. (JS Y axis reports negative values when stick pushed forward)
+*	Enhance NavX class to report yaw from a target heading to support navigation by heading.
+*	Added a number of numeric editing functions to the Util class. Range checking and clamping.
+*	Added SynchronousPID class.
+
+R Corn
+May 23, 2018
+
 Version 1.10.4
 
 *	Fixed bug in JoyStick class introduced in update to 2018 (v1.10) that caused the ghost JS button press problem.

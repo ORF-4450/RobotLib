@@ -24,6 +24,7 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.can.CANJNI;
+import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
  * Provides a set of utility functions.
@@ -77,7 +78,7 @@ public class Util
 	/**
 	 * Configures and holds (static) classes for our custom logging system. 
 	 * Call setup() method to initialize logging. Logging is then done via
-	 * the logging convenince methods in the Util class.
+	 * the logging convenience methods in the Util class.
 	 */
 	public static class CustomLogger 
 	{
@@ -398,5 +399,155 @@ public class Util
 		}
 		
 		return retval;
+	}
+	
+	/**
+	 * Check a double value to be within a min/max range.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 * @return True if value in range, false if not.
+	 */
+	public static boolean checkRange(double value, double min, double max)
+	{
+		if (min > max) throw new BoundaryException("min is greater than max");
+		
+		if (value < min || value > max) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * Check a double value to be within a min/max range. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 * @param errorMessage Error message for exception.
+	 * @exception IllegalArgumentException
+	 */
+	public static void checkRange(double value, double min, double max, String errorMessage)
+	{
+		if (!checkRange(value, min, max)) throw new IllegalArgumentException(errorMessage);
+	}
+	
+	/**
+	 * Check an integer value to be within a min/max range.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 * @return True if value in range, false if not.
+	 */
+	public static boolean checkRange(int value, int min, int max)
+	{
+		if (min > max) throw new BoundaryException("min is greater than max");
+		
+		if (value < min || value > max) return false;
+		
+		return true;
+	}
+	
+	/**
+	 * Check an integer value to be within a min/max range. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param min Lowest valid value.
+	 * @param max Maximum valid value.
+	 * @param errorMessage Error message for the exception.
+	 * @exception IllegalArgumentException
+	 */
+	public static void checkRange(int value, int min, int max, String errorMessage)
+	{
+		if (!checkRange(value, min, max)) throw new IllegalArgumentException(errorMessage);
+	}
+	
+	/**
+	 * Check an integer value to be in the range -magnitude to +magnitude.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return True if value greater than or equal to -magnitude and less than or equal to + magnitude.
+	 */
+	public static boolean checkRange(int value, int magnitude)
+	{
+		return checkRange(value, -magnitude, +magnitude);
+	}
+	
+	/**
+	 * Check an integer value to be in the range -magnitude to +magnitude. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @param errorMessage Error message for the exception.
+	 * @exception IllegalArgumentException
+	 */
+	public static void checkRange(int value, int magnitude, String errorMessage)
+	{
+		if (!checkRange(value,magnitude)) throw new IllegalArgumentException(errorMessage);
+	}
+	
+	/**
+	 * Check a double value to be in the range -magnitude to +magnitude.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return True if value greater than or equal to -magnitude and less than or equal to + magnitude.
+	 */
+	public static boolean checkRange(double value, double magnitude)
+	{
+		return checkRange(value, -magnitude, +magnitude);
+	}
+	
+	/**
+	 * Check a double value to be in the range -magnitude to +magnitude. Throws exception with error message if not.
+	 * @param value Value to test.
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @param errorMessage Error message for the exception.
+	 * @exception IllegalArgumentException
+	 */
+	public static void checkRange(double value, double magnitude, String errorMessage)
+	{
+		if (!checkRange(value, magnitude)) throw new IllegalArgumentException(errorMessage);
+	}
+
+	/**
+	 * Constrain an integer value to be in the range specified by min/max.
+	 * @param value Value to test
+	 * @param min Smallest valid value.
+	 * @param max Largest valid value
+	 * @return The value or min/max.
+	 */
+	public static int clampValue(int value, int min, int max)
+	{
+		return Math.max(Math.min(value, max), min);
+	}
+	
+	/**
+	 * Constrain an integer value to be in the range -magnitude to +magnitude.
+	 * @param value Value to test
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return The value or +- magnitude.
+	 */
+	public static int clampValue(int value, int magnitude)
+	{
+		return clampValue(value, -magnitude, magnitude);
+	}
+
+	/**
+	 * Constrain a double value to be in the range specified by min/max.
+	 * @param value Value to test
+	 * @param min Smallest valid value.
+	 * @param max Largest valid value
+	 * @return The value or min/max.
+	 */
+	public static double clampValue(double value, double min, double max)
+	{
+		return Math.min(Math.max(value, min), max);
+	}
+	
+	/**
+	 * Constrain an double value to be in the range -magnitude to +magnitude.
+	 * @param value Value to test
+	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @return The value or +- magnitude.
+	 */
+	public static double clampValue(double value, double magnitude)
+	{
+		return clampValue(value, -magnitude, magnitude);
 	}
 }
