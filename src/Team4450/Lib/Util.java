@@ -78,7 +78,7 @@ public class Util
 	/**
 	 * Configures and holds (static) classes for our custom logging system. 
 	 * Call setup() method to initialize logging. Logging is then done via
-	 * the logging convenince methods in the Util class.
+	 * the logging convenience methods in the Util class.
 	 */
 	public static class CustomLogger 
 	{
@@ -422,6 +422,8 @@ public class Util
 	 * @param value Value to test.
 	 * @param min Lowest valid value.
 	 * @param max Maximum valid value.
+	 * @param errorMessage Error message for exception.
+	 * @exception IllegalArgumentException
 	 */
 	public static void checkRange(double value, double min, double max, String errorMessage)
 	{
@@ -449,6 +451,8 @@ public class Util
 	 * @param value Value to test.
 	 * @param min Lowest valid value.
 	 * @param max Maximum valid value.
+	 * @param errorMessage Error message for the exception.
+	 * @exception IllegalArgumentException
 	 */
 	public static void checkRange(int value, int min, int max, String errorMessage)
 	{
@@ -459,7 +463,7 @@ public class Util
 	 * Check an integer value to be in the range -magnitude to +magnitude.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
-	 * @return True if value >= -magnitude and <= + magnitude.
+	 * @return True if value greater than or equal to -magnitude and less than or equal to + magnitude.
 	 */
 	public static boolean checkRange(int value, int magnitude)
 	{
@@ -470,6 +474,8 @@ public class Util
 	 * Check an integer value to be in the range -magnitude to +magnitude. Throws exception with error message if not.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @param errorMessage Error message for the exception.
+	 * @exception IllegalArgumentException
 	 */
 	public static void checkRange(int value, int magnitude, String errorMessage)
 	{
@@ -480,7 +486,7 @@ public class Util
 	 * Check a double value to be in the range -magnitude to +magnitude.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
-	 * @return True if value >= -magnitude and <= + magnitude.
+	 * @return True if value greater than or equal to -magnitude and less than or equal to + magnitude.
 	 */
 	public static boolean checkRange(double value, double magnitude)
 	{
@@ -491,6 +497,8 @@ public class Util
 	 * Check a double value to be in the range -magnitude to +magnitude. Throws exception with error message if not.
 	 * @param value Value to test.
 	 * @param magnitude Magnitude or +-range of valid values, always positive.
+	 * @param errorMessage Error message for the exception.
+	 * @exception IllegalArgumentException
 	 */
 	public static void checkRange(double value, double magnitude, String errorMessage)
 	{

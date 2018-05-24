@@ -308,7 +308,7 @@ public class NavX
 	
 	/**
 	 * Set yaw reset wait time.
-	 * @param delayMs Wait time in milliseconds (0-2000).
+	 * @param wait Wait time in milliseconds (0-2000).
 	 */
 	public void setYawResetWait(double wait)
 	{
@@ -320,7 +320,7 @@ public class NavX
 	/**
 	 * Reset yaw zero reference to current direction the robot
 	 * is pointing and wait for reset to complete. Wait is determined
-	 * by watching getYaw to return a value 0->tolerance (degrees).
+	 * by watching getYaw to return a value 0..tolerance (degrees).
 	 * Checked every 10ms or until wait max is reached.
 	 * @param tolerance Tolerance (degrees) to determine reset complete (0-10).
 	 * @param wait Number of milliseconds to wait (10, 5000-10ms resolution).

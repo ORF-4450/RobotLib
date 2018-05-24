@@ -80,6 +80,8 @@ public class SynchronousPID
      *            the input
      * @param dt
      *            time passed since previous call to calculate
+     * @return
+     *            the output           
      */
     public double calculate(double input, double dt) 
     {
@@ -316,10 +318,10 @@ public class SynchronousPID
     {
         return m_error;
     }
-
+ 
     /**
      * Return true if the error is within the tolerance
-     *
+     * @param tolerance Tolerance value 0..t
      * @return true if the error is less than the tolerance
      */
     public boolean onTarget(double tolerance) 
