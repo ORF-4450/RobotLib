@@ -7,33 +7,43 @@ These are the library classes created by the Olympia Robotics Federation (FRC Te
 This library is delivered via jar file for use in our robot control programs.
 
 ## How to download
+
 ### GradleRIO (Best Method)
+
 Add the maven repository jitpack.io to your build.gradle file:
-```
+
+```gradle
 repositories {
-	maven { url 'https://jitpack.io' }
+    maven { url 'https://jitpack.io' }
 }
 ```
+
 Then add this library as a dependency in your build.gradle file:
-```
+
+```gradle
 dependencies {
-	//... The rest of the dependencies
-	compile 'com.github.MoSadie:RobotLib:cbd8fe518e'	//TODO Update this to correct repo and tag.
+    //... The rest of the dependencies
+    compile 'com.github.MoSadie:RobotLib:cbd8fe518e'	//TODO Update this to correct repo and tag.
 }
 ```
+
 Javadocs, source attachment, and importing the jars will be done automatically after building the project.
 
 ### WpiLib Library Manager (Manual & Before 2019)
+
 Download the RobotLib jar files from [here](releases/latest) to your WpiLib user library directory located at:
-C:\Users\yourusername\wpilib\user\java\lib. 
+C:\Users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path `/` .
 
 ## How to update
+
 ### GradleRIO
+
 Change the tag at the end of the string to the latest version and rebuild the project while connected to the internet.
 
 ### WpiLib Library Manager
+
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
 Version 1.10.4
