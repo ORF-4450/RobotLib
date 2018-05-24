@@ -11,12 +11,20 @@ c:\users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
 ***************************************************************************************************************
+Version 1.11.1
+
+*	Update Javadoc.
+
+R Corn
+May 24, 2018
+
 Version 1.11
 
 *	Enhance JoyStick class with dead zone by axis, optional inverted mode for each axis to support new standard of + motor
-	values meaning forward direction.
+	values meaning forward direction. (JS Y axis reports negative values when stick pushed forward)
 *	Enhance NavX class to report yaw from a target heading to support navigation by heading.
 *	Added a number of numeric editing functions to the Util class. Range checking and clamping.
+*	Added SynchronousPID class.
 
 R Corn
 May 23, 2018
