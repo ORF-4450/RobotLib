@@ -19,7 +19,7 @@ Version 1.11
 *	Added a number of numeric editing functions to the Util class. Range checking and clamping.
 
 R Corn
-April 23, 2018
+May 23, 2018
 
 Version 1.10.4
 
