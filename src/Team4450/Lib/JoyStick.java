@@ -167,7 +167,7 @@ public class JoyStick
 	
 	/**
 	 * Set global axis dead zone. Applied if no axis specific dead zone is set.
-	 * @param dz Dead zone value, 0.0 -> 1.0.
+	 * @param dz Dead zone value, 0.0..1.0.
 	 * @throws Exception
 	 */
 	public void deadZone(double dz) throws Exception
@@ -179,7 +179,7 @@ public class JoyStick
 	
 	/**
 	 * Set X axis dead zone.
-	 * @param dzX Dead zone value, 0.0 -> 1.0.
+	 * @param dzX Dead zone value, 0.0..1.0.
 	 * @throws Exception
 	 */
 	public void deadZoneX(double dzX) throws Exception
@@ -191,7 +191,7 @@ public class JoyStick
 	
 	/**
 	 * Set Y axis dead zone.
-	 * @param dzY Dead zone value, 0.0 -> 1.0.
+	 * @param dzY Dead zone value, 0.0..1.0.
 	 * @throws Exception
 	 */
 	public void deadZoneY(double dzY) throws Exception
