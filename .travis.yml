@@ -26,12 +26,14 @@ before_script:
   -O cscore.jar
 - wget http://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip -O navx-mxp.zip
 - unzip navx-mxp.zip -d navx-mxp
+- wget https://github.com/Open-RIO/Maven-Mirror/blob/master/m2/openrio/mirror/third/ctre/CTRE-phoenix-java/5.3.1.0/CTRE-phoenix-java-5.3.1.0.jar?raw=true -O CTRE.jar
 before_deploy:
 - rm wpilib.jar
 - rm networktables.jar
 - rm opencv.jar
 - rm cscore.jar
 - rm navx-mxp.zip
+- rm CTRE.jar
 deploy:
   provider: releases
   api_key:
