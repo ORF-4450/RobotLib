@@ -45,7 +45,7 @@
 		<echo>Creating jar files</echo>
 
 		<jar jarfile="dist/RobotLib.jar" basedir="bin/classes/" includes="**/*.class" >
-		    <zipgroupfileset dir="${userLibs}" />
+		    <zipgroupfileset dir="${userLibs}" includes="**/*.jar" />
 			<fileset dir="doc" />
 		</jar>
 		
