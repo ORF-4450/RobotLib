@@ -11,11 +11,18 @@ c:\users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
 ***************************************************************************************************************
+Version 1.13
+
+*	Add methods to Util to do elapsed time.
+
+R Corn
+June 11, 2018
+
 Version 1.12
 
 *	Add wrapper class for SRX Magnetic Encoder (relative mode) connected to a CanTalon.
 
-R Corn,
+R Corn
 June 8, 2018
 
 Version 1.11.1

@@ -21,7 +21,10 @@
         	   	<fileset dir="${userLibs}">
        				<include name="**/*.jar"/>
   				</fileset>
-        	</classpath>
+        	   	<fileset dir="${userLibs1}">
+       				<include name="**/*.jar"/>
+  				</fileset>
+       	</classpath>
 		</javac>
 	</target>
 
@@ -46,6 +49,8 @@
 
 		<jar jarfile="dist/RobotLib.jar" basedir="bin/classes/" includes="**/*.class" >
 		    <zipgroupfileset dir="${userLibs}" includes="**/*.jar" />
+		    <zipgroupfileset dir="${userLibs1}" includes="**/*.jar" />
+			
 			<fileset dir="doc" />
 		</jar>
 		
