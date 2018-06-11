@@ -23,6 +23,7 @@ import java.nio.ByteOrder;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.can.CANJNI;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
@@ -44,6 +45,8 @@ public class Util
 	 * convenience methods elsewhere in the Util class.
 	 */
 	public final static Logger logger = Logger.getGlobal();
+	
+	private static double timeMarker = 0;
 	
 	// Private constructor means this class cannot be instantiated. All access is static.
 	
@@ -549,5 +552,47 @@ public class Util
 	public static double clampValue(double value, double magnitude)
 	{
 		return clampValue(value, -magnitude, magnitude);
+	}
+	
+	/**
+	 * Return the elapsed time since the last call to this method.
+	 * @return Elapsed time in seconds.
+	 */
+	public static double getElaspedTime()
+	{
+		double now = Timer.getFPGATimestamp();
+		if (timeMarker == 0) timeMarker = now;
+		double elapsedTime = now - timeMarker;
+		timeMarker = now;
+		return elapsedTime;
+	}
+	
+	/**
+	 * Return the elapsed time between the specified timestamp and current timestamp.
+	 * @param previousTime Previous timestamp.
+	 * @return Elapsed time in seconds.
+	 */
+	public static double getElaspedTime(double previousTime)
+	{
+		return Timer.getFPGATimestamp() - previousTime;
+	}
+
+	/**
+	 * Return current FPGA timestamp.
+	 * @return The timestamp in seconds.
+	 */
+	public static double timeStamp()
+	{
+		return Timer.getFPGATimestamp();
+	}
+	
+	/**
+	 * Convert inches to meters.
+	 * @param inches Inches value to convert.
+	 * @return The distance in meters.
+	 */
+	public static double inchesToMeters(double inches)
+	{
+		return inches * .0254;
 	}
 }

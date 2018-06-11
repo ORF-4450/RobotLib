@@ -46,6 +46,20 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
+Version 1.13
+
+*	Add methods to Util class to do elapsed time and inches to meters conversion.
+
+R Corn
+June 11, 2018
+
+Version 1.12
+
+*	Add wrapper class for SRX Magnetic Encoder (relative mode) connected to a CanTalon.
+
+R Corn
+June 8, 2018
+
 Version 1.11.1
 
 *	Update Javadoc.

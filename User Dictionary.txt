@@ -12,3 +12,8 @@ usb
 yaw
 talons
 winch
+pid
+waypoints
+waypoint
+radians
+timestamp
