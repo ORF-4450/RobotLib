@@ -27,6 +27,7 @@ before_script:
 - wget http://www.kauailabs.com/public_files/navx-mxp/navx-mxp-libs.zip -O navx-mxp.zip
 - unzip navx-mxp.zip -d navx-mxp
 - wget https://github.com/Open-RIO/Maven-Mirror/blob/master/m2/openrio/mirror/third/ctre/CTRE-phoenix-java/5.3.1.0/CTRE-phoenix-java-5.3.1.0.jar?raw=true -O CTRE.jar
+- wget http://dev.imjac.in/maven/jaci/pathfinder/Pathfinder-Java/1.8/Pathfinder-Java-1.8.jar -O PathFinder.jar
 before_deploy:
 - rm wpilib.jar
 - rm networktables.jar
@@ -34,6 +35,7 @@ before_deploy:
 - rm cscore.jar
 - rm navx-mxp.zip
 - rm CTRE.jar
+- rm PathFinder.jar
 deploy:
   provider: releases
   api_key:
