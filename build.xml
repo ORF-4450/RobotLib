@@ -21,7 +21,7 @@
         	   	<fileset dir="${userLibs}">
        				<include name="**/*.jar"/>
   				</fileset>
-        	   	<fileset dir="${userLibs1}">
+        	   	<fileset dir="${userLibsNavx}">
        				<include name="**/*.jar"/>
   				</fileset>
        	</classpath>
@@ -49,7 +49,7 @@
 
 		<jar jarfile="dist/RobotLib.jar" basedir="bin/classes/" includes="**/*.class" >
 		    <zipgroupfileset dir="${userLibs}" includes="**/*.jar" />
-		    <zipgroupfileset dir="${userLibs1}" includes="**/*.jar" />
+		    <zipgroupfileset dir="${userLibsNavx}" includes="**/*.jar" />
 			
 			<fileset dir="doc" />
 		</jar>

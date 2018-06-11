@@ -13,7 +13,7 @@ configure project build path item for RobotLib to locate the javadoc in archive 
 ***************************************************************************************************************
 Version 1.13
 
-*	Add methods to Util to do elapsed time.
+*	Add methods to Util class to do elapsed time and inches to meters conversion.
 
 R Corn
 June 11, 2018

@@ -585,4 +585,14 @@ public class Util
 	{
 		return Timer.getFPGATimestamp();
 	}
+	
+	/**
+	 * Convert inches to meters.
+	 * @param inches Inches value to convert.
+	 * @return The distance in meters.
+	 */
+	public static double inchesToMeters(double inches)
+	{
+		return inches * .0254;
+	}
 }
