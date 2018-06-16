@@ -169,7 +169,8 @@ public class NavX
 	/**
 	 * Return current robot heading (0-359.n) relative to direction robot was
 	 * pointed at last heading reset (setHeading). Will return fractional angle.
-	 * @return Robot heading.
+	 * 1 degree is right of zero (clockwise) and 359 is left (counter clockwise).
+	 * @return Robot heading in degrees.
 	 */
 	public double getHeading()
 	{
@@ -187,13 +188,45 @@ public class NavX
 	}
 	
 	/**
+	 * Return current robot heading (0-359.n) relative to direction robot was
+	 * pointed at last heading reset (setHeading). Will return fractional angle.
+	 * 1 degree is left of zero (count clockwise) and 359 is rightt (clockwise).
+	 * This is how headings are done when working with radians.
+	 * @return Robot heading in degrees.
+	 */
+	public double getHeadingR()
+	{
+		double heading;
+		
+		heading = ahrs.getAngle() + totalAngle;
+		
+		heading = heading - ((int) (heading / 360) * 360);
+		
+		if (heading > 0) heading = 360 - heading;
+
+		//LCD.printLine(9, "angle=%.2f  totangle=%.2f  hdg=%.2f", ahrs.getAngle(), totalAngle, heading);
+		
+		return Math.abs(heading);
+	}
+	
+	/**
 	 * Return current robot heading (0-359) relative to direction robot was
-	 * pointed at last heading reset (setHeading).
-	 * @return Robot heading.
+	 * pointed at last heading reset (setHeading). 
+	 * @return Robot heading in whole degrees.
 	 */
 	public int getHeadingInt()
 	{
 		return (int) getHeading();
+	}
+	
+	/**
+	 * Return current robot heading (0-359) relative to direction robot was
+	 * pointed at last heading reset (setHeading). Radians format.
+	 * @return Robot heading in whole degrees.
+	 */
+	public int getHeadingIntR()
+	{
+		return (int) getHeadingR();
 	}
 	
 	/**
