@@ -13,10 +13,10 @@ configure project build path item for RobotLib to locate the javadoc in archive 
 ***************************************************************************************************************
 Version 1.14
 
-*	Update SRXMagneticEncoder class to fill in missing functions to better support path finding.
+*	Update SRXMagneticEncoder class adding functions to better support path finding.
 
 R Corn
-August 24, 2018
+August 27, 2018
 
 Version 1.13
 

@@ -140,11 +140,24 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	
 	/**
 	 * Return the rate of rotation in RPM.
-	 * @return Rotation in revolutions per second.
+	 * @return Rotation in revolutions per minute.
 	 */
 	public int getRPM()
 	{
 		return getRawRate() * 600 / 4096;
+	}
+	
+	/**
+	 * Return the current velocity.
+	 * @param metersPerSecond False for feet/second, true for meters/second.
+	 * @return Current velocity based on RPM and gear ratio in units requested.
+	 */
+	public double getVelocity( boolean metersPerSecond )
+	{
+		if (metersPerSecond)
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
+		else
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
 	}
 	
 	/**
@@ -172,6 +185,19 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 			talon.getSensorCollection().getQuadratureVelocity();
 	}
 	
+	/**
+	 * Return the max velocity recorded since start up.
+	 * @param metersPerSecond False for feet/second, true for meters/second.
+	 * @return Max velocity recorded based on RPM and gear ratio in units requested.
+	 */
+	public double getMaxVelocity( boolean metersPerSecond )
+	{
+		if (metersPerSecond)
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
+		else
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
+	}
+
 	/**
 	 * Return the distance in inches the encoder has recorded since last
 	 * reset. If encoder goes backwards the distance is reduced. Computed
@@ -316,7 +342,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 
 	/**
 	 * Set the gear ratio factor. This is a factor that the encoder rotation
-	 * is multiplied by to yield the wheel rotation. Defaults to 1.
+	 * is multiplied by to yield the wheel rotation. Defaults to 1 meaning a
+	 * 1:1 ratio between encoder shaft revolutions and wheel revolutions.
 	 * @param gearRatio The gear ratio factor to set
 	 */
 	public void setGearRatio( double gearRatio )

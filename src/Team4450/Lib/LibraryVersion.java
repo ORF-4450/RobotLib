@@ -15,7 +15,7 @@ public class LibraryVersion
 	 * Returns current version of RobotLib.
 	 */
 
-	public static final String version = "1.14 (08.24.18)";	
+	public static final String version = "1.14 (08.27.18)";	
 
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
