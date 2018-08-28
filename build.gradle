@@ -3,24 +3,18 @@ plugins {
     id "eclipse"
     id "idea"
 	id "maven"
-    id "jaci.openrio.gradle.GradleRIO" version "2018.03.06"
+    id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
-def TEAM = 4450 //Mostly unused
-def ROBOT_CLASS = "Team4450.RobotLib.LibraryVersion" //Unused
+// Instructions on how to build this project:
+// In the main folder of this project (the one with the gradlew.bat file) run the command "./gradlew.bat build" (or "gradlew build" if on a non-Windows platform)
+// The jars will be in the "build" folder under "libs"
 
-// Define my targets (RoboRIO) and artifacts (deployable files)
-// This is added by GradleRIO's backing project EmbeddedTools.
+// This section is to prevent people from accidently deploying this project to a robot. 
 deploy {
-    targets {
-        target("roborio", jaci.openrio.gradle.frc.RoboRIO) {
-            team = TEAM
-        }
-    }
-    artifacts {
-        artifact('frcJava', jaci.openrio.gradle.frc.FRCJavaArtifact) {
-            targets << "roborio"
-        }
+    for (String task : project.gradle.startParameter.taskNames) {
+        if (task == "deploy")
+            throw new GradleException("This is a library project! You can't deploy it to a robot!")
     }
 }
 
@@ -30,6 +24,10 @@ dependencies {
     compileOnly wpilib()
     compileOnly ctre()
     compileOnly navx()
+
+    // For reference, here are a few more of the easy to add libraries not currently used:
+    //compileOnly pathfinder()
+    //compileOnly openrioMatchData()
 }
 
 // Create Sources Jar
@@ -56,5 +54,5 @@ artifacts {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.9'
 }
