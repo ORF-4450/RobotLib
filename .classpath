@@ -16,7 +16,7 @@
 	<classpathentry kind="var" path="networktables" sourcepath="networktables.sources"/>
 	<classpathentry kind="var" path="navx">
 		<attributes>
-			<attribute name="javadoc_location" value="file:/C:/Users/sean/navx-mxp/java/docs/"/>
+			<attribute name="javadoc_location" value="file:/C:/Users/rcorn/navx-mxp/java/docs/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRE_Phoenix.jar" sourcepath="/USERLIBS_DIR/CTRE_Phoenix-sources.jar"/>

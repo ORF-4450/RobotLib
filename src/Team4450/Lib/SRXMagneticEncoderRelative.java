@@ -13,9 +13,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 {
 	private WPI_TalonSRX	talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
-	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0;
-	private int				scaleFactor= 1;
-	private boolean			inverted = false;
+	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
+	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
+	private boolean			inverted = false, direction = false;
 
 	public SRXMagneticEncoderRelative()
 	{	
@@ -37,7 +37,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	
 	/**
 	 * Create SRMagneticEncoderRelate setting the Talon the encoder is
-	 * connected to end the wheel diameter of the wheel being monitored.
+	 * connected to and the wheel diameter of the wheel being monitored.
 	 * @param talon CanTalon object encoder is connected to.
  	 * @param wheelDiameter Wheel diameter in inches.
 	 */
@@ -51,10 +51,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		
 		reset();
 	}
+	
 	/**
-	 * Sets the pid source type to be used for pidGet(). Only displacement
-	 * (count) implemented.
-	 * @param pidSourceType The pid source type.
+	 * Sets the pid source type to be used for pidGet(). 
+	 * @param pidSourceType The pid source type (displacement/rate).
 	 */
 	@Override
 	public void setPIDSourceType( PIDSourceType pidSourceType )
@@ -64,8 +64,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 
 	/**
 	 * Return the current pid source type setting.
-	 * @return The pid source type. Only displacement (count)
-	 * implemented.
+	 * @return The pid source type.
 	 */
 	@Override
 	public PIDSourceType getPIDSourceType()
@@ -75,8 +74,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 
 	/**
 	 * Return the cumulative encoder count since last reset for input
-	 * to a pid controller. Only displacement (count) implemented.
-	 * @return The encoder count.
+	 * to a pid controller, or return the current rate of change of the
+	 * encoder (velocity).
+	 * @return The encoder current count or rate of change (ticks/100ms).
 	 */
 	@Override
 	public double pidGet()
@@ -84,7 +84,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		if (pidSourceType == PIDSourceType.kDisplacement)
 			return get();
 		else
-			return 0;
+			return getRate();
 	}
 
 	/**
@@ -95,7 +95,26 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	@Override
 	public int get()
 	{
-		return getRaw() / scaleFactor;
+		int count = getRaw() / scaleFactor;
+		
+		if (count == lastCount)
+			if (lastSampleTime == 0) lastSampleTime = Util.timeStamp();
+		
+		if (count > lastCount)
+		{
+			direction = true;
+			lastSampleTime = 0;
+		}
+		
+		if (count < lastCount) 
+		{
+			direction = false;
+			lastSampleTime = 0;
+		}
+		
+		lastCount = count;
+		
+		return count;
 	}
 	
 	private int getRaw()
@@ -105,9 +124,84 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
+	 * Return rate of rotation (velocity).
+	 * @return The rotation rate in ticks per 100ms.
+	 */
+	public int getRate()
+	{
+		get();	// Update direction and stopped.
+		
+		int rate = getRawRate();
+		
+		if (Math.abs(rate) > maxRate) maxRate = rate;
+		
+		return rate;
+	}
+	
+	/**
+	 * Return the rate of rotation in RPM.
+	 * @return Rotation in revolutions per minute.
+	 */
+	public int getRPM()
+	{
+		return getRawRate() * 600 / 4096;
+	}
+	
+	/**
+	 * Return the current velocity.
+	 * @param metersPerSecond False for feet/second, true for meters/second.
+	 * @return Current velocity based on RPM and gear ratio in units requested.
+	 */
+	public double getVelocity( boolean metersPerSecond )
+	{
+		if (metersPerSecond)
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
+		else
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
+	}
+	
+	/**
+	 * Return max rate of rotation (velocity) recorded since
+	 * start up.
+	 * @return The highest rotation rate seen in ticks per 100ms.
+	 */
+	public int getMaxRate()
+	{
+		return maxRate;
+	}
+	
+	/**
+	 * Return the max RPM recorded since start up.
+	 * @return The highest RPM seen.
+	 */
+	public int getMaxRPM()
+	{
+		return getMaxRate() * 600 / 4096;
+	}
+	
+	private int getRawRate()
+	{
+		return isInverted() ? talon.getSensorCollection().getQuadratureVelocity() * -1 :
+			talon.getSensorCollection().getQuadratureVelocity();
+	}
+	
+	/**
+	 * Return the max velocity recorded since start up.
+	 * @param metersPerSecond False for feet/second, true for meters/second.
+	 * @return Max velocity recorded based on RPM and gear ratio in units requested.
+	 */
+	public double getMaxVelocity( boolean metersPerSecond )
+	{
+		if (metersPerSecond)
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
+		else
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
+	}
+
+	/**
 	 * Return the distance in inches the encoder has recorded since last
 	 * reset. If encoder goes backwards the distance is reduced. Computed
-	 * from encoder rotations x gear ratio factor x (wheel diameter x 3.13).
+	 * from encoder rotations x gear ratio factor x (wheel diameter x 3.14).
 	 * @return The distance in inches.
 	 */
 	public double getDistance()
@@ -134,30 +228,41 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 
 	/**
-	 * Not implemented.
+	 * Set the time that should elapse with no movement to determine
+	 * if the robot is stopped.
+	 * @param maxPeriod The time in seconds.
 	 */
 	@Override
 	public void setMaxPeriod( double maxPeriod )
 	{
+		if (maxPeriod < 0) throw new IllegalArgumentException("Max Period must be >= 0");
+		
 		this.maxPeriod = maxPeriod;
 	}
 
 	/**
-	 * Not implemented.
+	 * Return if robot is stopped. No movement for Max Period seconds.
+	 * @return True if stopped, false if moving.
 	 */
 	@Override
 	public boolean getStopped()
 	{
+		if (maxPeriod == 0 || lastSampleTime == 0) return false;
+		
+		if (Util.getElaspedTime(lastSampleTime) >= maxPeriod) return true;
+		
 		return false;
 	}
 
 	/**
-	 * Not implemented.
+	 * Return direction of encoder movement. Assumes positive encoder counting
+	 * as indicating the "forward" direction of the  robot.
+	 * @return The direction (true = forward, false = backward).
 	 */
 	@Override
 	public boolean getDirection()
 	{
-		return false;
+		return direction;
 	}
 	
 	/**
@@ -221,6 +326,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	 */
 	public void setWheelDiameter( double wheelDiameter )
 	{
+		if (wheelDiameter < 1) throw new IllegalArgumentException("Wheel diameter must be >= 1");
+		
 		this.wheelDiameter = wheelDiameter;
 	}
 
@@ -235,7 +342,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 
 	/**
 	 * Set the gear ratio factor. This is a factor that the encoder rotation
-	 * is multiplied by to yield the wheel rotation. Defaults to 1.
+	 * is multiplied by to yield the wheel rotation. Defaults to 1 meaning a
+	 * 1:1 ratio between encoder shaft revolutions and wheel revolutions.
 	 * @param gearRatio The gear ratio factor to set
 	 */
 	public void setGearRatio( double gearRatio )
