@@ -46,9 +46,16 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
+Version 1.15
+
+*	More updates to SRXMagneticEncoderRelative class to support velocity based PID.
+
+R Corn
+August 28, 2018
+
 Version 1.14
 
-*	Update SRXMagneticEncoder class adding functions to better support path finding.
+*	Update SRXMagneticEncoderRelative class adding functions to better support path finding.
 
 R Corn
 August 27, 2018
