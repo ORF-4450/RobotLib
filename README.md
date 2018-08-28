@@ -11,9 +11,16 @@ c:\users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
 configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
 ***************************************************************************************************************
+Version 1.15
+
+*	More updates to SRXMagneticEncoderRelative class to support velocity based PID.
+
+R Corn
+August 28, 2018
+
 Version 1.14
 
-*	Update SRXMagneticEncoder class adding functions to better support path finding.
+*	Update SRXMagneticEncoderRelative class adding functions to better support path finding.
 
 R Corn
 August 27, 2018

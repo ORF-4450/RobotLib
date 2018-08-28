@@ -13,6 +13,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 {
 	private WPI_TalonSRX	talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
+	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
 	private boolean			inverted = false, direction = false;
@@ -53,8 +54,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
-	 * Sets the pid source type to be used for pidGet(). 
-	 * @param pidSourceType The pid source type (displacement/rate).
+	 * Sets the pid source type to be used for pidGet() calls by PID controllers. When
+	 * selecting rate, be sure to set the PIDRateType to use.
+	 * @param pidSourceType The pid source type (displacement(default)/rate).
 	 */
 	@Override
 	public void setPIDSourceType( PIDSourceType pidSourceType )
@@ -84,11 +86,30 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		if (pidSourceType == PIDSourceType.kDisplacement)
 			return get();
 		else
-			return getRate();
+			switch (pidRateType)
+			{
+				case ticksPer100ms:
+					return getRate(PIDRateType.ticksPer100ms);
+					
+				case ticksPerSec:
+					return getRate(PIDRateType.ticksPerSec);
+					
+				case RPM:
+					return getRPM();
+					
+				case velocityFPS:
+					return getVelocity(PIDRateType.velocityFPS);
+					
+				case velocityMPS:
+					return getVelocity(PIDRateType.velocityMPS);
+					
+				default:
+					return getRate(PIDRateType.ticksPer100ms);
+			}
 	}
 
 	/**
-	 * Return the encoder count since last reset. 4096 counts per
+	 * Return the encoder count since last reset. Note: 4096 counts per
 	 * encoder revolution divided by the scale factor.
 	 * @return The encoder count.
 	 */
@@ -124,10 +145,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
-	 * Return rate of rotation (velocity).
-	 * @return The rotation rate in ticks per 100ms.
+	 * Return rate of rotation.
+	 * @param rateType Ticks unit: per 100ms or per Second.
+	 * @return The rotation rate in ticks per selected unit.
 	 */
-	public int getRate()
+	public int getRate( PIDRateType rateType )
 	{
 		get();	// Update direction and stopped.
 		
@@ -135,7 +157,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		
 		if (Math.abs(rate) > maxRate) maxRate = rate;
 		
-		return rate;
+		if (rateType == PIDRateType.ticksPerSec)
+			return rate * 10;
+		else
+			return rate;
 	}
 	
 	/**
@@ -144,30 +169,34 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	 */
 	public int getRPM()
 	{
-		return getRawRate() * 600 / 4096;
+		return getRate(PIDRateType.ticksPer100ms) * 600 / 4096;
 	}
 	
 	/**
-	 * Return the current velocity.
-	 * @param metersPerSecond False for feet/second, true for meters/second.
+	 * Return the current velocity (distance per second).
+	 * @param rateType feet/second or meters/second.
 	 * @return Current velocity based on RPM and gear ratio in units requested.
 	 */
-	public double getVelocity( boolean metersPerSecond )
+	public double getVelocity( PIDRateType rateType )
 	{
-		if (metersPerSecond)
+		if (rateType == PIDRateType.velocityMPS)
 			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
 		else
 			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
 	}
 	
 	/**
-	 * Return max rate of rotation (velocity) recorded since
+	 * Return max rate of rotation recorded since
 	 * start up.
-	 * @return The highest rotation rate seen in ticks per 100ms.
+	 * @param rateType Ticks unit: per 100ms or per Second.
+	 * @return The highest rotation rate seen in ticks per selected unit.
 	 */
-	public int getMaxRate()
+	public int getMaxRate( PIDRateType rateType )
 	{
-		return maxRate;
+		if (rateType == PIDRateType.ticksPerSec)
+			return maxRate * 10;
+		else
+			return maxRate;
 	}
 	
 	/**
@@ -176,7 +205,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	 */
 	public int getMaxRPM()
 	{
-		return getMaxRate() * 600 / 4096;
+		return getMaxRate(PIDRateType.ticksPer100ms) * 600 / 4096;
 	}
 	
 	private int getRawRate()
@@ -187,12 +216,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	
 	/**
 	 * Return the max velocity recorded since start up.
-	 * @param metersPerSecond False for feet/second, true for meters/second.
+	 * @param rateType feet/second or meters/second.
 	 * @return Max velocity recorded based on RPM and gear ratio in units requested.
 	 */
-	public double getMaxVelocity( boolean metersPerSecond )
+	public double getMaxVelocity( PIDRateType rateType )
 	{
-		if (metersPerSecond)
+		if (rateType == PIDRateType.velocityMPS)
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
 		else
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
@@ -370,5 +399,40 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		if (scaleFactor < 1) throw new IllegalArgumentException("Scale factor must be >= 1");
 		
 		this.scaleFactor = scaleFactor;
+	}
+	
+	/**
+	 * Reset max rotation rate and max RPM.
+	 */
+	public void resetMaxRate()
+	{
+		maxRate = 0;
+	}
+	
+	/**
+	 * Set the PID rate type (unit) to use when doing rate PID.
+	 * @param rateType The rate type to send to PID controllers.
+	 */
+	public void setPIDRateType( PIDRateType rateType )
+	{
+		pidRateType = rateType;
+	}
+
+	/**
+	 * Return the current PIDRateType set.
+	 * @return The PIDRateType.
+	 */
+	public PIDRateType getPIDRateType()
+	{
+		return pidRateType;
+	}
+	
+	public enum PIDRateType
+	{
+		ticksPer100ms,
+		ticksPerSec,
+		RPM,
+		velocityFPS,
+		velocityMPS
 	}
 }
