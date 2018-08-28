@@ -190,7 +190,7 @@ public class NavX
 	/**
 	 * Return current robot heading (0-359.n) relative to direction robot was
 	 * pointed at last heading reset (setHeading). Will return fractional angle.
-	 * 1 degree is left of zero (count clockwise) and 359 is rightt (clockwise).
+	 * 1 degree is left of zero (count clockwise) and 359 is right (clockwise).
 	 * This is how headings are done when working with radians.
 	 * @return Robot heading in degrees.
 	 */

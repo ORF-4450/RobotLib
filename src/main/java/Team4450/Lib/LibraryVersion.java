@@ -1,5 +1,6 @@
 /**
- * RobotLib Version Number. Update for each release.
+ * RobotLib Version Number. Update for each release. Also update overview.html and
+ * run the JavaDoc function as well as the readme.md file.
  */
 
 package Team4450.Lib;
@@ -14,7 +15,7 @@ public class LibraryVersion
 	 * Returns current version of RobotLib.
 	 */
 
-	public static final String version = "1.13 (06.11.18)";	
+	public static final String version = "1.14 (08.27.18)";	
 
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()

@@ -38,7 +38,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
-// When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project, docs folder can be configured to auto-publish to GitHub.
+// When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project folder.
 javadoc {
     destinationDir = new File("docs")
 }
