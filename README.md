@@ -23,7 +23,7 @@ Then add this library as a dependency in your build.gradle file:
 ```gradle
 dependencies {
     //... The rest of the dependencies
-    compile 'com.github.MoSadie:RobotLib:e0501b7aa8'	//TODO Update this to correct repo and tag.
+    compile 'com.github.ORF-4450:RobotLib:v1.15.1'
 }
 ```
 
