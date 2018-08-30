@@ -6,10 +6,45 @@ FRC Team 4450 Robot Control program library classes.
 These are the library classes created by the Olympia Robotics Federation (FRC Team 4450).
 This library is delivered via jar file for use in our robot control programs.
 
-Download the RobotLib jar files to your WpiLib user library directory located at:
-c:\users\yourusername\wpilib\user\java\lib. 
+## How to download
+
+### GradleRIO (Best Method)
+
+Add the maven repository jitpack.io to your build.gradle file:
+
+```gradle
+repositories {
+    maven { url 'https://jitpack.io' }
+}
+```
+
+Then add this library as a dependency in your build.gradle file:
+
+```gradle
+dependencies {
+    //... The rest of the dependencies
+    compile 'com.github.ORF-4450:RobotLib:v1.15.1'
+}
+```
+
+Javadocs, source attachment, and importing the jars will be done automatically after building the project.
+
+### WpiLib Library Manager (Manual & Before 2019)
+
+Download the RobotLib jar files from [here](releases/latest) to your WpiLib user library directory located at:
+C:\Users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
-configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path /.
+configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path `/` .
+
+## How to update
+
+### GradleRIO
+
+Change the tag at the end of the string to the latest version and rebuild the project while connected to the internet.
+
+### WpiLib Library Manager
+
+Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
 Version 1.15
 
