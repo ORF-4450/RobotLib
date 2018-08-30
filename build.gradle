@@ -28,6 +28,10 @@ dependencies {
     // For reference, here are a few more of the easy to add libraries not currently used:
     //compileOnly pathfinder()
     //compileOnly openrioMatchData()
+
+    // Quick guide to keywords:
+    // compile includes the library inside the final jar.
+    // compileOnly doesn't, but expects the used depencies to exist somewhere else. (Ex. Using compile keywork in a main robot project)
 }
 
 // Create Sources Jar
