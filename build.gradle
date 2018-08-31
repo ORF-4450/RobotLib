@@ -6,6 +6,8 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
+build.finalizedBy 'buildToRobotLib'
+
 // Instructions on how to build this project:
 // In the main folder of this project (the one with the gradlew.bat file) run the command "./gradlew.bat build" (or "gradlew build" if on a non-Windows platform)
 // The jars will be in the "build" folder under "libs"
@@ -22,16 +24,23 @@ deploy {
 // and NavX.
 dependencies {
     compileOnly wpilib()
-    compileOnly ctre()
-    compileOnly navx()
+    compile		ctre()
+    compile 	navx()
 
     // For reference, here are a few more of the easy to add libraries not currently used:
     //compileOnly pathfinder()
     //compileOnly openrioMatchData()
 
     // Quick guide to keywords:
-    // compile includes the library inside the final jar.
-    // compileOnly doesn't, but expects the used depencies to exist somewhere else. (Ex. Using compile keywork in a main robot project)
+    // compile includes the library inside the final jar (see jar step below).
+    // compileOnly doesn't, expects the used dependencies to exist somewhere else. (Ex. Using compile keyword in a main robot project)
+}
+
+// Includes "compile" dependencies into the robotlib.jar file.
+jar {
+	from configurations.compile.collect {
+		it.isDirectory() ? it:zipTree(it)
+	}
 }
 
 // Create Sources Jar
@@ -55,6 +64,12 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+task buildToRobotLib(type: Copy, dependsOn: jar) {
+    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
+    from 'build\\libs'
+    into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
 }
 
 task wrapper(type: Wrapper) {
