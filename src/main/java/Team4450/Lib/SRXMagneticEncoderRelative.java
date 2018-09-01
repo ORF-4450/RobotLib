@@ -305,7 +305,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 
 	/**
-	 * @return The Talon the encoder is connected to.
+	 * Returns the Talon the encoder is connected to.
+	 * @return The Talon instance the encoder is connected to.
 	 */
 	public WPI_TalonSRX getTalon()
 	{
@@ -313,6 +314,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 
 	/**
+	 * Sets the Talon the encoder is connected to.
 	 * @param talon The Talon the encoder is connected to.
 	 */
 	public void setTalon( WPI_TalonSRX talon )
@@ -426,13 +428,38 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	{
 		return pidRateType;
 	}
-	
+
+	/**
+	 * When using PID Source Type of rate, selects which rate 
+	 * measurement to use.
+	 */
 	public enum PIDRateType
 	{
+		/**
+		 * Rate of rotation in ticks per 100ms.
+		 */
 		ticksPer100ms,
+		
+		/**
+		 * Rate of rotation in ticks per second.
+		 */
 		ticksPerSec,
+		
+		/**
+		 * Rate of rotation in revolutions per minute.
+		 */
 		RPM,
+		
+		/**
+		 * Speed in feet per second based on wheel size and
+		 * gear ratio.
+		 */
 		velocityFPS,
+		
+		/**
+		 * Speed in meters per second based on wheel size and
+		 * gear ratio.
+		 */
 		velocityMPS
 	}
 }

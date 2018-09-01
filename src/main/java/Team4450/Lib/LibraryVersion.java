@@ -20,7 +20,6 @@ public class LibraryVersion
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
 	{		
-	
 		
 	}
 }
