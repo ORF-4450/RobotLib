@@ -8,7 +8,7 @@ plugins {
 
 build.finalizedBy 'buildToRobotLib'
 
-apply plugin: 'eclipse'
+//apply plugin: 'eclipse'
 
 eclipse {
   //if you want parts of paths in resulting file to be replaced by variables (files):
@@ -32,8 +32,6 @@ eclipse {
     downloadJavadoc = true
    }
  }
- 
- task GenerateEclipseClasspath
  
 // Instructions on how to build this project:
 // In the main folder of this project (the one with the gradlew.bat file) run the command "./gradlew.bat build" (or "gradlew build" if on a non-Windows platform)

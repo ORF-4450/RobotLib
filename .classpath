@@ -1,58 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry output="bin/main" kind="src" path="src/main/java">
+	<classpathentry kind="src" output="bin/main" path="src/main/java">
 		<attributes>
 			<attribute name="gradle_scope" value="main"/>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry output="bin/main" kind="src" path="src/main/resources">
+	<classpathentry kind="src" output="bin/main" path="src/main/resources">
 		<attributes>
 			<attribute name="gradle_scope" value="main"/>
 			<attribute name="gradle_used_by_scope" value="main,test"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
 	<classpathentry kind="con" path="org.eclipse.buildship.core.gradleclasspathcontainer"/>
 	<classpathentry kind="output" path="bin/default"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8/"/>
-	<classpathentry sourcepath="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.ctre/CTRE-phoenix-java/5.5.1.0/7e777ddb7dc51b40e528d6bc3864ab50010fc6de/CTRE-phoenix-java-5.5.1.0-sources.jar" kind="lib" path="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.ctre/CTRE-phoenix-java/5.5.1.0/5089b4279af4e1c992e855c0af38a365d50057f2/CTRE-phoenix-java-5.5.1.0.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.ctre/CTRE-phoenix-java/5.5.1.0/2cfccedd17c04f1d4ac542ec25cdb9c0d51389b0/CTRE-phoenix-java-5.5.1.0-javadoc.jar!/"/>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.kauailabs/navx-java/3.0.348/255ba23bdb8da00696c80d9056bdfa204dda5ad6/navx-java-3.0.348-sources.jar" kind="lib" path="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/openrio.mirror.third.kauailabs/navx-java/3.0.348/5944f178eefdc19e32cee9fad21ea33880239839/navx-java-3.0.348.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value="main,test"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2018.4.1/b71b340c616d5c841deef19c9721044f57477788/wpilibj-java-2018.4.1-sources.jar" kind="lib" path="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2018.4.1/897367c0a37b2ec4dcb6aeb578be84f066c46f4a/wpilibj-java-2018.4.1.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibj-java/2018.4.1/11c712b4c2ff78b14b2de6e39d60f33450dc1be6/wpilibj-java-2018.4.1-javadoc.jar!/"/>
-			<attribute name="gradle_used_by_scope" value=""/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/4.1.0/af2f67e3ca637328b5d87a2ca66f3cc7eed0bb9/ntcore-java-4.1.0-sources.jar" kind="lib" path="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/4.1.0/52e7d8449aacb56e104020f10b39f33549177078/ntcore-java-4.1.0.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.ntcore/ntcore-java/4.1.0/90e07edcf48489e51a764f209f74504a3112c3ae/ntcore-java-4.1.0-javadoc.jar!/"/>
-			<attribute name="gradle_used_by_scope" value=""/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/3.2.0/c2f13b5007365c2b972c3d37e6104e4213c70c53/wpiutil-java-3.2.0-sources.jar" kind="lib" path="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/3.2.0/40b6832a84296f9146b27584e22c8507dab874dd/wpiutil-java-3.2.0.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpiutil/wpiutil-java/3.2.0/5f151470531ef660f4b748cb26899b3d0e8c367f/wpiutil-java-3.2.0-javadoc.jar!/"/>
-			<attribute name="gradle_used_by_scope" value=""/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.2.0/da5215ba2c023701a644802a1fcd93749061f90d/opencv-java-3.2.0-sources.jar" kind="lib" path="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/org.opencv/opencv-java/3.2.0/c65e242eaf6ff4b086d45b0254f4511b6a072a65/opencv-java-3.2.0.jar">
-		<attributes>
-			<attribute name="gradle_used_by_scope" value=""/>
-		</attributes>
-	</classpathentry>
-	<classpathentry sourcepath="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/1.3.0/2f60952b33c41e708cbd3efec5402d29aab472ca/cscore-java-1.3.0-sources.jar" kind="lib" path="C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/1.3.0/af0c62cf7e9903d052e67008105e014357917e13/cscore-java-1.3.0.jar">
-		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/rcorn/.gradle/caches/modules-2/files-2.1/edu.wpi.first.cscore/cscore-java/1.3.0/13039eb79f6793d05db4ceb8732b1bc4e060e236/cscore-java-1.3.0-javadoc.jar!/"/>
-			<attribute name="gradle_used_by_scope" value=""/>
-		</attributes>
-	</classpathentry>
 </classpath>
