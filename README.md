@@ -23,7 +23,7 @@ Then add this library as a dependency in your build.gradle file:
 ```gradle
 dependencies {
     //... The rest of the dependencies
-    compile 'com.github.ORF-4450:RobotLib:v1.15.1'
+    compile 'com.github.ORF-4450:RobotLib:v2.0.0'
 }
 ```
 
