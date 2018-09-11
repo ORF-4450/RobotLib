@@ -49,9 +49,10 @@ Follow the same instructions as above for downloading and installing the library
 Version 2.0
 
 *	Convert to Gradle project. Thanks to Sean Flo for figuring all of this out.
+*	Add Jitpak support.
 
 R Corn
-August 30, 2018
+September 10, 2018
 
 Version 1.15
 
