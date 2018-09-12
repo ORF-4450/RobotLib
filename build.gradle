@@ -1,14 +1,16 @@
 plugins {
     id "java"
+    id "java-library"
     id "eclipse"
     id "idea"
 	id "maven"
     id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
-build.finalizedBy 'buildToRobotLib'
-
-//apply plugin: 'eclipse'
+// Configuration for install task which does the install of robotlib in local maven cache.
+group = "com.github.ORF-4450"
+archivesBaseName = "RobotLib"
+version = "local"	// Version for local maven cache.
 
 eclipse {
   //if you want parts of paths in resulting file to be replaced by variables (files):
@@ -49,24 +51,19 @@ deploy {
 // and NavX. These items are built into GradleRio and are not connected to the project
 // referenced libraries.
 dependencies {
-    compileOnly wpilib()
-    compile		ctre()
-    compile 	navx()
+    compileOnly 	wpilib()
+    api				ctre()
+    implementation 	navx()
 
-    // For reference, here are a few more of the easy to add libraries not currently used:
-    //compileOnly pathfinder()
-    //compileOnly openrioMatchData()
+	// For reference, here are a few more of the easy to add libraries not currently used:
+   	//implementation pathfinder()
+   	//implementation openrioMatchData()
 
-    // Quick guide to keywords:
-    // compile includes the library inside the final jar (see jar step below).
-    // compileOnly doesn't, expects the used dependencies to exist somewhere else. (Ex. Using compile keyword in a main robot project)
-}
-
-// Includes "compile" dependencies into the robotlib.jar file.
-jar {
-	from configurations.compile.collect {
-		it.isDirectory() ? it:zipTree(it)
-	}
+   	// Quick guide to keywords:
+   	// api is for libraries that are expected to be needed in the main robot project.
+   	// implementation is for libraries that will not be needed in the main robot project.
+   	// (Both api and implememtation keywords will have the library be automatically downloaded with RobotLib)
+   	// compileOnly expects the used dependencies to exist somewhere else. (Ex. In a main robot project)
 }
 
 // Create Sources Jar
@@ -93,11 +90,11 @@ artifacts {
     archives javadocJar
 }
 
-task buildToRobotLib(type: Copy, dependsOn: jar) {
-    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
-    from 'build\\libs'
-    into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
-}
+//task buildToRobotLib(type: Copy, dependsOn: jar) {
+//    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
+//    from 'build\\libs'
+//    into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
+//}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.9'
