@@ -10,7 +10,7 @@ plugins {
 // Configuration for install task which does the install of robotlib in local maven cache.
 group = "com.github.ORF-4450"
 archivesBaseName = "RobotLib"
-version = "local"	// Version for local maven cache.
+version = "local"	// Version identifier for local maven cache.
 
 eclipse {
   //if you want parts of paths in resulting file to be replaced by variables (files):
@@ -56,14 +56,14 @@ dependencies {
     implementation 	navx()
 
 	// For reference, here are a few more of the easy to add libraries not currently used:
-   	//implementation pathfinder()
+   	//implementation pathfinder() (Jaci's)
    	//implementation openrioMatchData()
 
    	// Quick guide to keywords:
    	// api is for libraries that are expected to be needed in the main robot project.
    	// implementation is for libraries that will not be needed in the main robot project.
    	// (Both api and implememtation keywords will have the library be automatically downloaded with RobotLib)
-   	// compileOnly expects the used dependencies to exist somewhere else. (Ex. In a main robot project)
+   	// compileOnly expects the dependency to be provided somewhere else. (Ex. In a main robot project)
 }
 
 // Create Sources Jar
@@ -90,6 +90,8 @@ artifacts {
     archives javadocJar
 }
 
+// Not used now that this build puts RobotLib into the local maven cache from which the robot
+// project can find it in it's normal processing of dependencies.
 //task buildToRobotLib(type: Copy, dependsOn: jar) {
 //    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
 //    from 'build\\libs'
