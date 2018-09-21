@@ -7,6 +7,9 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.0.0-alpha-3"
 }
 
+// Triggers jar copy task at end of build.
+install.finalizedBy 'buildToRobotLib'
+
 // Configuration for install task which does the install of robotlib in local maven cache.
 group = "com.github.ORF-4450"
 archivesBaseName = "RobotLib"
@@ -53,7 +56,8 @@ deploy {
 dependencies {
     compileOnly 	wpilib()
     api				ctre()
-    implementation 	navx()
+    //implementation 	navx()
+    compile			navx()	// we do this to support including navx in the robotib jar.
 
 	// For reference, here are a few more of the easy to add libraries not currently used:
    	//implementation pathfinder() (Jaci's)
@@ -62,8 +66,16 @@ dependencies {
    	// Quick guide to keywords:
    	// api is for libraries that are expected to be needed in the main robot project.
    	// implementation is for libraries that will not be needed in the main robot project.
-   	// (Both api and implememtation keywords will have the library be automatically downloaded with RobotLib)
-   	// compileOnly expects the dependency to be provided somewhere else. (Ex. In a main robot project)
+   	// (Both api and implementation keywords will have the library automatically downloaded with RobotLib)
+   	// compileOnly expects the dependency to be provided somewhere else. (Ex. by a main robot project)
+   	// compile means include in the output library jar (see below).
+}
+
+// Include 'compile' dependencies into output library jar. We do this for ANT build backwards compatibility.
+jar {
+	from configurations.compile.collect {
+		it.isDirectory() ? it:zipTree(it)
+	}
 }
 
 // Create Sources Jar
@@ -90,13 +102,12 @@ artifacts {
     archives javadocJar
 }
 
-// Not used now that this build puts RobotLib into the local maven cache from which the robot
-// project can find it in it's normal processing of dependencies.
-//task buildToRobotLib(type: Copy, dependsOn: jar) {
-//    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
-//    from 'build\\libs'
-//    into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
-//}
+// Copy output jars to folder used by our ant builds (non-gradle projects) to find libraries.
+task buildToRobotLib(type: Copy, dependsOn: jar) {
+    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
+    from 'build\\libs'
+    into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
+}
 
 task wrapper(type: Wrapper) {
     gradleVersion = '4.9'

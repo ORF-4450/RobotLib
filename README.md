@@ -46,6 +46,12 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
 ***************************************************************************************************************
+Version 2.0.1
+
+*	Fix backwards compatibility with ant projects.
+
+R Corn, September 21, 2018
+
 Version 2.0
 
 *	Convert to Gradle project. Thanks to Sean Flo for figuring all of this out.
