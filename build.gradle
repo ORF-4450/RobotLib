@@ -11,9 +11,14 @@ plugins {
 install.finalizedBy 'buildToRobotLib'
 
 // Configuration for install task which does the install of robotlib in local maven cache.
+// Also used by Jitpack.
 group = "com.github.ORF-4450"
 archivesBaseName = "RobotLib"
-version = "local"	// Version identifier for local maven cache.
+version = "local"	// Version identifier for local maven cache and github releases.
+					// Should stay as local. This allows the robot* projects on the
+					// same PC as RobotLib to pull from the local cache and so consume
+					// RobotLib versions under development and not yet passed through
+					// the release process.
 
 eclipse {
   //if you want parts of paths in resulting file to be replaced by variables (files):

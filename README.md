@@ -1,5 +1,6 @@
 # RobotLib
-[![Build Status](https://travis-ci.org/ORF-4450/RobotLib.svg?branch=master)](https://travis-ci.org/ORF-4450/RobotLib)
+Travis: [![Build Status](https://travis-ci.org/ORF-4450/RobotLib.svg?branch=master)](https://travis-ci.org/ORF-4450/RobotLib)
+[![](https://jitpack.io/v/ORF-4450/robotlib.svg)](https://jitpack.io/#ORF-4450/robotlib)
 
 FRC Team 4450 Robot Control program library classes.
 
@@ -23,7 +24,7 @@ Then add this library as a dependency in your build.gradle file:
 ```gradle
 dependencies {
     //... The rest of the dependencies
-    compile 'com.github.ORF-4450:RobotLib:v2.0.0'
+    compile 'com.github.ORF-4450:RobotLib:v[version number]'
 }
 ```
 
@@ -34,7 +35,8 @@ Javadocs, source attachment, and importing the jars will be done automatically a
 Download the RobotLib jar files from [here](releases/latest) to your WpiLib user library directory located at:
 C:\Users\yourusername\wpilib\user\java\lib.
 Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
-configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path `/` .
+configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path `/` or 
+download the javadoc jar and reference it directly.
 
 ## How to update
 
@@ -44,15 +46,16 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 ### WpiLib Library Manager
 
-Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib.jar and RobotLib-sources.jar
+Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
 ***************************************************************************************************************
-Version 2.0.2
+Version 2.0.1
 
 *	Fix backwards compatibility with ant projects.
-*	Fix more issues with gradle/travis/jitpack.
-*	v2.0.1 skipped due to issues with travis/jitpack.
+*	Fix more issues with gradle/travis/jitpack deployment.
+*	The file names in the github release (pre-2019) have changed. They have the fixed text -local appended to
+	each file name. This is an artifact of the gradle conversion.
 
-R Corn, September 21, 2018
+R Corn, September 24, 2018
 
 Version 2.0
 
