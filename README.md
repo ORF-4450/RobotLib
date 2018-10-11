@@ -48,6 +48,13 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
 ***************************************************************************************************************
+Version 2.1
+
+*	Modify NavX class to implement Sendable interface so it can be used with Shuffleboard Gyro widget.
+*	Modify NavX class to implement PIDSource interface so it can be used to feed PID controllers.
+
+R Corn, October 10, 2018
+
 Version 2.0.1
 
 *	Fix backwards compatibility with ant projects.
