@@ -27,3 +27,5 @@ github
 Shuffleboard
 Sendable
 SmartDashboard
+sendable
+setpoint
