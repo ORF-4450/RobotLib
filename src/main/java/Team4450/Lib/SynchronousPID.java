@@ -435,10 +435,11 @@ public class SynchronousPID implements Sendable
 	public void initSendable( SendableBuilder builder )
 	{
 		builder.setSmartDashboardType("PIDController");
-	    builder.addDoubleProperty("P", this::getP, this::setP);
-	    builder.addDoubleProperty("I", this::getI, this::setI);
-	    builder.addDoubleProperty("D", this::getD, this::setD);
-	    builder.addDoubleProperty("F", this::getF, this::setF);
+	    builder.addDoubleProperty("p", this::getP, this::setP);
+	    builder.addDoubleProperty("i", this::getI, this::setI);
+	    builder.addDoubleProperty("d", this::getD, this::setD);
+	    builder.addDoubleProperty("f", this::getF, this::setF);
+	    builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
 	}
     
 }

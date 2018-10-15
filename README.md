@@ -54,7 +54,7 @@ Version 2.1
 *	Modify NavX class to implement PIDSource interface so it can be used to feed PID controllers.
 *	Modify SynchronousPID to implement Sendable interface it can be used with Shuffleboard PIDController widget.
 
-R Corn, October 11, 2018
+R Corn, October 15, 2018
 
 Version 2.0.1
 
