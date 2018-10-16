@@ -92,6 +92,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 // When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project folder.
 javadoc {
     destinationDir = file("doc")
+    title = "RobotLib"
     options.overview = "src/main/resources/overview.html"
 }
 

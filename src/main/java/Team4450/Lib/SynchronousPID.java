@@ -384,6 +384,9 @@ public class SynchronousPID implements Sendable
         m_setpoint = 0;
     }
 
+    /**
+     * Reset the error accumulated for integration (i term).
+     */
     public void resetIntegrator() 
     {
         m_totalError = 0;
@@ -396,6 +399,7 @@ public class SynchronousPID implements Sendable
         lState += "Kp: " + m_P + "\n";
         lState += "Ki: " + m_I + "\n";
         lState += "Kd: " + m_D + "\n";
+        lState += "Kf: " + m_F + "\n";
 
         return lState;
     }
@@ -407,30 +411,50 @@ public class SynchronousPID implements Sendable
 
     // Functions that implement the Sendable interface.
 	
+    /**
+     * Returns the Sendable name.
+     * @return The Sendable name. 
+     */
 	@Override
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * Sets the Sendable name.
+	 * @param name The name of the Sendable.
+	 */
 	@Override
 	public void setName( String name )
 	{
 		this.name = name;
 	}
 
+	/**
+	 * Returns the Sendable's subsystem name.
+	 * @return The Sendable's subsystem name.
+	 */
 	@Override
 	public String getSubsystem()
 	{
 		return subSystem;
 	}
 
+	/**
+	 * Sets the name of the subsystem the Sendable is part of.
+	 * @param subsystem The subsystem name.
+	 */
 	@Override
 	public void setSubsystem( String subsystem )
 	{
 		subSystem = subsystem;
 	}
 
+	/**
+	 * Initialize the Sendable. Called by SmartDashboard.putData().
+	 * @param builder SendableBuilder object.
+	 */
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
