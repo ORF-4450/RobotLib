@@ -5,6 +5,7 @@
 bin/
 build/
 dist/
+doc/
 
 # Misc temp files
 
