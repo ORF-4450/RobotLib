@@ -19,3 +19,15 @@ radians
 timestamp
 pathfinder
 intake
+javadoc
+internet
+gradle
+jitpack
+github
+Shuffleboard
+Sendable
+SmartDashboard
+sendable
+setpoint
+sendables
+smartdashboard

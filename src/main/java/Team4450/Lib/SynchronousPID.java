@@ -1,5 +1,7 @@
 package Team4450.Lib;
 
+import edu.wpi.first.wpilibj.Sendable;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.util.BoundaryException;
 
 /**
@@ -10,7 +12,7 @@ import edu.wpi.first.wpilibj.util.BoundaryException;
  * This class courtesy of Team 254.
  */
 
-public class SynchronousPID 
+public class SynchronousPID implements Sendable
 {
     private double m_P; 	// factor for "proportional" control.
     private double m_I; 	// factor for "integral" control.
@@ -29,6 +31,7 @@ public class SynchronousPID
     private double m_last_input = Double.NaN;
     private double m_deadband = 0.0; // If the absolute error is less than deadband.
                                      // then treat error for the proportional term as 0.
+	private String name = "SynchronousPID", subSystem = "Ungrouped";
 
     public SynchronousPID() 
     {
@@ -171,6 +174,16 @@ public class SynchronousPID
     {
         return m_P;
     }
+    
+    /**
+     * Set the Proportional coefficient
+     * 
+     * @param p The proportional coefficient
+     */
+    public void setP(double p)
+    {
+    	m_P = p;
+    }
 
     /**
      * Get the Integral coefficient
@@ -180,6 +193,16 @@ public class SynchronousPID
     public double getI() 
     {
         return m_I;
+    }
+    
+    /**
+     * Set the Integral coefficient
+     * 
+     * @param i The integral coefficient
+     */
+    public void setI(double i)
+    {
+    	m_I = i;
     }
 
     /**
@@ -191,6 +214,16 @@ public class SynchronousPID
     {
         return m_D;
     }
+    
+    /**
+     * Set the Differential coefficient
+     * 
+     * @param d The differential coefficient
+     */
+    public void setD(double d)
+    {
+    	m_D = d;
+    }
 
     /**
      * Get the Feed forward coefficient
@@ -201,7 +234,17 @@ public class SynchronousPID
     {
         return m_F;
     }
-
+    
+    /**
+     * Set the Feed Forward coefficient
+     * 
+     * @param f The fee forward coefficient
+     */
+    public void setF(double f)
+    {
+    	m_F = f;
+    }
+    
     /**
      * Return the current PID result This is always centered on zero and constrained the the max and min outs
      *
@@ -361,4 +404,42 @@ public class SynchronousPID
     {
         return "PIDController";
     }
+
+    // Functions that implement the Sendable interface.
+	
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public void setName( String name )
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String getSubsystem()
+	{
+		return subSystem;
+	}
+
+	@Override
+	public void setSubsystem( String subsystem )
+	{
+		subSystem = subsystem;
+	}
+
+	@Override
+	public void initSendable( SendableBuilder builder )
+	{
+		builder.setSmartDashboardType("PIDController");
+	    builder.addDoubleProperty("p", this::getP, this::setP);
+	    builder.addDoubleProperty("i", this::getI, this::setI);
+	    builder.addDoubleProperty("d", this::getD, this::setD);
+	    builder.addDoubleProperty("f", this::getF, this::setF);
+	    builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
+	}
+    
 }

@@ -2,10 +2,15 @@ package Team4450.Lib;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -13,12 +18,15 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * Wrapper class for NavX MXP navigation sensor board.
  */
 
-public class NavX
+public class NavX implements Sendable, PIDSource
 {
 	private static NavX		navx;
 	private AHRS			ahrs;
 	private double 			totalAngle = 0, targetHeading = 0;
 	private double			yawResetDelay = .175;
+	private String			name = "NavX", subSystem = "Ungrouped";
+	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
+	private PIDDispType		pidDispType = PIDDispType.getYaw;
 
 	/**
 	 * Identifies port the NavX is plugged into
@@ -519,5 +527,132 @@ public class NavX
         /* Connectivity Debugging Support                                           */
         table.getEntry(    "IMU_Byte_Count")      .setNumber( ahrs.getByteCount());
         table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
+	}
+
+	// Functions that implement the Sendable interface.
+	
+	@Override
+	public String getName()
+	{
+		return name;
+	}
+
+	@Override
+	public void setName( String name )
+	{
+		this.name = name;
+	}
+
+	@Override
+	public String getSubsystem()
+	{
+		return subSystem;
+	}
+
+	@Override
+	public void setSubsystem( String subsystem )
+	{
+		subSystem = subsystem;
+	}
+
+	@Override
+	public void initSendable( SendableBuilder builder )
+	{
+		builder.setSmartDashboardType("Gyro");
+	    builder.addDoubleProperty("Value", this::getHeadingInt, null);
+	}
+
+	/**
+	 * When using PID Source Type of displacement, selects which displacement 
+	 * measurement function to use.
+	 */
+	public enum PIDDispType
+	{
+		getYaw,
+		getTotalYaw,
+		getHeadingYaw,
+		getHeading,
+		getHeadingR,
+		getHeadingInt,
+		getHeadingIntR
+	}
+	
+	/**
+	 * Set the PID displacement function to use when doing displacement PID.
+	 * @param dispType The function used to send data to PID controllers. Defaults
+	 * to getYaw.
+	 */
+	public void setPIDDispType( PIDDispType dispType )
+	{
+		pidDispType = dispType;
+	}
+
+	/**
+	 * Return the current PIDDispType function.
+	 * @return The PIDDispType.
+	 */
+	public PIDDispType getPIDDispType()
+	{
+		return pidDispType;
+	}
+
+	/**
+	 * Sets the pid source type to be used for pidGet() calls by PID controllers. When
+	 * selecting displacement, be sure to set the PIDDispType to use.
+	 * @param pidSource The pid source type (displacement(default)/rate of yaw change deg/sec).
+	 */
+	@Override
+	public void setPIDSourceType( PIDSourceType pidSource )
+	{
+		this.pidSourceType = pidSource;
+	}
+
+	/**
+	 * Return the current pid source type setting.
+	 * @return The pid source type.
+	 */
+	@Override
+	public PIDSourceType getPIDSourceType()
+	{
+		return pidSourceType;
+	}
+
+	/**
+	 * Returns the current displacement (yaw or heading) or rate of change to PID
+	 * controllers per the PIDSourceType setting.
+	 * @return The current displacement(yaw/heading) or rate of yaw change.
+	 */
+	@Override
+	public double pidGet()
+	{
+		if (pidSourceType == PIDSourceType.kDisplacement)
+			return getYawRate();
+		else
+			switch (pidDispType)
+			{
+				case getYaw:
+					return getYaw();
+
+				case getTotalYaw:
+					return getTotalYaw();
+					
+				case getHeadingYaw:
+					return getHeadingYaw();
+				
+				case getHeading:
+					return getHeading();
+					
+				case getHeadingR:
+					return getHeadingR();
+					
+				case getHeadingInt:
+					return getHeadingInt();
+					
+				case getHeadingIntR:
+					getHeadingIntR();
+					
+				default:
+					return getYaw();
+			}
 	}
 }
