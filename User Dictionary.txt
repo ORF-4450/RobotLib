@@ -31,3 +31,5 @@ sendable
 setpoint
 sendables
 smartdashboard
+dashboard
+git

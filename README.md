@@ -48,6 +48,12 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
 ***************************************************************************************************************
+Version 2.2
+
+*	Add SendableVersion class.
+
+R Corn, October 17,  2018
+
 Version 2.1
 
 *	Modify NavX class to implement Sendable interface so it can be used with Shuffleboard Gyro widget.

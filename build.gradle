@@ -76,10 +76,41 @@ dependencies {
    	// compile means include in the output library jar (see below).
 }
 
+def branch = { ->
+    def stdout = new ByteArrayOutputStream()
+    
+    exec {
+        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+        standardOutput = stdout
+    }
+    
+    return stdout.toString().trim()
+}
+
+def hash = { ->
+    def stdout = new ByteArrayOutputStream()
+    
+    exec {
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        standardOutput = stdout
+    }
+    
+    return stdout.toString().trim()
+}
+
 // Include 'compile' dependencies into output library jar. We do this for ANT build backwards compatibility.
+// Add version information to jar manifest.
 jar {
 	from configurations.compile.collect {
 		it.isDirectory() ? it:zipTree(it)
+    }   
+
+    manifest {
+       	attributes("LibraryVersion": LibraryVersion)	// from gradle.properties file.
+       	attributes("Time": new Date().format("yyyy-MM-dd HH:mm:ss"))
+       	attributes("User": System.getProperty("user.name"))
+       	attributes("Branch": branch())
+       	attributes("Commit": hash())
 	}
 }
 

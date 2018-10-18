@@ -1,6 +1,6 @@
 /**
  * RobotLib Version Number. Update for each release. Also update overview.html and
- * run the JavaDoc function as well as the readme.md file.
+ * run the JavaDoc function as well as the readme.md and gradle.properties files.
  */
 
 package Team4450.Lib;
@@ -14,6 +14,10 @@ public class LibraryVersion
 	/**
 	 * Returns current version of RobotLib.
 	 */
+
+	// When you change this, update overview.html and run the JavaDoc function 
+	// (ant build only, gradle does the doc automatically) as well as the readme.md
+	// and gradle.properties files.	
 
 	public static final String version = "2.1.0 (10.15.18)";	
 
