@@ -37,15 +37,15 @@ public class CameraFeed extends Thread
 	private CvSource			imageOutputStream;
 	private boolean				changingCamera;
 	
-	// Camera settings - Static
-	public static final int 	imageWidth = 320; //640;
-	public static final int 	imageHeight = 240; //480;
-	//public static final double 	fovH = 48.0;
-	//public static final double 	fovV = 32.0;
-	public static final	double	frameRate = 20;		// frames per second
-	public static final int		whitebalance = 4700;	// Color temperature in K, -1 is auto
-	public static final int		brightness = 50;		// 0 - 100, -1 is "do not set"
-	public static final int		exposure = 50;		// 0 - 100, -1 is "auto"
+	// Default Camera settings - Static
+	private final int 		imageWidth = 320; //640;
+	private final int 		imageHeight = 240; //480;
+	//public final double 	fovH = 48.0;
+	//public final double 	fovV = 32.0;
+	private final double	frameRate = 20;		// frames per second
+	private final int		whitebalance = 4700;	// Color temperature in K, -1 is auto
+	private final int		brightness = 50;		// 0 - 100, -1 is "do not set"
+	private final int		exposure = 50;		// 0 - 100, -1 is "auto"
 
 	// Create single instance of this class and return that single instance to any callers.
 	
@@ -132,6 +132,74 @@ public class CameraFeed extends Thread
 		camera.setWhiteBalanceManual(whitebalance);
 		camera.setBrightness(brightness);
 	}
+	
+	/**
+	 * Return current camera. May be used to configure camera settings.
+	 * @return UsbCamera Current camera, may be null. 
+	 */
+	public UsbCamera getCamera()
+	{
+		Util.consoleLog();
+		
+		return currentCamera;
+	}
+	
+	/**
+	 * Return the number of cameras in the internal camera list.
+	 * @return The camera count.
+	 */
+	public int getCameraCount()
+	{
+		Util.consoleLog();
+		
+		if (!initialized) return 0;
+		
+		if (cameras.isEmpty()) return 0;
+		
+		return cameras.size();
+	}
+	/**
+	 * Return camera from internal camera list. May be used to configure camera settings.
+	 * @param index Camera index in internal camera list (0 based).
+	 * @return Requested camera or null.
+	 */
+	public UsbCamera getCamera(int index)
+	{
+		Util.consoleLog("%d", index);
+		
+		if (!initialized) return null;
+		
+		if (cameras.isEmpty()) return null;
+		
+		if (index < 0 || index >= cameras.size()) return null;
+		
+		return cameras.get(index);
+	}
+	
+	/**
+	 * Return named camera from internal camera list. May be used to configure camera settings.
+	 * @param name Camera name, will be "CamN" where N is a device number.
+	 * @return Requested camera or null.
+	 */
+	public UsbCamera getCamera(String name)
+	{
+		UsbCamera	camera;
+		
+		Util.consoleLog("%s", name);
+		
+		if (!initialized) return null;
+		
+		if (cameras.isEmpty()) return null;
+
+		for(int i = 0; i < cameras.size(); ++i) 
+		{
+			camera = cameras.get(i);
+			
+			if (camera.getName() == name) return camera;
+		}
+		
+		return null;
+	}
 
 	// Run thread to read and feed camera images. Called by Thread.start().
 	
@@ -157,7 +225,7 @@ public class CameraFeed extends Thread
 	
 	/**
 	 * Get last image read from camera.
-	 * @return Mat Last image from camera.
+	 * @return Last image from camera.
 	 */
 	public Mat getCurrentImage()
 	{
@@ -239,6 +307,32 @@ public class CameraFeed extends Thread
 	    Util.consoleLog("end");
     }
     
+	/**
+	 * Change current camera to specific camera.
+	 * @param camera Usb camera object.
+	 */
+	public void changeCamera(UsbCamera camera)
+	{
+		Util.consoleLog("%s", camera.getName());
+		
+		if (!initialized) return;
+		
+		if (cameras.isEmpty()) return;
+		
+		changingCamera = true;
+		
+		currentCamera = camera;
+		
+	    synchronized (this) 
+	    {
+	    	imageSource.setSource(camera);
+	    }
+	    
+	    changingCamera = false;
+	    
+	    Util.consoleLog("end");
+	}
+	
 	// Get an image from current camera and give it to the server.
     
 	private void UpdateCameraImage()
