@@ -33,3 +33,4 @@ sendables
 smartdashboard
 dashboard
 git
+whitebalance

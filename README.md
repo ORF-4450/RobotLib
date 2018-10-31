@@ -52,8 +52,9 @@ Version 2.2
 
 *	Add SendableVersion class.
 *	Add functions to CameraFeed class to allow manipulation of individual camera settings.
+*	CameraFeed exposure & whitebalance now default to auto.
 
-R Corn, October 29,  2018
+R Corn, October 30,  2018
 
 Version 2.1
 

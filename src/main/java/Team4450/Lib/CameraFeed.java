@@ -37,15 +37,15 @@ public class CameraFeed extends Thread
 	private CvSource			imageOutputStream;
 	private boolean				changingCamera;
 	
-	// Default Camera settings - Static
-	private final int 		imageWidth = 320; //640;
-	private final int 		imageHeight = 240; //480;
+	// Default Camera settings
+	private final int 		imageWidth = 320; 		//640;
+	private final int 		imageHeight = 240;		//480;
 	//public final double 	fovH = 48.0;
 	//public final double 	fovV = 32.0;
-	private final double	frameRate = 20;		// frames per second
-	private final int		whitebalance = 4700;	// Color temperature in K, -1 is auto
-	private final int		brightness = 50;		// 0 - 100, -1 is "do not set"
-	private final int		exposure = 50;		// 0 - 100, -1 is "auto"
+	private final double	frameRate = 20;			// frames per second
+	//private final int		whitebalance = 4700;	// Color temperature in K
+	private final int		brightness = 50;		// 0 - 100
+	//private final int		exposure = 50;			// 0 - 100
 
 	// Create single instance of this class and return that single instance to any callers.
 	
@@ -120,7 +120,7 @@ public class CameraFeed extends Thread
 	}
 	
 	/**
-	 * Update camera with current settings fields values.
+	 * Update camera with default settings.
 	 */
 	private void updateCameraSettings(UsbCamera camera) 
 	{
@@ -128,8 +128,8 @@ public class CameraFeed extends Thread
 
 		camera.setResolution(imageWidth, imageHeight);
 		camera.setFPS((int) frameRate);
-		camera.setExposureManual(exposure);
-		camera.setWhiteBalanceManual(whitebalance);
+		camera.setExposureAuto();
+		camera.setWhiteBalanceAuto();
 		camera.setBrightness(brightness);
 	}
 	
@@ -178,7 +178,7 @@ public class CameraFeed extends Thread
 	
 	/**
 	 * Return named camera from internal camera list. May be used to configure camera settings.
-	 * @param name Camera name, will be "CamN" where N is a device number.
+	 * @param name Camera name, will be "camN" where N is the device number.
 	 * @return Requested camera or null.
 	 */
 	public UsbCamera getCamera(String name)
@@ -194,8 +194,8 @@ public class CameraFeed extends Thread
 		for(int i = 0; i < cameras.size(); ++i) 
 		{
 			camera = cameras.get(i);
-			
-			if (camera.getName() == name) return camera;
+
+			if (camera.getName().equals(name)) return camera;
 		}
 		
 		return null;
