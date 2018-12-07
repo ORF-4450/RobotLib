@@ -2,8 +2,14 @@
 package Team4450.Lib;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
 
 import edu.wpi.cscore.CvSink;
 import edu.wpi.cscore.CvSource;
@@ -20,8 +26,13 @@ import edu.wpi.first.wpilibj.Timer;
  * WpiLib CameraServer class to send to the DS. Creates camera object 
  * for each detected camera and starts them capturing images. We then 
  * loop on a thread getting the current image from the currently selected 
- * camera and pass the image to the camera  * server which passes the 
+ * camera and pass the image to the camera server which passes the 
  * image to the driver station.
+ * 
+ * You can decide to not start the thread and get/put images yourself.
+ * 
+ * You can set target rectangle(s) or an array of contours to be drawn
+ * on the outgoing image.
  */
 
 public class CameraFeed extends Thread
@@ -36,6 +47,11 @@ public class CameraFeed extends Thread
 	private CvSink				imageSource;
 	private CvSource			imageOutputStream;
 	private boolean				changingCamera;
+	
+	private ArrayList<Rect>			targetRectangles;
+	private ArrayList<MatOfPoint>	contours;
+	private Scalar 					targetColor = new Scalar(0, 0, 255);
+	private int						targetWidth = 1;
 	
 	// Default Camera settings
 	private final int 		imageWidth = 320; 		//640;
@@ -217,7 +233,7 @@ public class CameraFeed extends Thread
 			{
 				if (!changingCamera) UpdateCameraImage();
 		
-				Timer.delay(1 / frameRate);
+				//Timer.delay(1 / frameRate);
 			}
 		}
 		catch (Throwable e) {Util.logException(e);}
@@ -238,6 +254,36 @@ public class CameraFeed extends Thread
 	    	else
 	    		return image.clone();
 	    }
+	}
+	
+	/**
+	 * Get an image from the current camera. Returns null if no image
+	 * is available.
+	 * @return The image.
+	 */
+	public Mat getImage()
+	{
+		long	result;
+		
+		if (!initialized) return null;
+		
+		if (cameras.isEmpty()) return null;
+		
+		try
+		{
+			if (currentCamera != null)
+			{	
+			    synchronized (this) 
+			    {
+			    	result = imageSource.grabFrame(image);
+			    }
+			    
+			    if (result != 0) return image;
+			}
+		}
+		catch (Throwable e)	{Util.logException(e);}
+		
+		return null;
 	}
 	
 	/**
@@ -335,24 +381,95 @@ public class CameraFeed extends Thread
 	
 	// Get an image from current camera and give it to the server.
     
+//	private void UpdateCameraImage()
+//    {
+//		long	result;
+//		
+//		try
+//		{
+//			if (currentCamera != null)
+//			{	
+//			    synchronized (this) 
+//			    {
+//			    	result = imageSource.grabFrame(image);
+//			    }
+//			    
+//			    if (result != 0) imageOutputStream.putFrame(image);
+//			}
+//		}
+//		catch (Throwable e)	{Util.logException(e);}
+//    }
+	
 	private void UpdateCameraImage()
-    {
-		long	result;
+	{
+		Mat image = getImage();
 		
-		try
+		if (image != null) putImage(image);
+	}
+	
+	/**
+	 * Write an image to the camera server output.
+	 * @param image The image to write.
+	 */
+	public void putImage(Mat image)
+	{
+		if (contours != null) Imgproc.drawContours(image, contours, -1, targetColor, targetWidth);
+		
+		if (targetRectangles != null)
 		{
-			if (currentCamera != null)
-			{	
-			    synchronized (this) 
-			    {
-			    	result = imageSource.grabFrame(image);
-			    }
-			    
-			    if (result != 0) imageOutputStream.putFrame(image);
-			}
+			for (Rect rect: targetRectangles) 
+				Imgproc.rectangle(image, 
+						new Point(rect.x, rect.y), 
+						new Point(rect.x + rect.width, rect.y +  rect.height), 
+						targetColor, targetWidth);
 		}
-		catch (Throwable e)	{Util.logException(e);}
-    }
+		
+		imageOutputStream.putFrame(image);
+	}
+	
+	/**
+	 * Add a rectangle to be drawn on the camera feed images.
+	 * @param rectangle Rectangle to draw, null to clear all rectangles.
+	 */
+	public void addTargetRectangle(Rect rectangle)
+	{
+		if (rectangle == null)
+		{
+			targetRectangles = null;
+			return;
+		}
+		
+		if (targetRectangles == null) targetRectangles = new ArrayList<Rect>();
+		
+		targetRectangles.add(rectangle);
+	}
+	
+	/**
+	 * Set an array of contours to be drawn on the camera feed images.
+	 * @param contours The array of contours, null to clear.
+	 */
+	public void setContours(ArrayList<MatOfPoint> contours)
+	{
+		this.contours = contours;
+	}
+	
+	/**
+	 * Set the line color used to draw targets/contours.
+	 * @param color B,G,R color values. Defaults to 0,0,255 (red).
+	 */
+	public void setTargetColor(Scalar color)
+	{
+		targetColor = color;
+	}
+	
+	/**
+	 * Set width of line used to draw targets/contours.
+	 * @param width Line width, defaults to 1.
+	 */
+	public void setTargetWidth(int width)
+	{
+		if (width > 0) targetWidth =  width;
+	}
 	
 	/**
 	 * Write a list of usb cameras known to the RoboRio to the log.

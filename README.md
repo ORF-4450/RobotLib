@@ -48,6 +48,15 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
 ***************************************************************************************************************
+Version 2.3
+
+*	Modify CameraFeed class to support drawing target rectangles or contours on the outgoing feed. Research 
+	and concept development by Abhinav Gundrala.
+*	Modify CameraFeed class to support calling code reading images directly from the camera and writing images
+	directly to the feed, allowing an external loop to drive the feed.
+	
+A. Gundrala, R Corn, December 7, 2018
+	
 Version 2.2
 
 *	Add SendableVersion class.
