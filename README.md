@@ -52,8 +52,8 @@ Version 2.3
 
 *	Modify CameraFeed class to support drawing target rectangles or contours on the outgoing feed. Research 
 	and concept development by Abhinav Gundrala.
-*	Modify CameraFeed class to support calling code reading images directly from the camera and writing images
-	directly to the feed, allowing an external loop to drive the feed.
+*	Modify CameraFeed class to support calling programs reading images directly from the camera and writing 
+	images directly to the feed, allowing an external loop to drive the feed.
 	
 A. Gundrala, R Corn, December 7, 2018
 	
