@@ -103,6 +103,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 				case velocityMPS:
 					return getVelocity(PIDRateType.velocityMPS);
 					
+				case velocityIPS:
+					return getVelocity(PIDRateType.velocityIPS);
+					
 				default:
 					return getRate(PIDRateType.ticksPer100ms);
 			}
@@ -173,21 +176,22 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
-	 * Return the current velocity (distance per second).
-	 * @param rateType feet/second or meters/second.
+	 * Return the current velocity (distance unit per second).
+	 * @param rateType MPS/FPS/IPS.
 	 * @return Current velocity based on RPM and gear ratio in units requested.
 	 */
 	public double getVelocity( PIDRateType rateType )
 	{
 		if (rateType == PIDRateType.velocityMPS)
 			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
-		else
+		else if (rateType == PIDRateType.velocityFPS)
 			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
+		else
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 60);
 	}
 	
 	/**
-	 * Return max rate of rotation recorded since
-	 * start up.
+	 * Return max rate of rotation recorded since start up.
 	 * @param rateType Ticks unit: per 100ms or per Second.
 	 * @return The highest rotation rate seen in ticks per selected unit.
 	 */
@@ -215,16 +219,18 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
-	 * Return the max velocity recorded since start up.
-	 * @param rateType feet/second or meters/second.
+	 * Return the max velocity recorded since start up (distance unit per second).
+	 * @param rateType MPS/FPS/IPS.
 	 * @return Max velocity recorded based on RPM and gear ratio in units requested.
 	 */
 	public double getMaxVelocity( PIDRateType rateType )
 	{
 		if (rateType == PIDRateType.velocityMPS)
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
-		else
+		else if (rateType == PIDRateType.velocityFPS)
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
+		else
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 60);
 	}
 
 	/**
@@ -460,6 +466,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		 * Speed in meters per second based on wheel size and
 		 * gear ratio.
 		 */
-		velocityMPS
+		velocityMPS,
+		
+		/**
+		 * Speed in inches per second based on wheel size and
+		 * gear ratio.
+		 */
+		velocityIPS
 	}
 }

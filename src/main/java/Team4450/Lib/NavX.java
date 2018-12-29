@@ -175,6 +175,28 @@ public class NavX implements Sendable, PIDSource
 	}
 	
 	/**
+	 * Return the rotational velocity in degrees/second for selected axis.
+	 * @param axis Desired gyro axis.
+	 * @return rotational velocity (degrees/second)
+	 */
+	public double getRotationalVelocity(GyroAxis axis) 
+	{
+		switch (axis)
+		{
+			case X:
+				return navx.getAHRS().getRawGyroX();
+				
+			case Y:
+				return navx.getAHRS().getRawGyroY();
+				
+			case Z:
+				return navx.getAHRS().getRawGyroZ();
+		}
+		
+		return 0;
+	}	
+
+	/**
 	 * Return current robot heading (0-359.n) relative to direction robot was
 	 * pointed at last heading reset (setHeading). Will return fractional angle.
 	 * 1 degree is right of zero (clockwise) and 359 is left (counter clockwise).
@@ -575,6 +597,16 @@ public class NavX implements Sendable, PIDSource
 		getHeadingR,
 		getHeadingInt,
 		getHeadingIntR
+	}
+
+	/**
+	 * Selects gyro axis to use in various axis based methods.
+	 */
+	public enum GyroAxis
+	{
+		X,
+		Y,
+		Z
 	}
 	
 	/**
