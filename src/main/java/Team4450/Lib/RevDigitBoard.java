@@ -115,9 +115,9 @@ public class RevDigitBoard
 	{
 		Util.consoleLog();
 
-		if (pot != null) pot.free();
-		if (buttonA != null) buttonA.free();
-		if (buttonB != null) buttonB.free();
+		if (pot != null) pot.close();
+		if (buttonA != null) buttonA.close();
+		if (buttonB != null) buttonB.close();
 		
 		instance = null;
 	}

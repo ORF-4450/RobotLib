@@ -2,7 +2,6 @@
 package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.hal.PowerJNI;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -61,7 +60,7 @@ public class MonitorBattery extends Thread
         
 		  while (true)
           {
-			  if (PowerJNI.getVinVoltage() < LOW_BATTERY) //TODO: Replace with RobotController.getBatteryVoltage() See: wpilibsuite/allwpilib#870
+			  if (RobotController.getBatteryVoltage() < LOW_BATTERY)
 			  {
 				  if (alarmFlash)
 				  {

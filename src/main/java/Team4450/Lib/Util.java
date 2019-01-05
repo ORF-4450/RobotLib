@@ -24,8 +24,8 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.can.CANJNI;
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.can.CANJNI;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * Provides a set of utility functions.
