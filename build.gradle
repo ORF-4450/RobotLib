@@ -1,10 +1,10 @@
 plugins {
-    id "java"
     id "java-library"
     id "eclipse"
     id "idea"
     id "edu.wpi.first.GradleRIO" version "2019.1.1"
-	id "maven"
+    id "org.ajoberstar.grgit" version "3.0.0"
+    id "maven"
 }
 
 // Triggers jar copy task at end of build.
@@ -20,29 +20,6 @@ version = "local"	// Version identifier for local maven cache and github release
 					// RobotLib versions under development and not yet passed through
 					// the release process.
 
-eclipse {
-  //if you want parts of paths in resulting file to be replaced by variables (files):
-  //pathVariables 'GRADLE_HOME': file('/best/software/gradle'), 'TOMCAT_HOME': file('../tomcat')
-
-  classpath {
-    //you can tweak the classpath of the Eclipse project by adding extra configurations:
-    //plusConfigurations += [ configurations.provided ]
-
-    //you can also remove configurations from the classpath:
-    //minusConfigurations += [ configurations.someBoringConfig ]
-
-    //if you want to append extra containers:
-    //containers 'someFriendlyContainer', 'andYetAnotherContainer'
-
-    //customizing the classes output directory:
-    //defaultOutputDir = file('build-eclipse')
-
-    //default settings for downloading sources and Javadoc:
-    downloadSources = true
-    downloadJavadoc = true
-   }
- }
- 
 // Instructions on how to build this project:
 // In the main folder of this project (the one with the gradlew.bat file) run the command "./gradlew.bat build" (or "gradlew build" if on a non-Windows platform)
 // The jars will be in the "build" folder under "libs"
@@ -58,9 +35,17 @@ deploy {
 // Set this to true to enable desktop support.
 def includeDesktopSupport = false
 
-// Maven central needed for JUnit
+// Setup eclipse classpath settings, so the javadoc and sources are available in eclipse
+eclipse {
+    classpath {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
+// Look in local maven cache first, then maven central, then jitpack for dependent libraries.
 repositories {
-    mavenCentral()
+	mavenCentral()
 }
 
 // Defining my dependencies. In this case, WPILib (+ friends), and some vendor libraries (NavX, CTRE)
@@ -70,10 +55,10 @@ dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)    
+    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     testCompile 'junit:junit:4.12'
 
-	// For reference, here are a few more of the easy to add libraries not currently used:
+    // For reference, here are a few more of the easy to add libraries not currently used:
    	//implementation pathfinder() (Jaci's)
    	//implementation openrioMatchData()
 
@@ -85,35 +70,29 @@ dependencies {
    	// compile means include in the output library jar (see below).
 }
 
+// These next definitions (branch and hash) attempt to find extra information to add to the the manifest of
+// the robot program jar file.
+
+// Either the name of the current branch, or an empty string if no git repo is found.
 def branch = { ->
-    def stdout = new ByteArrayOutputStream()
-    
-    exec {
-        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
-        standardOutput = stdout
+    if (grgit == null) { // If there's no git repo.
+        return ""
     }
-    
-    return stdout.toString().trim()
+
+    return grgit.branch.current().getName()
 }
 
+// Either the short hash of the last commit or an empty string if no git repo is found.
 def hash = { ->
-    def stdout = new ByteArrayOutputStream()
-    
-    exec {
-        commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        standardOutput = stdout
+    if (grgit == null) { // If there's no git repo.
+        return ""
     }
     
-    return stdout.toString().trim()
+    return grgit.head().abbreviatedId
 }
 
-// Include 'compile' dependencies into output library jar. We do this for ANT build backwards compatibility.
-// Add version information to jar manifest.
+// Setting up RobotLib Jar File. In this case, adding version information to jar manifest.
 jar {
-	from configurations.compile.collect {
-		it.isDirectory() ? it:zipTree(it)
-    }   
-
     manifest {
        	attributes("LibraryVersion": LibraryVersion)	// from gradle.properties file.
        	attributes("Time": new Date().format("yyyy-MM-dd HH:mm:ss"))
