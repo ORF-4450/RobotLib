@@ -7,9 +7,6 @@ plugins {
     id "maven"
 }
 
-// Triggers jar copy task at end of build.
-install.finalizedBy 'buildToRobotLib'
-
 // Configuration for install task which does the install of robotlib in local maven cache.
 // Also used by Jitpack.
 group = "com.github.ORF-4450"
@@ -117,12 +114,4 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
-}
-
-// Copy output jars to folder used by our ant builds (non-gradle projects) to find libraries.
-// TODO Check if we need this now that Gradle is the main build system.
-task buildToRobotLib(type: Copy, dependsOn: jar) {
-    mkdir System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
-    from 'build\\libs'
-    into System.getProperty("user.home") + "\\wpilib\\user\\RobotLib"
 }
