@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.math.BigDecimal;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.logging.ConsoleHandler;
@@ -552,6 +553,20 @@ public class Util
 	public static double clampValue(double value, double magnitude)
 	{
 		return clampValue(value, -magnitude, magnitude);
+	}
+	
+	/**
+	 * Round a double to a specified number of decimal places.
+	 * @param number Value to round.
+	 * @param decimalPlaces Number of decimal places to round to.
+	 * @param rounding BigDecimal rounding method constant.
+	 * @return Rounded value.
+	 */
+	public static double round(double number, int decimalPlaces, int rounding) 
+	{
+		BigDecimal bd = new BigDecimal(number);
+		bd = bd.setScale(decimalPlaces, rounding);
+		return bd.floatValue();
 	}
 	
 	/**
