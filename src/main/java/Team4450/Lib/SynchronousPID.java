@@ -2,7 +2,7 @@ package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * This class implements a PID Control Loop.

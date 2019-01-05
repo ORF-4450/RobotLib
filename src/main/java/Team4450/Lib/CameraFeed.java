@@ -17,7 +17,7 @@ import edu.wpi.cscore.MjpegServer;
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.UsbCameraInfo;
 import edu.wpi.cscore.VideoMode;
-import edu.wpi.first.wpilibj.CameraServer;
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -304,7 +304,7 @@ public class CameraFeed extends Thread
     		for(int i = 0; i < cameras.size(); ++i) 
     		{
     			currentCamera = cameras.get(i);
-    			currentCamera.free();
+    			currentCamera.close();
     		}
     		
     		currentCamera = null;
