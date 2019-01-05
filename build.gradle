@@ -43,20 +43,12 @@ eclipse {
     }
 }
 
-// Look in local maven cache first, then maven central, then jitpack for dependent libraries.
-repositories {
-	mavenCentral()
-}
-
 // Defining my dependencies. In this case, WPILib (+ friends), and some vendor libraries (NavX, CTRE)
-// These items are built into GradleRio and are not connected to the project
-// referenced libraries.
 dependencies {
     compile wpi.deps.wpilib()
     compile wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
-    testCompile 'junit:junit:4.12'
 
     // For reference, here are a few more of the easy to add libraries not currently used:
    	//implementation pathfinder() (Jaci's)
