@@ -48,6 +48,14 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
 ***************************************************************************************************************
+Version 2.4
+
+*	Add "round" function to Util class.
+*	Add method to get rotational velocity around selected axis to NavX class.
+*	Add inches per second as a velocity unit to SRXMagneticEncoder class.
+
+R Corn, January 5, 2019
+
 Version 2.3
 
 *	Modify CameraFeed class to support drawing target rectangles or contours on the outgoing feed. Research 
