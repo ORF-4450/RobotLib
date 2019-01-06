@@ -9,7 +9,12 @@ This library is delivered via jar file for use in our robot control programs.
 
 ## How to download
 
-### GradleRIO (Best Method)
+### GradleRIO (2019 full release and later)
+
+Add the file RobotLib.json to the vendordeps directory of your project. Check the RobotLib version inside that file
+and set the version you wish to pull from Jitpack.
+
+### GradleRIO (Before 2019 full release)
 
 Add the maven repository jitpack.io to your build.gradle file:
 
@@ -40,7 +45,11 @@ download the javadoc jar and reference it directly.
 
 ## How to update
 
-### GradleRIO
+### GradleRIO (2019 full release and later)
+
+Update the version number inside RobotLib.json to desired version and recompile.
+
+### GradleRIO (Before 2019 full release)
 
 Change the tag at the end of the string to the latest version and rebuild the project while connected to the internet.
 
@@ -48,6 +57,15 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
 ***************************************************************************************************************
+Version 2.4
+
+*	Add "round" function to Util class.
+*	Add method to get rotational velocity around selected axis to NavX class.
+*	Add inches per second as a velocity unit to SRXMagneticEncoder class.
+*	Update for compatibility with the 2019 changes to GradleRIO.
+
+R Corn, S Flo, January 5, 2019
+
 Version 2.3
 
 *	Modify CameraFeed class to support drawing target rectangles or contours on the outgoing feed. Research 
