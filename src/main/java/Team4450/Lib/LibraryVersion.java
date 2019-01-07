@@ -1,6 +1,6 @@
 /**
- * RobotLib Version Number. Update for each release. Also update overview.html and
- * run the JavaDoc function as well as the readme.md and gradle.properties files.
+ * RobotLib Version Number. Update for each release. Also update overview.html for
+ * the JavaDoc as well as the readme.md and gradle.properties files.
  */
 
 package Team4450.Lib;
@@ -19,11 +19,11 @@ public class LibraryVersion
 	// (ant build only, gradle does the doc automatically) as well as the readme.md
 	// and gradle.properties files.	
 
-	public static final String version = "2.4.0 (01.05.19)";	
+	public static final String version = "3.0.0 (01.07.19)";	
 
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
-	{		
+	{			
 		
 	}
 }

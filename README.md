@@ -9,49 +9,29 @@ This library is delivered via jar file for use in our robot control programs.
 
 ## How to download
 
-### GradleRIO (Best Method - 2019-alpha version of GradleRIO)
+### GradleRIO (2019 full release and later)
 
-Add the maven repository jitpack.io to your build.gradle file:
+Add the file RobotLib.json from this project to the vendordeps directory of your robot project. Check the RobotLib version inside that file and set the version you wish to pull from Jitpack. Normally the version in RobotLib.json will  point to the current release. Recompile while connected to the internet.
 
-```gradle
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-```
+Import of Javadocs, source attachment, and jars will be done automatically when building the robot project.
 
-Then add this library as a dependency in your build.gradle file:
+### WARNING ###
 
-```gradle
-dependencies {
-    //... The rest of the dependencies
-    compile 'com.github.ORF-4450:RobotLib:v[version number]'
-}
-```
-
-Javadocs, source attachment, and importing the jars will be done automatically after building the project.
-
-### WpiLib Library Manager (Manual & Before 2019)
-
-Download the RobotLib jar files from [here](releases/latest) to your WpiLib user library directory located at:
-C:\Users\yourusername\wpilib\user\java\lib.
-Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
-configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path `/` or 
-download the javadoc jar and reference it directly.
-
-## How to update
-
-### GradleRIO
-
-Change the tag at the end of the string to the latest version and rebuild the project while connected to the internet.
-
-### WpiLib Library Manager
-
-Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
+This library no longer contains its dependencies. You have to import the dependent libraries in the robot project
+consuming this library. As of 3.0 these libraries are needed:
+Navx
+CTRE_Phoenix
 
 ### NOTICE
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.0
+
+*	Update for compatibility with the 2019 changes to WPILib and GradleRIO.
+
+R Corn, S Flo, January 7, 2019
+
 Version 2.4
 
 *	Add "round" function to Util class.

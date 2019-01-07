@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.logging.ConsoleHandler;
@@ -25,8 +26,8 @@ import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.can.CANJNI;
-import edu.wpi.first.wpilibj.util.BoundaryException;
+import edu.wpi.first.hal.can.CANJNI;
+import edu.wpi.first.hal.util.BoundaryException;
 
 /**
  * Provides a set of utility functions.
@@ -559,10 +560,10 @@ public class Util
 	 * Round a double to a specified number of decimal places.
 	 * @param number Value to round.
 	 * @param decimalPlaces Number of decimal places to round to.
-	 * @param rounding BigDecimal rounding method constant.
+	 * @param rounding Selected RoundingMode.
 	 * @return Rounded value.
 	 */
-	public static double round(double number, int decimalPlaces, int rounding) 
+	public static double round(double number, int decimalPlaces, RoundingMode rounding) 
 	{
 		BigDecimal bd = new BigDecimal(number);
 		bd = bd.setScale(decimalPlaces, rounding);

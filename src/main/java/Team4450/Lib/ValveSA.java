@@ -44,7 +44,7 @@ public class ValveSA
 		
 		Close();
 		
-		valveOpenSide.free();
+		valveOpenSide.close();
 	}
 
 	/**

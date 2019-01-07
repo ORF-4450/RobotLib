@@ -67,8 +67,8 @@ public class ValveDA
 	{
 		Util.consoleLog();
 		
-		valveOpenSide.free();
-		valveCloseSide.free();
+		valveOpenSide.close();
+		valveCloseSide.close();
 	}
 
 	/**
