@@ -9,7 +9,7 @@ This library is delivered via jar file for use in our robot control programs.
 
 ## How to download
 
-### GradleRIO (Best Method)
+### GradleRIO (Best Method - 2019-alpha version of GradleRIO)
 
 Add the maven repository jitpack.io to your build.gradle file:
 
@@ -47,6 +47,10 @@ Change the tag at the end of the string to the latest version and rebuild the pr
 ### WpiLib Library Manager
 
 Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
+
+### NOTICE
+
+v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
 Version 2.4
 
