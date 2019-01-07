@@ -11,60 +11,30 @@ This library is delivered via jar file for use in our robot control programs.
 
 ### GradleRIO (2019 full release and later)
 
-Add the file RobotLib.json to the vendordeps directory of your project. Check the RobotLib version inside that file
-and set the version you wish to pull from Jitpack.
+Add the file RobotLib.json from this project to the vendordeps directory of your robot project. Check the RobotLib version inside that file and set the version you wish to pull from Jitpack. Normally the version in RobotLib.json will  point to the current release. Recompile while connected to the internet.
 
-### GradleRIO (Before 2019 full release)
+Import of Javadocs, source attachment, and jars will be done automatically when building the robot project.
 
-Add the maven repository jitpack.io to your build.gradle file:
+### WARNING ###
 
-```gradle
-repositories {
-    maven { url 'https://jitpack.io' }
-}
-```
-
-Then add this library as a dependency in your build.gradle file:
-
-```gradle
-dependencies {
-    //... The rest of the dependencies
-    compile 'com.github.ORF-4450:RobotLib:v[version number]'
-}
-```
-
-Javadocs, source attachment, and importing the jars will be done automatically after building the project.
-
-### WpiLib Library Manager (Manual & Before 2019)
-
-Download the RobotLib jar files from [here](releases/latest) to your WpiLib user library directory located at:
-C:\Users\yourusername\wpilib\user\java\lib.
-Restart Eclipse. RobotLib will be integrated into your robot projects. After that, if RobotLib changes, just download the new RobotLib jars to the lib directory and refresh your robot project. To make the doc available
-configure project build path item for RobotLib to locate the javadoc in archive RobotLib.jar with path `/` or 
-download the javadoc jar and reference it directly.
-
-## How to update
-
-### GradleRIO (2019 full release and later)
-
-Update the version number inside RobotLib.json to desired version and recompile.
-
-### GradleRIO (Before 2019 full release)
-
-Change the tag at the end of the string to the latest version and rebuild the project while connected to the internet.
-
-### WpiLib Library Manager
-
-Follow the same instructions as above for downloading and installing the library, just overwrite the existing RobotLib-local.jar and RobotLib-local-sources.jar
+This library no longer contains its dependencies. You have to import the dependent libraries in the robot project
+consuming this library. As of 3.0 these libraries are needed:
+Navx
+CTRE_Phoenix
 ***************************************************************************************************************
+Version 3.0
+
+*	Update for compatibility with the 2019 changes to WPILib and GradleRIO.
+
+R Corn, S Flo, January 7, 2019
+
 Version 2.4
 
 *	Add "round" function to Util class.
 *	Add method to get rotational velocity around selected axis to NavX class.
 *	Add inches per second as a velocity unit to SRXMagneticEncoder class.
-*	Update for compatibility with the 2019 changes to GradleRIO.
 
-R Corn, S Flo, January 5, 2019
+R Corn, January 5, 2019
 
 Version 2.3
 
