@@ -567,7 +567,7 @@ public class Util
 	{
 		BigDecimal bd = new BigDecimal(number);
 		bd = bd.setScale(decimalPlaces, rounding);
-		return bd.floatValue();
+		return bd.doubleValue();
 	}
 	
 	/**

@@ -18,14 +18,19 @@ Import of Javadocs, source attachment, and jars will be done automatically when 
 ### WARNING ###
 
 This library no longer contains its dependencies. You have to import the dependent libraries in the robot project
-consuming this library. As of 3.0 these libraries are needed:
-Navx
-CTRE_Phoenix
+consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix
 
 ### NOTICE
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.0.1
+
+*	Fix bug in Util.round function, was returning float instead of double.
+*	In Util.SendableVersion, log ignored exception if the init function fails.
+
+V Vairaperumal, R Corn, January 12, 2019
+
 Version 3.0
 
 *	Update for compatibility with the 2019 changes to WPILib and GradleRIO.

@@ -69,7 +69,7 @@ public class SendableVersion implements Sendable
             branch = attr.getValue("Branch");
             commit = attr.getValue("Commit");
         }
-        catch(Exception ignored) { }
+        catch(Exception ignored) { Util.logException(ignored); }
     }
 
     /**
