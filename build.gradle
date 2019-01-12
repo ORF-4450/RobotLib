@@ -5,7 +5,10 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.1.1"
     id "org.ajoberstar.grgit" version "3.0.0"
     id "maven"
+    id "io.github.mosadie.vendorJSON" version "1.0"
 }
+
+build.finalizedBy 'vendorJSON'
 
 // Configuration for install task which does the install of robotlib in local maven cache.
 // Also used by Jitpack.
@@ -16,10 +19,13 @@ version = "local"	// Version identifier for local maven cache and github release
 					// same PC as RobotLib to pull from the local cache and so consume
 					// RobotLib versions under development and not yet passed through
 					// the release process.
-
-// Instructions on how to build this project:
-// In the main folder of this project (the one with the gradlew.bat file) run the command "./gradlew.bat build" (or "gradlew build" if on a non-Windows platform)
-// The jars will be in the "build" folder under "libs"
+					
+// This task updates the vendor json file for this project to the specified version.					
+vendorJSON {
+    fileName = "robotLib.json"
+    version = LibraryVersion
+    addJavaArtifact("com.github.ORF-4450", archivesBaseName, LibraryVersion)
+}
 
 // This section is to prevent people from accidently deploying this project to a robot. 
 deploy {
