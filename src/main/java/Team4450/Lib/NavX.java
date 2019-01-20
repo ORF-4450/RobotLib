@@ -218,25 +218,20 @@ public class NavX implements Sendable, PIDSource
 	}
 	
 	/**
-	 * Return current robot heading (0-359.n) relative to direction robot was
+	 * Return current robot heading (0-6.28144 (359.9)) relative to direction robot was
 	 * pointed at last heading reset (setHeading). Will return fractional angle.
-	 * 1 degree is left of zero (count clockwise) and 359 is right (clockwise).
+	 * 1 degree is left of zero (counter clockwise) and 359 is right (clockwise).
 	 * This is how headings are done when working with radians.
-	 * @return Robot heading in degrees.
+	 * @return Robot heading in radians.
 	 */
 	public double getHeadingR()
 	{
-		double heading;
-		
-		heading = ahrs.getAngle() + totalAngle;
-		
-		heading = heading - ((int) (heading / 360) * 360);
-		
-		if (heading > 0) heading = 360 - heading;
-
-		//LCD.printLine(9, "angle=%.2f  totangle=%.2f  hdg=%.2f", ahrs.getAngle(), totalAngle, heading);
-		
-		return Math.abs(heading);
+		return Math.abs(Math.toRadians(360 - getHeading()));
+	}
+	
+	public double getHeadingR(double degrees)
+	{
+		return Math.toRadians(360 - degrees);
 	}
 	
 	/**

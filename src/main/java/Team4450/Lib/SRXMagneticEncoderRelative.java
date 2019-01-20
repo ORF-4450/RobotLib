@@ -1,5 +1,6 @@
 package Team4450.Lib;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.CounterBase;
@@ -162,8 +163,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		
 		if (rateType == PIDRateType.ticksPerSec)
 			return rate * 10;
-		else
+		else if (rateType == PIDRateType.ticksPer100ms)
 			return rate;
+		
+		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
 	
 	/**
@@ -186,8 +189,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
 		else if (rateType == PIDRateType.velocityFPS)
 			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
-		else
+		else if (rateType == PIDRateType.velocityIPS)
 			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 60);
+		
+		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
 	
 	/**
@@ -199,8 +204,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	{
 		if (rateType == PIDRateType.ticksPerSec)
 			return maxRate * 10;
-		else
+		else if (rateType == PIDRateType.ticksPer100ms)
 			return maxRate;
+		
+		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
 	
 	/**
@@ -229,8 +236,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
 		else if (rateType == PIDRateType.velocityFPS)
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
-		else
+		else if (rateType == PIDRateType.velocityIPS)
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 60);
+		
+		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
 
 	/**
@@ -245,12 +254,29 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 
 	/**
-	 * Reset the encoder count.
+	 * Reset the encoder count. Note: this method returns immediately but the
+	 * encoder may take several milliseconds to actually reset. If you read
+	 * the encoder too soon it may not be reset.
 	 */
 	@Override
 	public void reset()
 	{
 		talon.getSensorCollection().setQuadraturePosition(0, 0);
+	}
+
+	/**
+	 * Reset the encoder count. Will wait the specified milliseconds for the
+	 * encoder reset to complete.
+	 * @param timeOut Number of milliseconds to wait for reset completion.
+	 * @return Zero if reset completes, non-zero if times out before reset complete.
+	 */
+	public int reset(int timeOut)
+	{
+		int errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeOut).value;
+		
+		if (errorCode!= 0) Util.consoleLog("encoder reset failed (%d)", errorCode);
+	
+		return errorCode;
 	}
 
 	/**

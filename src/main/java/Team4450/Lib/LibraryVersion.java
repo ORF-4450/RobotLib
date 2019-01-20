@@ -19,7 +19,7 @@ public class LibraryVersion
 	// (ant build only, gradle does the doc automatically) as well as the readme.md
 	// and gradle.properties files.	
 
-	public static final String version = "3.0.1 (01.12.19)";	
+	public static final String version = "3.0.2 (01.19.19)";	
 
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()

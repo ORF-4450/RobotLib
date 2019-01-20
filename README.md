@@ -11,7 +11,8 @@ This library is delivered via jar file for use in our robot control programs.
 
 ### GradleRIO (2019 full release and later)
 
-Add the file RobotLib.json from this project to the vendordeps directory of your robot project. Check the RobotLib version inside that file and set the version you wish to pull from Jitpack. Normally the version in RobotLib.json will  point to the current release. Recompile while connected to the internet.
+Add the file RobotLib.json from this project to the vendordeps directory of your robot project. You can use the
+file url from the list above to add to VSCode with the WPILib: Manage Vendor Libraries command. Check the RobotLib version inside that file and set the version you wish to pull from Jitpack. Normally the version in RobotLib.json will  point to the current release. Recompile while connected to the internet.
 
 Import of Javadocs, source attachment, and jars will be done automatically when building the robot project.
 
@@ -24,6 +25,14 @@ consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.0.2
+
+*	Correct Navx class getHeadingR() method documentation, streamline algorithm.
+*	Add some editing to make sure appropriate PIDRateType is passed to methods that use it.
+*	Add timeout to SRXMagneticEncoder.reset() method to optionally have the method wait for the reset to complete.
+
+R Corn, January 19, 2019
+
 Version 3.0.1
 
 *	Fix bug in Util.round function, was returning float instead of double.
