@@ -25,13 +25,15 @@ consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
-Version 3.0.2
+Version 3.0.3
 
 *	Correct Navx class getHeadingR() method documentation, streamline algorithm.
 *	Add some editing to make sure appropriate PIDRateType is passed to methods that use it.
 *	Add timeout to SRXMagneticEncoder.reset() method to optionally have the method wait for the reset to complete.
 
 R Corn, January 21, 2019
+
+Version 3.0.2 skipped due to Travis failure.
 
 Version 3.0.1
 
