@@ -31,7 +31,7 @@ Version 3.0.2
 *	Add some editing to make sure appropriate PIDRateType is passed to methods that use it.
 *	Add timeout to SRXMagneticEncoder.reset() method to optionally have the method wait for the reset to complete.
 
-R Corn, January 19, 2019
+R Corn, January 21, 2019
 
 Version 3.0.1
 
