@@ -10,7 +10,6 @@ deploy:
   file_glob: true
   file: 
   - "$TRAVIS_BUILD_DIR/build/libs/*"
-  file:
   - "$TRAVIS_BUILD_DIR/RobotLib.json"
   skip_cleanup: true
   on:
