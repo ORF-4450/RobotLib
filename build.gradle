@@ -5,7 +5,7 @@ plugins {
     id "edu.wpi.first.GradleRIO" version "2019.1.1"
     id "org.ajoberstar.grgit" version "3.0.0"
     id "maven"
-    id "io.github.mosadie.vendorJSON" version "1.0"
+//    id "io.github.mosadie.vendorJSON" version "1.0"
 }
 
 build.finalizedBy 'vendorJSON'
@@ -21,11 +21,11 @@ version = "local"	// Version identifier for local maven cache and github release
 					// the release process.
 					
 // This task updates the vendor json file for this project to the specified version.					
-vendorJSON {
-    fileName = "robotLib.json"
-    version = LibraryVersion
-    addJavaArtifact("com.github.ORF-4450", archivesBaseName, LibraryVersion)
-}
+//vendorJSON {
+//    fileName = "robotLib.json"
+//    version = LibraryVersion
+//    addJavaArtifact("com.github.ORF-4450", archivesBaseName, LibraryVersion)
+//}
 
 // This section is to prevent people from accidently deploying this project to a robot. 
 deploy {
