@@ -1,6 +1,6 @@
 language: java
 jdk:
-- oraclejdk8
+- oraclejdk11
 before_install:
  - chmod +x gradlew
 deploy:
@@ -10,7 +10,7 @@ deploy:
   file_glob: true
   file: 
   - "$TRAVIS_BUILD_DIR/build/libs/*"
-  - "$TRAVIS_BUILD_DIR/RobotLib.json"
+  - "$TRAVIS_BUILD_DIR/robotLib.json"
   skip_cleanup: true
   on:
     tags: on
