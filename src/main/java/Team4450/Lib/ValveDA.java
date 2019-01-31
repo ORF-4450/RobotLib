@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.Solenoid;
 public class ValveDA
 {
 	private final Solenoid	valveOpenSide, valveCloseSide;
+	private boolean			valveOpen = false;
 
 	public double           solenoidSlideTime;
 
@@ -83,6 +84,8 @@ public class ValveDA
 		valveOpenSide.set(true);
 		Timer.delay(solenoidSlideTime);
 		valveOpenSide.set(false);
+		
+		valveOpen = true;
 	}
 	
 	/**
@@ -107,6 +110,8 @@ public class ValveDA
 		valveCloseSide.set(true);
 		Timer.delay(solenoidSlideTime);
 		valveCloseSide.set(false);
+		
+		valveOpen = false;
 	}
 	
 	/**
@@ -117,5 +122,28 @@ public class ValveDA
 		Util.consoleLog();
 		
 		Close();
+	}
+	
+	/**
+	 * Returns open state of valve. Open is air on the A side of the
+	 * valve, which is open based on our convention. Note, this value
+	 * is not reliable until your first call to open/SetA or close/SetB to set
+	 * the initial physical state of the valve.
+	 * @return True if valve open (pressure on A side), false if closed.
+	 */
+	public boolean isOpen()
+	{
+		return valveOpen;
+	}
+	
+	/**
+	 * Indicates if pressure is applied to the A side of the valve. Note, this value
+	 * is not reliable until your first call to open/SetA or close/SetB to set
+	 * the initial physical state of the valve.
+	 * @return True of pressure on A side, false if pressure on B side
+	 */
+	public boolean isA()
+	{
+		return valveOpen;
 	}
 }

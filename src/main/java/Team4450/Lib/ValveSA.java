@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.Solenoid;
 
 public class ValveSA
 {
-	private final Solenoid valveOpenSide;
+	private final Solenoid	valveOpenSide;
+	private boolean			valveOpen = false;
 
 	/**
 	 * @param port DIO port wired to valve. Assumes PCM with CAN Id 0.
@@ -55,6 +56,8 @@ public class ValveSA
 		Util.consoleLog();
     
 		valveOpenSide.set(true);
+		
+		valveOpen = true;
 	}
 
 	/**
@@ -65,5 +68,20 @@ public class ValveSA
 		Util.consoleLog();
     
 		valveOpenSide.set(false);
+		
+		valveOpen = false;
+	}
+	
+	/**
+	 * Indicates if the valve is open, that is pressure is applied to the A
+	 * side of the valve (single action only has the A side). SA cylinders
+	 * typically have a spring that pulls in the rod so the no pressure
+	 * condition is considered closed. Applying air to the one port connected
+	 * to the A side of the valve extends the cylinder and is considered open.
+	 * @return True if valve is open (pressure on A side).
+	 */
+	public boolean isOpen()
+	{
+		return valveOpen;
 	}
 }

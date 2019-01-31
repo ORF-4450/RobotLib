@@ -34,3 +34,5 @@ smartdashboard
 dashboard
 git
 whitebalance
+gearbox
+pneumatic

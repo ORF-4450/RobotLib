@@ -25,13 +25,22 @@ consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.0.4
+
+*	Minor improvemments to ValveSA and DA classes. They now track open/closed state.
+*	Fix SRXMagenticEncoderRelative class. The reset(timeout) function was not correct
+	due to how the CTRE API handles Talon updates.
+*	Modified the tracing function so that when 99 log files are reached, the trace setup function
+	will delete the 99th file instead of throwing an exception. The rest of the files are moved
+	down so 98 becomes 99, 97 becomes 98 and so on. The most recent file is number 0.
+	
 Version 3.0.3
 
 *	Correct Navx class getHeadingR() method documentation, streamline algorithm.
 *	Add some editing to make sure appropriate PIDRateType is passed to methods that use it.
 *	Add timeout to SRXMagneticEncoder.reset() method to optionally have the method wait for the reset to complete.
 
-R Corn, January 21, 2019
+R Corn, January 31, 2019
 
 Version 3.0.2 skipped due to Travis failure.
 

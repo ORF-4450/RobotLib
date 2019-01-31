@@ -1,10 +1,13 @@
 package Team4450.Lib;
 
+import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Wrapper for SRX Magnetic Encoder used in relative (quadrature) mode.
@@ -17,6 +20,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
 	private boolean			inverted = false, direction = false;
+	
+	public static final int	TICKS_PER_REVOLUTION = 4096;
 
 	public SRXMagneticEncoderRelative()
 	{	
@@ -254,7 +259,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 
 	/**
 	 * Reset the encoder count. Note: this method returns immediately but the
-	 * encoder may take several milliseconds to actually reset. If you read
+	 * encoder may take up to 160 milliseconds to actually reset. If you read
 	 * the encoder too soon it may not be reset.
 	 */
 	@Override
@@ -265,17 +270,30 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 
 	/**
 	 * Reset the encoder count. Will wait the specified milliseconds for the
-	 * encoder reset to complete.
-	 * @param timeOut Number of milliseconds to wait for reset completion.
+	 * encoder reset to complete. To make sure the next get() call returns zero counts
+	 * the wait should be at least 170ms as the default update period of current counts
+	 * is 160ms plus max of 10ms to transmit the reset command.
+	 * @param timeout Number of milliseconds to wait for reset completion, zero for no wait.
 	 * @return Zero if reset completes, non-zero if times out before reset complete.
 	 */
-	public int reset(int timeOut)
+	public int reset(int timeout)
 	{
-		int errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeOut).value;
+		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
+
+		ErrorCode errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
 		
-		if (errorCode!= 0) Util.consoleLog("encoder reset failed (%d)", errorCode);
+		// The set function typically returns quite quickly but could take up to 10ms to send
+		// the reset command. It may take up to 160 additional ms for the zeroing to be reflected
+		// in a call to getQuadraturePosition() (our get()) as that is the default update period for the
+		// encoder counts from SRXEnc to the API. We go ahead and delay the requested amount to guarantee
+		// we wait long enough that next get() call returns zero counts.
+		
+		if (errorCode == ErrorCode.OK) 
+			Timer.delay(timeout / 1000.0);
+		else
+			Util.consoleLog("encoder reset failed (%d)", errorCode.value);
 	
-		return errorCode;
+		return errorCode.value;
 	}
 
 	/**
@@ -355,6 +373,21 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		this.talon = talon;
 		
 		reset();
+	}
+	
+	/**
+	 * Set the period that the Talon updates the RR with encoder count value.
+	 * Defaults to 160ms per CTRE doc. An update is called a frame. This method
+	 * will take 10ms to complete.
+	 * @param period Frame period in milliseconds.
+	 */
+	public void setStatusFramePeriod(int period)
+	{
+		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
+
+		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, period);
+		
+		Timer.delay(.010);
 	}
 
 	/**
