@@ -416,16 +416,15 @@ public class LaunchPad
     public enum LaunchPadControlIDs
     {
         BUTTON_GREEN(1),
-        BUTTON_TWO(2),
         BUTTON_BLUE(2),
         BUTTON_RED_RIGHT(3),
-        BUTTON_BLACK(6),
-        BUTTON_RED(8),
-        BUTTON_BLUE_RIGHT(10),
-        BUTTON_YELLOW(11),
         ROCKER_LEFT_FRONT(4),
         ROCKER_LEFT_BACK(5),
-        ROCKER_RIGHT(9);
+        BUTTON_BLACK(6),
+        BUTTON_RED(8),
+        ROCKER_RIGHT(9),
+        BUTTON_BLUE_RIGHT(10),
+        BUTTON_YELLOW(11);
         
         private int value;
 

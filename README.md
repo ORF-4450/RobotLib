@@ -25,6 +25,12 @@ consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.1.1
+
+*	Fix typo in 3.1.0.
+
+R. Corn, March 13, 2019
+
 Version 3.1.0
 
 *	Fix problems in LaunchPad class button enumeration. The constructor that adds all buttons automatically did
