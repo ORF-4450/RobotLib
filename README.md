@@ -25,6 +25,23 @@ consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.1.0
+
+*	Fix problems in LaunchPad class button enumeration. The constructor that adds all buttons automatically did
+	not work correctly due to misunderstanding how the Java enum class works. BUTTON_BLUE(2) and BUTTON_TWO(2) are
+	NOT the same thing and are not interchangeable even though they have the same integer value. These are two
+	different objects and apparently the case statement compares object ids not the integer value...
+*	Add squaredInput() function to Util class.
+*	ValveDA and SA now trace the pcm and port the valve is attached to.
+
+R Corn, March 13, 2019
+
+Version 3.0.5
+
+*	Fix errors in LaunchPad constructor that adds all available buttons to event handling.
+
+R Corn, February 26, 2019
+
 Version 3.0.4
 
 *	Minor improvements to ValveSA and DA classes. They now track open/closed state.

@@ -24,6 +24,7 @@ public class ValveDA
 {
 	private final Solenoid	valveOpenSide, valveCloseSide;
 	private boolean			valveOpen = false;
+	private int				port, pcmCanId = 0;
 
 	public double           solenoidSlideTime;
 
@@ -34,11 +35,13 @@ public class ValveDA
 
 	public ValveDA(int port)
 	{
-	  	Util.consoleLog("port=%d", port);
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
 
 		valveOpenSide = new Solenoid(port);
 		valveCloseSide = new Solenoid(port + 1);
     
+		this.port = port;
+		
 		solenoidSlideTime = .05;
     
 		//Close();
@@ -51,11 +54,14 @@ public class ValveDA
 
 	public ValveDA(int pcmCanId, int port)
 	{
-	  	Util.consoleLog("pcmCanId=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
 
 		valveOpenSide = new Solenoid(pcmCanId, port);
 		valveCloseSide = new Solenoid(pcmCanId, port + 1);
     
+		this.port = port;
+		this.pcmCanId = pcmCanId;
+		
 		solenoidSlideTime = .05;
     
 		//Close();
@@ -77,7 +83,7 @@ public class ValveDA
 	 */
 	public void Open()
 	{
-		Util.consoleLog();
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
     
 		valveCloseSide.set(false);
     
@@ -103,7 +109,7 @@ public class ValveDA
 	 */
 	public void Close()
 	{
-		Util.consoleLog();
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
     
 		valveOpenSide.set(false);
     

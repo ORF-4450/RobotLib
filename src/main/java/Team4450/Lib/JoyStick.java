@@ -139,7 +139,10 @@ public class JoyStick
 	{
 		Util.consoleLog(joyStickName);
 
+		if (monitorJoyStickThread != null) monitorJoyStickThread.interrupt();
+
 		monitorJoyStickThread = new MonitorJoyStick();
+		
 		monitorJoyStickThread.start();
 	}
 
@@ -235,10 +238,10 @@ public class JoyStick
 		
 		x = joyStick.getX();
 		
-		if (deadZoneX > 0.0 && Math.abs(x) < deadZoneX)
-			x = 0.0;
-		else if (deadZone > 0.0 && Math.abs(x) < deadZone)
-			x = 0.0;
+		if (deadZoneX > 0 && Math.abs(x) < deadZoneX)
+			x = 0;
+		else if (deadZone > 0 && Math.abs(x) < deadZone)
+			x = 0;
 		
 		return x * invertX;
 	}
@@ -253,10 +256,10 @@ public class JoyStick
 		
 		y = joyStick.getY();
 		
-		if (deadZoneY > 0.0 && Math.abs(y) < deadZoneY)
-			y = 0.0;
-		else if (deadZone > 0.0 && Math.abs(y) < deadZone)
-			y = 0.0;
+		if (deadZoneY > 0 && Math.abs(y) < deadZoneY)
+			y = 0;
+		else if (deadZone > 0 && Math.abs(y) < deadZone)
+			y = 0;
 		
 		return y * invertY;
 	}
@@ -375,12 +378,11 @@ public class JoyStick
      *  the actions associated with button up and down events.
      */
 	public interface JoyStickEventListener extends EventListener 
-	{
+	{	
 		public void ButtonDown(JoyStickEvent JoyStickEvent);
       
 		public void ButtonUp(JoyStickEvent JoyStickEvent);
 	}
-  
   
     /**
      * Register a JoyStickEventListener object to receive events.
@@ -427,7 +429,7 @@ public class JoyStick
 	public class JoyStickButton
 	{
 		public JoyStickButtonIDs	id;
-		public boolean			currentState, latchedState;
+		public boolean				currentState, latchedState;
   
 		public JoyStickButton(JoyStickButtonIDs buttonID)
 		{

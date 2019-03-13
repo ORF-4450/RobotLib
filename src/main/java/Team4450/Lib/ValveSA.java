@@ -14,14 +14,17 @@ public class ValveSA
 {
 	private final Solenoid	valveOpenSide;
 	private boolean			valveOpen = false;
+	private int				port, pcmCanId;
 
 	/**
 	 * @param port DIO port wired to valve. Assumes PCM with CAN Id 0.
 	 */
 	public ValveSA(int port)
 	{
-	  	Util.consoleLog("port=%d", port); 
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
 
+	  	this.port = port;
+	  	
 		valveOpenSide = new Solenoid(port);
 	}
 
@@ -31,8 +34,11 @@ public class ValveSA
 	 */
 	public ValveSA(int pcmCanId, int port)
 	{
-	  	Util.consoleLog("port=%d", port); 
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
 
+	  	this.port = port;
+	  	this.pcmCanId = pcmCanId;
+	  	
 		valveOpenSide = new Solenoid(pcmCanId, port);
 	}
 
@@ -53,7 +59,7 @@ public class ValveSA
 	 */
 	public void Open()
 	{
-		Util.consoleLog();
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
     
 		valveOpenSide.set(true);
 		
@@ -65,7 +71,7 @@ public class ValveSA
 	 */
 	public void Close()
 	{
-		Util.consoleLog();
+	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
     
 		valveOpenSide.set(false);
 		

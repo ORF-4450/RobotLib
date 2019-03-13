@@ -38,7 +38,7 @@ public class LaunchPad
 	 * @param joystick The JoyStick object that maps to the LaunchPad
 	 * @param caller 'this' in calling class.
 	 */
-	public LaunchPad(Joystick	joystick, Object caller)
+	public LaunchPad(Joystick joystick, Object caller)
 	{
 		LaunchPadControl	control;
 		
@@ -52,37 +52,37 @@ public class LaunchPad
     		// Build full set of launch pad controls and register them
     		// for monitoring.
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_ONE);
+    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_GREEN);
     		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_TWO);
+    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_BLUE);
     		controls.add(control);
     		
-    		//control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_THREE);
-    		//controls.add(control);
-    		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_FOUR);
+    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_RED_RIGHT);
     		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_FIVE);
+    		control = new LaunchPadControl(LaunchPadControlIDs.ROCKER_LEFT_FRONT);
+    		control.controlType = LaunchPadControlTypes.SWITCH;
     		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_SIX);
+    		control = new LaunchPadControl(LaunchPadControlIDs.ROCKER_LEFT_BACK);
+    		control.controlType = LaunchPadControlTypes.SWITCH;
     		controls.add(control);
     		
-    		//control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_SEVEN);
-    		//controls.add(control);
-    		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_EIGHT);
+    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_BLACK);
     		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_NINE);
+    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_RED);
     		controls.add(control);
     		
-    		//control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_TEN);
-    		//controls.add(control);
+    		control = new LaunchPadControl(LaunchPadControlIDs.ROCKER_RIGHT);
+    		control.controlType = LaunchPadControlTypes.SWITCH;
+    		controls.add(control);
     		
-    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_ELEVEN);
+    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_BLUE_RIGHT);
+    		controls.add(control);
+    		
+    		control = new LaunchPadControl(LaunchPadControlIDs.BUTTON_YELLOW);
     		controls.add(control);
 
     		Start();
@@ -160,12 +160,15 @@ public class LaunchPad
 	{
 		Util.consoleLog();
 		
+		if (monitorLaunchPadThread != null) monitorLaunchPadThread.interrupt();
+		
 		monitorLaunchPadThread = new MonitorLaunchPad();
+		
 		monitorLaunchPadThread.start();
 	}
 	
 	/**
-	 * Stop montioring the Launchpad controls.
+	 * Stop monitoring the Launch pad controls.
 	 */
 	public void Stop()
 	{
@@ -213,8 +216,8 @@ public class LaunchPad
     	            {
     	            	if (control.controlType.equals(LaunchPad.LaunchPadControlTypes.BUTTON))
     	            	{
-    	            		// Checking not because the buttons on DS are wired backwards.
-        	            	if (!joyStick.getRawButton(control.id.value)) //(control.joyStickButton.value))
+    	            		// Checking not because the LP buttons on DS are wired backwards.
+        	            	if (!joyStick.getRawButton(control.id.value))
             				{
             					previousState = control.currentState;
             					control.currentState = true;
@@ -239,7 +242,7 @@ public class LaunchPad
     	            	{
         					previousState = control.currentState;
         					
-        					control.currentState = joyStick.getRawButton(control.id.value); //(control.joyStickButton.value);
+        					control.currentState = joyStick.getRawButton(control.id.value);
         					
         					control.latchedState = control.currentState;
         							
@@ -393,37 +396,27 @@ public class LaunchPad
     // Driver Station Launch Pad to Booster to Joystick mapping.
     // -- MSP --  Booster  --  JS button Id -- Name
     //    Left
-    //    P1.6      A4              1          Trigger
-    //    P3.2      A5              2          Top Back
-    //    P2.7      B8              3          Top Center
-    //    P4.2      A10             4          Top Left
-    //    P4.1      A11             5          Top Right
-    //    P3.6      A3              6          Left Front
-    //    P3.5      none            7          Left Rear
+    //    P1.6      A4              1          Trigger		Green
+    //    P3.2      A5              2          Top Back		Blue
+    //    P2.7      B8              3          Top Center	Red Right
+    //    P4.2      A10             4          Top Left		Rocker Left Front
+    //    P4.1      A11             5          Top Right	Rocker Left Back
+    //    P3.6      A3              6          Left Front	Black
+    //    P3.5      none            7          Not used
     //
     //    Right
-    //    P2.2      A2              8          Back Left
-    //    P7.4      B1              9          Back Right
-    //    P1.5      A6             10          Right Rear
-    //    P1.4      B2             11          Right Front
+    //    P2.2      A2              8          Back Left	Red
+    //    P7.4      B1              9          Back Right	Rocker Right
+    //    P1.5      A6             10          Right Rear	Blue Right
+    //    P1.4      B2             11          Right Front	Yellow
 
     /**
      * LaunchPad control id enumeration.
      */
     public enum LaunchPadControlIDs
     {
-        BUTTON_ONE (1),
-        BUTTON_TWO (2),
-        BUTTON_THREE (3),
-        BUTTON_FOUR (4),
-        BUTTON_FIVE (5),
-        BUTTON_SIX (6),
-        //BUTTON_SEVEN (7),
-        BUTTON_EIGHT (8),
-        BUTTON_NINE (9),
-        BUTTON_TEN (10),
-        BUTTON_ELEVEN (11),
         BUTTON_GREEN(1),
+        BUTTON_TWO(2),
         BUTTON_BLUE(2),
         BUTTON_RED_RIGHT(3),
         BUTTON_BLACK(6),

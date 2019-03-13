@@ -91,6 +91,7 @@ public class MonitorCompressor extends Thread
   private MonitorCompressor(AnalogInput pressureSensor)
   {
 	  Util.consoleLog("port=%d", pressureSensor.getChannel());
+	  
 	  this.setName("MonitorCompressor");
 
 	  SmartDashboard.putBoolean("LowPressure", false);
