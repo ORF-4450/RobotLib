@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class GamePad
 {
-	private final Object	caller;
 	private final Joystick	joyStick;
 	private 				Set<GamePadEventListener> listeners = new HashSet<GamePadEventListener>();
 	private					Set<GamePadButton> buttons = new HashSet<GamePadButton>();
@@ -30,10 +29,8 @@ public class GamePad
 	 * Constructor which adds all GamePad buttons to be monitored.
 	 * @param joyStick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the pad object.
-	 * @param caller calling class instance (use 'this').
 	 */
-	
-	public GamePad(Joystick joyStick, String name, Object caller)
+	public GamePad(Joystick joyStick, String name)
 	{
 		GamePadButton	button;
 		
@@ -41,7 +38,6 @@ public class GamePad
 
 		this.joyStick = joyStick;
 		gamePadName = name;
-		this.caller = caller;
 		
 		// Add all the gamepad buttons to be monitored.
 		
@@ -80,16 +76,13 @@ public class GamePad
 	 * @param joyStick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the pad object.
 	 * @param button Enum value identifying button to add.
-	 * @param caller Calling class instance (use 'this').
 	 */
-	
-	GamePad(Joystick joyStick, String name, GamePadButtonIDs	button, Object caller)
+	GamePad(Joystick joyStick, String name, GamePadButtonIDs button)
 	{
 		Util.consoleLog("%s (single button)", name);
 
 		this.joyStick = joyStick;
 		gamePadName = name;
-		this.caller = caller;
 		
 		AddButton(button);
 	}
@@ -99,7 +92,6 @@ public class GamePad
 	 * @param button id value identifying button to add.
 	 * @return New button added or existing button.
 	 */
-
 	public GamePadButton AddButton(GamePadButtonIDs button)
 	{
 		Util.consoleLog("%s (%s)", gamePadName, button.name());
@@ -120,7 +112,6 @@ public class GamePad
 	 * @param button Enum value identifying button to find.
 	 * @return Button or null if not found.
 	 */
-	
 	public GamePadButton FindButton(GamePadButtonIDs button)
 	{
 		Util.consoleLog("%s (%s)", gamePadName, button.name());
@@ -132,9 +123,17 @@ public class GamePad
 	}
 	
 	/**
+	 * Returns the name of this gamepad object.
+	 * @return Joystick name.
+	 */
+	public String getName()
+	{
+		return gamePadName;
+	}
+	
+	/**
 	 *  Call to start GamePad button monitoring once all buttons are added.
 	 */
-	
 	public void Start()
 	{
 		Util.consoleLog(gamePadName);
@@ -415,7 +414,7 @@ public class GamePad
   {
       for (GamePadEventListener GamePadEventListener: listeners) 
       {
-          GamePadEventListener.ButtonUp(new GamePadEvent(caller, button));
+          GamePadEventListener.ButtonUp(new GamePadEvent(this, button));
       }
   }
   
@@ -425,7 +424,7 @@ public class GamePad
   {
       for (GamePadEventListener GamePadEventListener: listeners) 
       {
-          GamePadEventListener.ButtonDown(new GamePadEvent(caller, button));
+          GamePadEventListener.ButtonDown(new GamePadEvent(this, button));
       }
   }
 

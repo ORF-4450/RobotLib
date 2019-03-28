@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class JoyStick
 {
-	private final Object	caller;
 	private final Joystick	joyStick;
 	private 				Set<JoyStickEventListener> listeners = new HashSet<JoyStickEventListener>();
 	private					Set<JoyStickButton> buttons = new HashSet<JoyStickButton>();
@@ -28,10 +27,9 @@ public class JoyStick
 	 * Constructor which adds all JoyStick buttons to be monitored.
 	 * @param joystick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the JoyStick object.
-	 * @param caller calling class instance (use 'this').
 	 */
 	
-	public JoyStick(Joystick joystick, String name, Object caller)
+	public JoyStick(Joystick joystick, String name)
 	{
 		JoyStickButton	button;
 		
@@ -39,7 +37,6 @@ public class JoyStick
 
 		joyStick = joystick;
 		joyStickName = name;
-		this.caller = caller;
 		
 		// Build set of all the joystick buttons which will be monitored.
 		
@@ -84,15 +81,13 @@ public class JoyStick
 	 * @param joystick JoyStick object representing the GamePad.
 	 * @param name Identifying name for the JoyStick object.
 	 * @param button Enum value identifying button to add.
-	 * @param caller Calling class instance (use 'this').
 	 */
-	public JoyStick(Joystick joystick, String name, JoyStickButtonIDs button, Object caller)
+	public JoyStick(Joystick joystick, String name, JoyStickButtonIDs button)
 	{
 		Util.consoleLog(name);
 
 		this.joyStick = joystick;
 		joyStickName = name;
-		this.caller = caller;
 		
 		if (button != null) AddButton(button);
 	}
@@ -130,6 +125,15 @@ public class JoyStick
         	if (jsButton.id.value == button.value) return jsButton;
 
         return null;
+	}
+	
+	/**
+	 * Returns the name of this joystick object.
+	 * @return Joystick name.
+	 */
+	public String getName()
+	{
+		return joyStickName;
 	}
 
 	/**
@@ -408,7 +412,7 @@ public class JoyStick
 	{
 		for (JoyStickEventListener JoyStickEventListener: listeners) 
 		{
-			JoyStickEventListener.ButtonUp(new JoyStickEvent(caller, button));
+			JoyStickEventListener.ButtonUp(new JoyStickEvent(this, button));
 		}
 	}
   
@@ -418,7 +422,7 @@ public class JoyStick
 	{
 		for (JoyStickEventListener JoyStickEventListener: listeners) 
 		{
-			JoyStickEventListener.ButtonDown(new JoyStickEvent(caller, button));
+			JoyStickEventListener.ButtonDown(new JoyStickEvent(this, button));
 		}
 	}
 

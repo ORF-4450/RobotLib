@@ -25,6 +25,14 @@ consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.2.0
+
+*	Improve tracing in the PDxShim library classes.
+*	Modify JoyStick, LaunchPad and GamePad classes to correct design error and allow these objects to be
+	created in the Devices class.
+
+R. Corn, March 28, 2019
+
 Version 3.1.1
 
 *	Fix typo in 3.1.0.

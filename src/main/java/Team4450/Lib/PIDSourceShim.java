@@ -17,8 +17,18 @@ public class PIDSourceShim implements PIDSource
 	@Override
 	public double pidGet()
 	{
-		Util.consoleLog("%f sp=%f", pidSource.pidGet(), pid.getSetpoint());
-		return pidSource.pidGet();
+		double sp, src;
+		
+		Util.consoleLog();
+		
+		sp = pid.getSetpoint();
+		Util.consoleLog("after sp=%.3f", sp);
+		src = pidSource.pidGet();
+		Util.consoleLog("after src=%.3f", src);
+
+		Util.consoleLog("sp=%.3f src=%.3f err=%.3f", sp, src, sp - src);	
+
+		return src;
 	}
 
 	@Override

@@ -27,7 +27,6 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class LaunchPad
 {
-	private Object			caller;
 	private	Joystick		joyStick;
 	private 				Set<LaunchPadEventListener> listeners = new HashSet<LaunchPadEventListener>();
 	private					Set<LaunchPadControl> controls = new HashSet<LaunchPadControl>();
@@ -36,9 +35,8 @@ public class LaunchPad
 	/**
 	 * Construct JoyStick class with all controls registered for monitoring.
 	 * @param joystick The JoyStick object that maps to the LaunchPad
-	 * @param caller 'this' in calling class.
 	 */
-	public LaunchPad(Joystick joystick, Object caller)
+	public LaunchPad(Joystick joystick)
 	{
 		LaunchPadControl	control;
 		
@@ -47,7 +45,6 @@ public class LaunchPad
 		try
 		{
     		this.joyStick = joystick;
-    		this.caller = caller;
     		
     		// Build full set of launch pad controls and register them
     		// for monitoring.
@@ -94,16 +91,14 @@ public class LaunchPad
 	 * Construct JoyStick class with one control registered for monitoring.
 	 * @param joystick The JoyStick object that maps to the LaunchPad
 	 * @param controlID Launch pad control id identifying control to register.
-	 * @param caller 'this' in calling class.
 	 */
-	public LaunchPad(Joystick joystick, LaunchPadControlIDs controlID, Object caller)
+	public LaunchPad(Joystick joystick, LaunchPadControlIDs controlID)
 	{
 		Util.consoleLog(controlID.name());
 
 		try
 		{
     		this.joyStick = joystick;
-    		this.caller = caller;
     		
     		if (controlID != null) AddControl(controlID);
     	}
@@ -348,7 +343,7 @@ public class LaunchPad
     {
         for (LaunchPadEventListener launchPadEventListener: listeners) 
         {
-            launchPadEventListener.ButtonDown(new LaunchPadEvent(caller, control));
+            launchPadEventListener.ButtonDown(new LaunchPadEvent(this, control));
         }
     }
     
@@ -356,7 +351,7 @@ public class LaunchPad
     {
         for (LaunchPadEventListener launchPadEventListener: listeners) 
         {
-            launchPadEventListener.SwitchChange(new LaunchPadEvent(caller, control));
+            launchPadEventListener.SwitchChange(new LaunchPadEvent(this, control));
         }
     }
     
