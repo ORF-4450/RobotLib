@@ -4,6 +4,19 @@ import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
+/**
+/ This is how you use the shims to trace the input and output of a pid controller:
+
+/ sourceShim = new PIDSourceShim(Devices.winchEncoder);
+/ outputShim = new PIDOutputShim(Devices.winchDrive);
+
+/ //liftPidController = new PIDController(0.0, 0.0, 0.0, Devices.winchEncoder, Devices.winchDrive);
+/ liftPidController = new PIDController(0.0, 0.0, 0.0, sourceShim, outputShim);
+
+/ sourceShim.setPidController(liftPidController);
+/ outputShim.setPidController(liftPidController);
+*/
+
 public class PIDSourceShim implements PIDSource
 {
 	public PIDSource		pidSource;
@@ -22,9 +35,7 @@ public class PIDSourceShim implements PIDSource
 		Util.consoleLog();
 		
 		sp = pid.getSetpoint();
-		Util.consoleLog("after sp=%.3f", sp);
 		src = pidSource.pidGet();
-		Util.consoleLog("after src=%.3f", src);
 
 		Util.consoleLog("sp=%.3f src=%.3f err=%.3f", sp, src, sp - src);	
 

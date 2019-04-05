@@ -3,6 +3,19 @@ package Team4450.Lib;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.PIDOutput;
 
+/**
+/ This is how you use the shims to trace the input and output of a pid controller:
+
+/ sourceShim = new PIDSourceShim(Devices.winchEncoder);
+/ outputShim = new PIDOutputShim(Devices.winchDrive);
+
+/ //liftPidController = new PIDController(0.0, 0.0, 0.0, Devices.winchEncoder, Devices.winchDrive);
+/ liftPidController = new PIDController(0.0, 0.0, 0.0, sourceShim, outputShim);
+
+/ sourceShim.setPidController(liftPidController);
+/ outputShim.setPidController(liftPidController);
+*/
+
 public class PIDOutputShim implements PIDOutput
 {
 	public PIDOutput		pidOutput;
