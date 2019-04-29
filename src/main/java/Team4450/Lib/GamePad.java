@@ -408,6 +408,14 @@ public class GamePad
       this.listeners.remove(listener);
   }  
   
+  /**
+   * Remove all GamePadEventListener objects from event notification.
+   */
+  public void removeAllGamePadEventListeners()
+  {
+  	this.listeners.clear();
+  }
+  
   // Notify all registered handlers of button up event.
   
   private void notifyButtonUp(GamePadButton button) 

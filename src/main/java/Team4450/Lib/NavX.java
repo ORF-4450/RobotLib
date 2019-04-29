@@ -124,6 +124,15 @@ public class NavX implements Sendable, PIDSource
 	}
 	
 	/**
+	 * Returns the firmware version of the NavX.
+	 * @return The current firmware version in x.x format.
+	 */
+	public String getFirmwareVersion()
+	{
+		return ahrs.getFirmwareVersion();
+	}
+	
+	/**
 	 * Return yaw angle from zero point, which is direction robot was pointing when
 	 * resetYaw() last called. Uses Navx internal function which is updated on a
 	 * timed basis (update rate). There can be a delay between calling zeroYaw()
@@ -229,6 +238,11 @@ public class NavX implements Sendable, PIDSource
 		return Math.abs(Math.toRadians(360 - getHeading()));
 	}
 	
+	/**
+	 * Convert the supplied degree value to radians.
+	 * @param degrees Specified degrees value.
+	 * @return Degrees value converted to radians.
+	 */
 	public double getHeadingR(double degrees)
 	{
 		return Math.toRadians(360 - degrees);
@@ -246,8 +260,8 @@ public class NavX implements Sendable, PIDSource
 	
 	/**
 	 * Return current robot heading (0-359) relative to direction robot was
-	 * pointed at last heading reset (setHeading). Radians format.
-	 * @return Robot heading in whole degrees.
+	 * pointed at last heading reset (setHeading) in Radians.
+	 * @return Robot heading in whole radians.
 	 */
 	public int getHeadingIntR()
 	{

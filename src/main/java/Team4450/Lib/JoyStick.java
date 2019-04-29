@@ -405,6 +405,14 @@ public class JoyStick
 	{
 		this.listeners.remove(listener);
 	}  
+    
+    /**
+     * Remove all JoyStickEventListener objects from event notification.
+     */
+    public void removeAllJoyStickEventListeners()
+    {
+    	this.listeners.clear();
+    }
   
 	// Notify all registered handlers of button up event.
   

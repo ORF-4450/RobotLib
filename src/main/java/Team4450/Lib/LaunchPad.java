@@ -331,6 +331,14 @@ public class LaunchPad
         this.listeners.remove(listener);
     }  
     
+    /**
+     * Remove all LaunchPadEventListener objects from event notification.
+     */
+    public void removeAllLaunchPadEventListeners()
+    {
+    	this.listeners.clear();
+    }
+    
     private void notifyButtonUp(LaunchPadControl control) 
     {
         for (LaunchPadEventListener launchPadEventListener: listeners) 
