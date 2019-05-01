@@ -1,11 +1,19 @@
 package Team4450.Lib;
 
+import java.util.EventListener;
+import java.util.EventObject;
+import java.util.Set;
+
 import com.kauailabs.navx.frc.AHRS;
 
+import Team4450.Lib.LaunchPad.LaunchPadControl;
+import Team4450.Lib.LaunchPad.LaunchPadEvent;
+import Team4450.Lib.LaunchPad.LaunchPadEventListener;
 import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -27,19 +35,23 @@ public class NavX implements Sendable, PIDSource
 	private String			name = "NavX", subSystem = "Ungrouped";
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDDispType		pidDispType = PIDDispType.getYaw;
+	private double			lastLinearAccelX = 0.0, lastLinearAccelY = 0.0, collisionThreshold = 0.0;
+	private double			eventMonitoringInterval = 1.0;
+	private boolean			eventMonitoringEnabled =  false;
+	
+	private NavXEventListener	eventListener;
 
+	private final eventMonitor	runnable = new eventMonitor();
+	private final Notifier 		eventNotifier = new Notifier(runnable);
+	
 	/**
 	 * Identifies port the NavX is plugged into
-	 *
 	 */
-
 	public enum PortType {SPI, I2C, I2C_MXP, USB};
 	
 	/**
 	 * Specifies pin type when accessing NavX pins.
-	 *
 	 */
-
 	public enum PinType {DigitalIO, PWM, AnalogIn, AnalogOut};
 	    
 	private final int MAX_NAVX_MXP_DIGIO_PIN_NUMBER      = 9;
@@ -696,4 +708,132 @@ public class NavX implements Sendable, PIDSource
 					return getYaw();
 			}
 	}
+	
+	/**
+	 * Turn event monitoring on/off.
+	 * @param enabled True to monitor events, false to stop.
+	 */
+	public void enableEventMonitoring(boolean enabled)
+	{
+		eventMonitoringEnabled = enabled;
+		
+		if  (enabled)
+			eventNotifier.startPeriodic(eventMonitoringInterval);
+		else
+			eventNotifier.stop();
+	}
+	
+	/**
+	 * Return status of event monitoring function.
+	 * @return True if event monitoring is enabled.
+	 */
+	public boolean isEventMonitoringEnabled()
+	{
+		return eventMonitoringEnabled;
+	}
+	
+	/**
+	 * Set the time interval at which the event monitoring loop will run.
+	 * @param seconds Number of seconds between each run of the event monitoring
+	 * loop.
+	 */
+	public void setEventMonitoringInterval(double seconds)
+	{
+		eventMonitoringInterval = seconds;
+	}
+	
+	// Runs each event monitoring time interval triggered by the notifier. Checks
+	// for events.
+	
+	private class eventMonitor implements Runnable
+	{
+		public final void run()
+		{
+			if (collisionThreshold != 0) detectCollision(collisionThreshold);
+		}
+	}
+	
+	/**
+	 * Set g force threshold to detect a collision. Set to zero to turn off
+	 * collision detection. Collision detect raises a NavXEvent if listener
+	 * defined and event monitoring is enabled. Monitoring interval should be
+	 * 50ms or less for detection to work reliably.
+	 * @param g The collision acceleration threshold in g (gravity). Zero to
+	 * turn off collision detection.
+	 */
+	public void setCollisionThreshold(double g)
+	{
+		collisionThreshold = g;
+	}
+	
+	/**
+	 * Perform collision detection, raise event if jerk acceleration exceeds the
+	 * threshold.
+	 * @param g Detection threshold in G (gravity).
+	 */
+	private void detectCollision(double g)
+	{
+        double currLinearAccelX = ahrs.getWorldLinearAccelX();
+        double currentJerkX = currLinearAccelX - lastLinearAccelX;
+        lastLinearAccelX = currLinearAccelX;
+        
+        double currLinearAccelY = ahrs.getWorldLinearAccelY();
+        double currentJerkY = currLinearAccelY - lastLinearAccelY;
+        lastLinearAccelY = currLinearAccelY;
+        
+        if ( Math.abs(currentJerkX) > g ) 
+        	notifyEventListener(NavXEventType.collisionDetected, currentJerkX);
+        else if ( Math.abs(currentJerkY) > g ) 
+        	notifyEventListener(NavXEventType.collisionDetected, currentJerkY);
+	}
+	
+	// Event Handling classes.
+	
+	/**
+	 * NavX event type enumeration
+	 */
+	public enum NavXEventType
+	{
+		collisionDetected;
+	}
+	
+	/**
+	 *  Event description class returned to event handler.
+	 */
+    public class NavXEvent extends EventObject 
+    {
+		//private static final long serialVersionUID = 1L;
+
+    	public NavXEventType	eventType;
+		public Object			eventData;
+		
+		public NavXEvent(Object source, NavXEventType eventType, Object eventData) 
+		{
+            super(source);
+            this.eventType = eventType;
+            this.eventData = eventData;
+        }
+    }
+    
+    /**
+     *  Java Interface definition for event listener.
+     */
+    public interface NavXEventListener extends EventListener 
+    {
+        public void event(NavXEvent navXEvent);
+    }
+    
+    /**
+     * Register a NavXEventListener object instance to receive events.
+     * @param listener NavXEventListener object instance to receive events.
+     */
+    public void setNavXEventListener(NavXEventListener listener) 
+    {
+        this.eventListener = listener;
+    }
+    
+    private void notifyEventListener(NavXEventType eventType, Object eventData) 
+    {
+        if (eventListener != null) eventListener.event(new NavXEvent(this, eventType, eventData));
+    }
 }

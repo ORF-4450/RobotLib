@@ -368,7 +368,7 @@ public class GamePad
    */
   public class GamePadEvent extends EventObject 
   {
-	  private static final long serialVersionUID = 1L;
+	  //private static final long serialVersionUID = 1L;
 
 	  public GamePadButton	button;
 	

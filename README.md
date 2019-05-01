@@ -30,8 +30,13 @@ Version 3.2.0
 *	Improve tracing in the PDxShim library classes.
 *	Modify JoyStick, LaunchPad and GamePad classes to correct design error and allow these objects to be
 	created in the Devices class.
+*	Implement internal event monitoring scheme in NavX class that runs on a notifier and supports adding
+	automated monitoring functions to NavX that interact with robot code by raising an event. Robot code
+	turns event monitoring on/off and sets the time interval of the monitoring notifier.
+*	Implement a collision detection function using the above event monitoring capability. Notifies robot
+	code of a collision via an event. Robot code sets the collision threshold in g.
 
-R. Corn, March 28, 2019
+R. Corn, Maay 1, 2019
 
 Version 3.1.1
 
