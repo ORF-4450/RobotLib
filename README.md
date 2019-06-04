@@ -33,10 +33,11 @@ Version 3.2.0
 *	Implement internal event monitoring scheme in NavX class that runs on a notifier and supports adding
 	automated monitoring functions to NavX that interact with robot code by raising an event. Robot code
 	turns event monitoring on/off and sets the time interval of the monitoring notifier.
-*	Implement a collision detection function using the above event monitoring capability. Notifies robot
+*	Implement a collision detection function in NavX using the above event monitoring capability. Notifies robot
 	code of a collision via an event. Robot code sets the collision threshold in g.
+*	Fix locking design error in CameraFeed class introduced in v2.3.	
 
-R. Corn, Maay 1, 2019
+R. Corn, June 3, 2019
 
 Version 3.1.1
 

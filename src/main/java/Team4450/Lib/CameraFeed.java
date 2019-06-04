@@ -410,18 +410,21 @@ public class CameraFeed extends Thread
 	 */
 	public void putImage(Mat image)
 	{
-		if (contours != null) Imgproc.drawContours(image, contours, -1, targetColor, targetWidth);
-		
-		if (targetRectangles != null)
+		synchronized(this)
 		{
-			for (Rect rect: targetRectangles) 
-				Imgproc.rectangle(image, 
-						new Point(rect.x, rect.y), 
-						new Point(rect.x + rect.width, rect.y +  rect.height), 
-						targetColor, targetWidth);
+			if (contours != null) Imgproc.drawContours(image, contours, -1, targetColor, targetWidth);
+			
+			if (targetRectangles != null)
+			{
+				for (Rect rect: targetRectangles) 
+					Imgproc.rectangle(image, 
+							new Point(rect.x, rect.y), 
+							new Point(rect.x + rect.width, rect.y +  rect.height), 
+							targetColor, targetWidth);
+			}
+			
+			imageOutputStream.putFrame(image);
 		}
-		
-		imageOutputStream.putFrame(image);
 	}
 	
 	/**
@@ -430,15 +433,18 @@ public class CameraFeed extends Thread
 	 */
 	public void addTargetRectangle(Rect rectangle)
 	{
-		if (rectangle == null)
+		synchronized(this)
 		{
-			targetRectangles = null;
-			return;
+			if (rectangle == null)
+			{
+				targetRectangles = null;
+				return;
+			}
+		
+			if (targetRectangles == null) targetRectangles = new ArrayList<Rect>();
+		
+			targetRectangles.add(rectangle);
 		}
-		
-		if (targetRectangles == null) targetRectangles = new ArrayList<Rect>();
-		
-		targetRectangles.add(rectangle);
 	}
 	
 	/**
@@ -447,7 +453,10 @@ public class CameraFeed extends Thread
 	 */
 	public void setContours(ArrayList<MatOfPoint> contours)
 	{
-		this.contours = contours;
+		synchronized(this)
+		{
+			this.contours = contours;
+		}
 	}
 	
 	/**
