@@ -37,7 +37,7 @@ Version 3.2.0
 	code of a collision via an event. Robot code sets the collision threshold in g.
 *	Fix locking design error in CameraFeed class introduced in v2.3.	
 
-R. Corn, June 3, 2019
+R. Corn, June 12, 2019
 
 Version 3.1.1
 
