@@ -366,7 +366,7 @@ public class JoyStick
      */
 	public class JoyStickEvent extends EventObject 
 	{
-	  //private static final long serialVersionUID = 1L;
+	  private static final long serialVersionUID = 1L;
 
 	  public JoyStickButton	button;
 	
