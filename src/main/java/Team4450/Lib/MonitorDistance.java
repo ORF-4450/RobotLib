@@ -3,7 +3,7 @@ package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
-import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.RobotBase;
 
 /**
  * Task to monitor ultrasonic sensor and report distance to driver station.
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.SampleRobot;
 
 public class MonitorDistance extends Thread
 {
-    SampleRobot 		robot;
+    RobotBase 		robot;
     private int			port;
     private Ultrasonic	ultra;
     private double		delay = 1.0;	// seconds.
@@ -29,13 +29,13 @@ public class MonitorDistance extends Thread
     
     /**
      * Get a reference to global MonitorDistance Thread object.
-     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param robot RobotBase instance calling this function (use 'this').
   	 * Defaults to DIO port 0 for first wire. Port + 1 will be allocated
    	 * for the second wire.
      * @return Reference to global MonitorDistance object.
      */
       
-    public static MonitorDistance getInstance(SampleRobot robot) 
+    public static MonitorDistance getInstance(RobotBase robot) 
     {
     	 Util.consoleLog();
         	
@@ -46,13 +46,13 @@ public class MonitorDistance extends Thread
       
     /**
      * Get a reference to global MonitorDistance Thread object.
-     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param robot RobotBase instance calling this function (use 'this').
 	 * @param port DIO port for first wire. Port + 1 will be allocated
 	 * for the second wire.
      * @return Reference to global MonitorDistance object.
      */
     
-    public static MonitorDistance getInstance(SampleRobot robot, int port) 
+    public static MonitorDistance getInstance(RobotBase robot, int port) 
     {
     	Util.consoleLog();
       	
@@ -63,12 +63,12 @@ public class MonitorDistance extends Thread
     
     /**
      * Get a reference to global MonitorDistance Thread object.
-     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param robot RobotBase instance calling this function (use 'this').
      * @param ultraSonic Ultrasonic sensor instance.
      * @return Reference to global MonitorDistance object.
      */
   
-    public static MonitorDistance getInstance(SampleRobot robot, Ultrasonic ultraSonic) 
+    public static MonitorDistance getInstance(RobotBase robot, Ultrasonic ultraSonic) 
     {
     	Util.consoleLog();
     	
@@ -77,7 +77,7 @@ public class MonitorDistance extends Thread
     	return monitorDistance;
     }
     
-	private MonitorDistance(SampleRobot robot, int port)
+	private MonitorDistance(RobotBase robot, int port)
 	{
 		Util.consoleLog("ports=%d,%d", port, port + 1);
 		
@@ -88,7 +88,7 @@ public class MonitorDistance extends Thread
         ultra = new Ultrasonic(port, port + 1);
     }
     
-	private MonitorDistance(SampleRobot robot, Ultrasonic ultraSonic)
+	private MonitorDistance(RobotBase robot, Ultrasonic ultraSonic)
 	{
 		Util.consoleLog();
 		

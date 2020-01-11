@@ -2,6 +2,8 @@
 package Team4450.Lib;
 
 import java.util.ArrayList;
+
+import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
@@ -37,7 +39,7 @@ public class CameraFeed extends Thread
 	private UsbCamera			currentCamera;
 	private int					currentCameraIndex;
 	private ArrayList			<UsbCamera>cameras = new ArrayList<UsbCamera>();
-	private Mat 				image = new Mat();
+	private Mat 				image;
 	private static CameraFeed	cameraFeed;
 	private boolean				initialized;
 	private MjpegServer			mjpegServer;
@@ -89,7 +91,13 @@ public class CameraFeed extends Thread
     		Util.consoleLog();
     
     		this.setName("CameraFeed");
+    		
+    		// Make sure OpenCV native libraries are loaded.
 
+    		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+
+    		image = new Mat();
+    		
             // Create Mjpeg stream server.
             
             mjpegServer = CameraServer.getInstance().addServer("4450-mjpegServer", 1180);

@@ -2,7 +2,7 @@
 package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.SampleRobot;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class MonitorDistanceMBX extends Thread
 {
-    SampleRobot				robot;
+    RobotBase				robot;
     private static 			MonitorDistanceMBX	monitorDistance;
     private int				port = 1;
     private AnalogInput 	ultra;
@@ -29,11 +29,11 @@ public class MonitorDistanceMBX extends Thread
     /**
      * Get a reference to global MonitorDistanceMBX Thread object. Defaults to
      * Analog port 1 for ultrasonic sensor.
-     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param robot RobotBase instance calling this function (use 'this').
      * @return Reference to global MonitorDistanceMBX object.
      */
     
-    public static MonitorDistanceMBX getInstance(SampleRobot robot) 
+    public static MonitorDistanceMBX getInstance(RobotBase robot) 
     {
     	Util.consoleLog();
       	
@@ -44,12 +44,12 @@ public class MonitorDistanceMBX extends Thread
     
     /**
      * Get a reference to global MonitorDistanceMBX Thread object.
-     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param robot RobotBase instance calling this function (use 'this').
      * @param port Analog port number for ultasonic sensor.
      * @return Reference to global MonitorDistanceMBX object.
      */
       
-    public static MonitorDistanceMBX getInstance(SampleRobot robot, int port) 
+    public static MonitorDistanceMBX getInstance(RobotBase robot, int port) 
     {
     	Util.consoleLog();
         	
@@ -60,12 +60,12 @@ public class MonitorDistanceMBX extends Thread
     
     /**
      * Get a reference to global MonitorDistanceMBX Thread object.
-     * @param robot SampleRobot instance calling this function (use 'this').
+     * @param robot RobotBase instance calling this function (use 'this').
      * @param ultraSonic AnalogInput instance for ultra sonic sensor.
      * @return Reference to global MonitorDistanceMBX object.
      */
       
-    public static MonitorDistanceMBX getInstance(SampleRobot robot, AnalogInput ultraSonic) 
+    public static MonitorDistanceMBX getInstance(RobotBase robot, AnalogInput ultraSonic) 
     {
     	Util.consoleLog();
         	
@@ -74,7 +74,7 @@ public class MonitorDistanceMBX extends Thread
         return monitorDistance;
     }
 
-    private MonitorDistanceMBX(SampleRobot robot)
+    private MonitorDistanceMBX(RobotBase robot)
 	{
 		Util.consoleLog("port=%d", port);
         this.robot = robot;
@@ -83,7 +83,7 @@ public class MonitorDistanceMBX extends Thread
         ultra = new AnalogInput(port);
     }
 
-    private MonitorDistanceMBX(SampleRobot robot, int port)
+    private MonitorDistanceMBX(RobotBase robot, int port)
 	{
 		Util.consoleLog("port=%d", port);
         this.robot = robot;
@@ -93,7 +93,7 @@ public class MonitorDistanceMBX extends Thread
         ultra = new AnalogInput(port);
 	}
 
-    private MonitorDistanceMBX(SampleRobot robot, AnalogInput ultraSonic)
+    private MonitorDistanceMBX(RobotBase robot, AnalogInput ultraSonic)
 	{
 		Util.consoleLog("port=%d", ultraSonic.getChannel());
         this.robot = robot;
