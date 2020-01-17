@@ -22,12 +22,19 @@ Import of Javadocs, source attachment, and jars will be done automatically when 
 This library no longer contains its dependencies. You have to import the dependent libraries in the robot project
 consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix. You can copy the json files for
 these libraries from RobotLib vendordeps folder to your robot project vendordeps folder. Don't forget to do a 
-Gradle refresh after changing any vendordeps file.
+Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REVColorSensorV3.
 
 ### NOTICE
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
+Version 3.4.0
+
+*	Add wrapper class for REV ColorSensor V3.
+*	Add wrapper class for Lidar V3. Note this class was added but not yet tested.
+
+R. Corn, January 15, 2020
+
 Version 3.3.0
 
 *	Update for 2020 WpiLib and 3rd party library changes.
