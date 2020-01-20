@@ -28,7 +28,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
-	 * Create SRXMagneticEncoder and set the Talon the encoder is
+	 * Create SRXMagneticEncoderRelative and set the Talon the encoder is
 	 * connected to.
 	 * @param talon CanTalon object encoder is connected to.
 	 */
@@ -42,7 +42,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
-	 * Create SRMagneticEncoderRelate setting the Talon the encoder is
+	 * Create SRXMagneticEncoderRelative setting the Talon the encoder is
 	 * connected to and the wheel diameter of the wheel being monitored.
 	 * @param talon CanTalon object encoder is connected to.
  	 * @param wheelDiameter Wheel diameter in inches.

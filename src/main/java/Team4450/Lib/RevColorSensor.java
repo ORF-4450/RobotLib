@@ -8,6 +8,9 @@ import com.revrobotics.ColorMatchResult;
 import com.revrobotics.ColorSensorV3;
 import com.revrobotics.ColorSensorV3.RawColor;
 
+/**
+ * Wrapper class for REV Color Sensor V3.
+ */
 public class RevColorSensor
 {
 	/**
@@ -65,7 +68,7 @@ public class RevColorSensor
      * well lit conditions (the built in LED is a big help here!). The farther
      * an object is the more light from the surroundings will bleed into the 
      * measurements and make it difficult to accurately determine its color.
-     * @return
+     * @return Color object representing the color read by the sensor.
      */
     public Color getColor()
     {

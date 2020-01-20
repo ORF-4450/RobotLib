@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
- * Interface class for Double Action pneumatic valve.
+ * Wrapper class for Double Action pneumatic valve.
  * Double action is a sliding valve. Calling open applies power to the open side momentarily causing
  * the valve to move to the open position. Power is then turned off and the valve
  * stays where it is (open). Calling close applies power to the close side momentarily causing the

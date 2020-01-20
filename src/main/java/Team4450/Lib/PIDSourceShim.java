@@ -5,16 +5,19 @@ import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
-/ This is how you use the shims to trace the input and output of a pid controller:
-
-/ sourceShim = new PIDSourceShim(Devices.winchEncoder);
-/ outputShim = new PIDOutputShim(Devices.winchDrive);
-
-/ //liftPidController = new PIDController(0.0, 0.0, 0.0, Devices.winchEncoder, Devices.winchDrive);
-/ liftPidController = new PIDController(0.0, 0.0, 0.0, sourceShim, outputShim);
-
-/ sourceShim.setPidController(liftPidController);
-/ outputShim.setPidController(liftPidController);
+ * Debugging shim for PID controller input.
+ * <pre>
+ * This is how you use the shims to trace the input and output of a pid controller:
+ *
+ * sourceShim = new PIDSourceShim(Devices.winchEncoder);
+ * outputShim = new PIDOutputShim(Devices.winchDrive);
+ *
+ * //liftPidController = new PIDController(0.0, 0.0, 0.0, Devices.winchEncoder, Devices.winchDrive);
+ * liftPidController = new PIDController(0.0, 0.0, 0.0, sourceShim, outputShim);
+ *
+ * sourceShim.setPidController(liftPidController);
+ * outputShim.setPidController(liftPidController);
+ * </pre>
 */
 
 public class PIDSourceShim implements PIDSource

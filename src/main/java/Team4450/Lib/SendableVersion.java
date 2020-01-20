@@ -1,8 +1,4 @@
-/**
- * Obtain and transmit version information to SmartDasboard as a Sendable.
- * Reads version info from jar manifest as written by build.gradle.
- * Courtesy of Team 2502.
- */
+
 package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Sendable;
@@ -12,6 +8,11 @@ import java.net.URL;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
+/**
+ * Obtain and transmit version information to SmartDasboard as a Sendable.
+ * Reads version info from jar manifest as written by build.gradle.
+ * Courtesy of Team 2502.
+ */
 public class SendableVersion implements Sendable
 {
 	// Singleton class single instance.
@@ -42,6 +43,7 @@ public class SendableVersion implements Sendable
      * Initialize version info with the calling program's version, the
      * RobotLib version and information from manifest file in the program jar.
      * Must be called before using SmartDashboard.putData() to send this class.
+     * @param programVersion Robot program version.
      */
     public void init(String programVersion)
     {

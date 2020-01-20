@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.logging.Level;
 
 /**
- * Interface class for Driver Station LCD panel.
+ * Wrapper class for Driver Station LCD panel.
  */
 
 public class LCD
