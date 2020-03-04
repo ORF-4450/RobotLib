@@ -25,7 +25,7 @@ public class RevColorSensor
 	 */
 	private final ColorSensorV3	colorSensor = new ColorSensorV3(i2cPort);	
 	
-	private final ColorMatch 	colorMatcher = new ColorMatch();
+	private ColorMatch 			colorMatcher = new ColorMatch();
 	
 	// Private constructor prevents instantiation.
 
@@ -56,7 +56,6 @@ public class RevColorSensor
     public void setPort(I2C.Port port)
     {
     	i2cPort = port;
-    	
     }
     
     /**
@@ -189,5 +188,13 @@ public class RevColorSensor
     public void setConfidenceThreshold(double confidenceLevel)
     {
     	colorMatcher.setConfidenceThreshold(confidenceLevel);
+    }
+    
+    /**
+     * Clears all colors from the color matcher function.
+     */
+    public void resetColorMatcher()
+    {
+    	colorMatcher = new ColorMatch();
     }
 }
