@@ -1,8 +1,10 @@
 package Team4450.Lib;
 
+import Team4450.Lib.Wpilib.PIDSource;
+import Team4450.Lib.Wpilib.PIDSourceType;
 import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+//import edu.wpi.first.wpilibj.PIDSource;
+//import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * Provides a wrapper for the Absolute Encoder model MA3-A10-250N. That encoder is attached

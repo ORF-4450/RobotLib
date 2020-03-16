@@ -1,8 +1,12 @@
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.PIDController;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+import Team4450.Lib.Wpilib.PIDController;
+import Team4450.Lib.Wpilib.PIDSource;
+import Team4450.Lib.Wpilib.PIDSourceType;
+
+//import edu.wpi.first.wpilibj.PIDController;
+//import edu.wpi.first.wpilibj.PIDSource;
+//import edu.wpi.first.wpilibj.PIDSourceType;
 
 /**
  * Debugging shim for PID controller input.

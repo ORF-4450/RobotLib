@@ -4,9 +4,11 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import Team4450.Lib.Wpilib.PIDSource;
+import Team4450.Lib.Wpilib.PIDSourceType;
 import edu.wpi.first.wpilibj.CounterBase;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+//import edu.wpi.first.wpilibj.PIDSource;
+//import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
@@ -146,6 +148,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		return count;
 	}
 	
+	/**
+	 * Get the encoder cumulative tick count since reset.
+	 * @return The tick count.
+	 */
 	private int getRaw()
 	{
 		return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
@@ -249,14 +255,33 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	/**
 	 * Return the distance in inches the encoder has recorded since last
 	 * reset. If encoder goes backwards the distance is reduced. Computed
-	 * from encoder rotations x gear ratio factor x (wheel diameter x 3.14).
+	 * from encoder rotations x gear ratio factor x (wheel diameter(in) x 3.14).
 	 * @return The distance in inches.
 	 */
 	public double getDistance()
 	{
 		return (getRotations() * gearRatio) * (wheelDiameter * 3.14);
 	}
-
+	
+	/**
+	 * Return the distance the encoder has recorded since last
+	 * reset. If encoder goes backwards the distance is reduced. Computed
+	 * from encoder rotations x gear ratio factor x (wheel diameter(in) x 3.14).
+	 * @param unit Unit type to return the distance in.
+	 * @return The distance in selected unit.
+	 */
+	public double getDistance(DistanceUnit unit)
+	{
+		if (unit == DistanceUnit.Meters)
+			return Util.inchesToMeters(getDistance());
+		else if (unit == DistanceUnit.Feet)
+			return getDistance() / 12;
+		else if (unit == DistanceUnit.Inches)
+			return getDistance();
+			
+		throw new IllegalArgumentException("Invalid DistanceUnit");
+	}
+	
 	/**
 	 * Reset the encoder count. Note: this method returns immediately but the
 	 * encoder may take up to 160 milliseconds to actually reset. If you read
@@ -531,5 +556,15 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		 * gear ratio.
 		 */
 		velocityIPS
+	}
+
+	/**
+	 * When getting distance info, selects which measurement unit to use.
+	 */
+	public enum DistanceUnit
+	{
+		Meters,
+		Feet,
+		Inches
 	}
 }

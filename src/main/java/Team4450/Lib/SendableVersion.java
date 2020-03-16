@@ -50,7 +50,7 @@ public class SendableVersion implements Sendable
     	this.programVersion = programVersion;
     	robotlibVersion = LibraryVersion.version;
     	
-        Class clazz = SendableVersion.class;
+        Class<SendableVersion> clazz = SendableVersion.class;
         
         String className = clazz.getSimpleName() + ".class";
         String classPath = clazz.getResource(className).toString();

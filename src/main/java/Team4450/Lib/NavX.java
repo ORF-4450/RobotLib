@@ -2,23 +2,21 @@ package Team4450.Lib;
 
 import java.util.EventListener;
 import java.util.EventObject;
-import java.util.Set;
-
 import com.kauailabs.navx.frc.AHRS;
 
-import Team4450.Lib.LaunchPad.LaunchPadControl;
-import Team4450.Lib.LaunchPad.LaunchPadEvent;
-import Team4450.Lib.LaunchPad.LaunchPadEventListener;
-import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
+import Team4450.Lib.Wpilib.PIDSource;
+import Team4450.Lib.Wpilib.PIDSourceType;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.PIDSource;
-import edu.wpi.first.wpilibj.PIDSourceType;
+//import edu.wpi.first.wpilibj.PIDSource;
+//import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -32,7 +30,7 @@ public class NavX implements Sendable, PIDSource
 	private AHRS			ahrs;
 	private double 			totalAngle = 0, targetHeading = 0;
 	private double			yawResetDelay = .175;
-	private String			name = "NavX", subSystem = "Ungrouped";
+	//private String			name = "NavX", subSystem = "Ungrouped";
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDDispType		pidDispType = PIDDispType.getYaw;
 	private double			lastLinearAccelX = 0.0, lastLinearAccelY = 0.0, collisionThreshold = 0.0;
@@ -91,6 +89,8 @@ public class NavX implements Sendable, PIDSource
 			default:
 				ahrs = new AHRS(SPI.Port.kMXP);
 		}
+		
+		SendableRegistry.add(this, "NavX");
 	}
 	
 	/**
@@ -163,6 +163,16 @@ public class NavX implements Sendable, PIDSource
 	public double getTotalYaw()
 	{
 		return ahrs.getAngle();
+	}
+	
+	/**
+	 * Return total yaw angle accumulated since last reset.
+	 * Note: Rotation2d angle is + for left of zero, - for right.
+	 * @return Total yaw angle in a Rotation2d object.
+	 */
+	public Rotation2d getTotalYaw2d()
+	{
+		return Rotation2d.fromDegrees(-getTotalYaw());
 	}
 	
 	/**
@@ -572,31 +582,32 @@ public class NavX implements Sendable, PIDSource
         table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
 	}
 
-	// Functions that implement the Sendable interface.
+	// Functions that implement the Sendable interface. Most of it replaced by
+	// SendableRegistry methods.
 	
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-
-	@Override
-	public void setName( String name )
-	{
-		this.name = name;
-	}
-
-	@Override
-	public String getSubsystem()
-	{
-		return subSystem;
-	}
-
-	@Override
-	public void setSubsystem( String subsystem )
-	{
-		subSystem = subsystem;
-	}
+//	@Override
+//	public String getName()
+//	{
+//		return name;
+//	}
+//
+//	@Override
+//	public void setName( String name )
+//	{
+//		this.name = name;
+//	}
+//
+//	@Override
+//	public String getSubsystem()
+//	{
+//		return subSystem;
+//	}
+//
+//	@Override
+//	public void setSubsystem( String subsystem )
+//	{
+//		subSystem = subsystem;
+//	}
 
 	@Override
 	public void initSendable( SendableBuilder builder )

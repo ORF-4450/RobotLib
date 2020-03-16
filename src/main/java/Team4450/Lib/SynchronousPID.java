@@ -2,6 +2,7 @@ package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -31,10 +32,11 @@ public class SynchronousPID implements Sendable
     private double m_last_input = Double.NaN;
     private double m_deadband = 0.0; // If the absolute error is less than deadband.
                                      // then treat error for the proportional term as 0.
-	private String name = "SynchronousPID", subSystem = "Ungrouped";
+	private String name = "SynchronousPID";	//, subSystem = "Ungrouped";
 
     public SynchronousPID() 
     {
+    	SendableRegistry.add(this, name);
     }
 
     /**
@@ -53,6 +55,8 @@ public class SynchronousPID implements Sendable
         m_I = Ki;
         m_D = Kd;
         m_F = 0;
+
+        SendableRegistry.add(this, name);
     }
 
     /**
@@ -73,6 +77,8 @@ public class SynchronousPID implements Sendable
         m_I = Ki;
         m_D = Kd;
         m_F = Kf;
+
+        SendableRegistry.add(this, name);
     }
 
     /**
@@ -409,47 +415,48 @@ public class SynchronousPID implements Sendable
         return "PIDController";
     }
 
-    // Functions that implement the Sendable interface.
+    // Functions that implement the Sendable interface. Most if it replaced by
+    // SendableRegistry methods.
 	
-    /**
-     * Returns the Sendable name.
-     * @return The Sendable name. 
-     */
-	@Override
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * Sets the Sendable name.
-	 * @param name The name of the Sendable.
-	 */
-	@Override
-	public void setName( String name )
-	{
-		this.name = name;
-	}
-
-	/**
-	 * Returns the Sendable's subsystem name.
-	 * @return The Sendable's subsystem name.
-	 */
-	@Override
-	public String getSubsystem()
-	{
-		return subSystem;
-	}
-
-	/**
-	 * Sets the name of the subsystem the Sendable is part of.
-	 * @param subsystem The subsystem name.
-	 */
-	@Override
-	public void setSubsystem( String subsystem )
-	{
-		subSystem = subsystem;
-	}
+//    /**
+//     * Returns the Sendable name.
+//     * @return The Sendable name. 
+//     */
+//	@Override
+//	public String getName()
+//	{
+//		return name;
+//	}
+//
+//	/**
+//	 * Sets the Sendable name.
+//	 * @param name The name of the Sendable.
+//	 */
+//	@Override
+//	public void setName( String name )
+//	{
+//		this.name = name;
+//	}
+//
+//	/**
+//	 * Returns the Sendable's subsystem name.
+//	 * @return The Sendable's subsystem name.
+//	 */
+//	@Override
+//	public String getSubsystem()
+//	{
+//		return subSystem;
+//	}
+//
+//	/**
+//	 * Sets the name of the subsystem the Sendable is part of.
+//	 * @param subsystem The subsystem name.
+//	 */
+//	@Override
+//	public void setSubsystem( String subsystem )
+//	{
+//		subSystem = subsystem;
+//	}
 
 	/**
 	 * Initialize the Sendable. Called by SmartDashboard.putData().
