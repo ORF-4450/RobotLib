@@ -8,24 +8,32 @@ plugins {
     id "io.github.mosadie.vendorJSON" version "1.0"
 }
 
-build.finalizedBy 'vendorJSON'
+install.finalizedBy 'vendorJSON'
 
 // Configuration for install task which does the install of robotlib in local maven cache.
 // Also used by Jitpack.
 group = "com.github.ORF-4450"
 archivesBaseName = "RobotLib"
 
+//version = LibraryVersion	// Uncomment this line, comment out the next for release push.
 version = "local"	// Version identifier for local maven cache and github releases.
 					// Should stay as local. This allows the robot* projects on the
-					// same PC as RobotLib to pull from the local cache and so consume
-					// RobotLib versions under development and not yet passed through
-					// the release process.
+					// same PC as RobotLib to pull from the local cache with the fixed
+					// version name "local" and so always be pointing at the current RobotLib
+					// version including those under development and not have to be updated
+					// each time the robotlib version changes. Release to the world via github
+					// is based on version numbers and robotlib.json.
+					//
+					// When all development on a version of robotlib is done and ready to
+					// release, change local above to actual version, push then compose
+					// a release on github for the new version. Change back to "local"
+					// above when done to start development cycle again.
 					
 // This task updates the vendor json file for this project to the specified version.					
 vendorJSON {
     fileName = "robotLib.json"
     version = LibraryVersion
-    addJavaArtifact("com.github.ORF-4450", archivesBaseName, LibraryVersion)
+    addJavaArtifact(group, archivesBaseName, LibraryVersion)
 }
 
 // This section is to prevent people from accidently deploying this project to a robot. 

@@ -28,7 +28,7 @@ Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REV
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 ***************************************************************************************************************
-Version 4.0.0
+Version 3.6.0
 
 *	Remove all deprecation warnings. Almost all warnings related to Wpilib PIDController class.
 *	Copied deprecated classes from Wpilib to this library so we can keep using them if we wish.

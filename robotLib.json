@@ -1,6 +1,6 @@
 {
   "name": "ORF-4450-RobotLib",
-  "version": "3.5.0",
+  "version": "3.6.0",
   "uuid": "27d5b603-ec71-4576-b639-4eb46f1d9f66",
   "mavenUrls": [
     "https://jitpack.io"
@@ -9,9 +9,8 @@
   "fileName": "robotLib.json",
   "javaDependencies": [
     {
-      "groupId": "com.github.ORF-4450",
       "artifactId": "RobotLib",
-      "version": "3.5.0"
+      "version": "3.6.0"
     }
   ],
   "jniDependencies": [],
