@@ -6,7 +6,7 @@
     "https://jitpack.io"
   ],
   "jsonUrl": "https://raw.githubusercontent.com/ORF-4450/RobotLib/master/robotLib.json",
-  "fileName": "robotLib.json",
+  "fileName": "robotlib.json",
   "javaDependencies": [
     {
       "artifactId": "RobotLib",

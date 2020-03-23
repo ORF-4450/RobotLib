@@ -186,4 +186,34 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
     super.initSendable(builder);
     builder.addBooleanProperty("enabled", this::isEnabled, this::setEnabled);
   }
+  
+  /**
+   * Set logging of setpoint, input, error and output values on each
+   * controller loop.
+   * @param enable True to log values.
+   */
+  public void enableLogging(boolean enable) {
+    m_thisMutex.lock();
+    try {
+      m_logging = enable;
+    } finally {
+      m_thisMutex.unlock();
+    }
+ 
+  }
+  
+  /**
+   * Turn off output, that is sending the result of pid calculation to the
+   * object receiving the controller output. This is used for testing without
+   * actually driving the controlled object.
+   * @param disable True to disable output.
+   */
+  public void disableOuptut(boolean disable) {
+    m_thisMutex.lock();
+    try {
+      m_disableOutput = disable;
+    } finally {
+      m_thisMutex.unlock();
+    }
+  }
 }

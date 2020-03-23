@@ -9,6 +9,7 @@ package Team4450.Lib.Wpilib;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import Team4450.Lib.Util;
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.util.BoundaryException;
@@ -83,6 +84,12 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
 
   // The tolerance object used to check if on target
   private Tolerance m_tolerance;
+  
+  // Is logging enabled
+  protected boolean m_logging;
+  
+  // Disable output
+  protected boolean m_disableOutput;
 
   private double m_setpoint;
   private double m_prevSetpoint;
@@ -287,7 +294,7 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
             // Don't block other PIDController operations on pidWrite()
             m_thisMutex.unlock();
 
-            m_pidOutput.pidWrite(result);
+            if (!m_disableOutput) m_pidOutput.pidWrite(result);
           }
         } finally {
           if (m_thisMutex.isHeldByCurrentThread()) {
@@ -298,6 +305,8 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
         m_pidWriteMutex.unlock();
       }
 
+      if (m_logging) Util.consoleLog("sp=%.3f src=%.3f err=%.3f", m_setpoint, input, error);
+      
       m_thisMutex.lock();
       try {
         m_prevError = error;

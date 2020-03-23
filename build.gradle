@@ -12,8 +12,6 @@ install.finalizedBy 'vendorJSON'
 
 // Configuration for install task which does the install of robotlib in local maven cache.
 // Also used by Jitpack.
-group = "com.github.ORF-4450"
-archivesBaseName = "RobotLib"
 
 //version = LibraryVersion	// Uncomment this line, comment out the next for release push.
 version = "local"	// Version identifier for local maven cache and github releases.
@@ -24,14 +22,18 @@ version = "local"	// Version identifier for local maven cache and github release
 					// each time the robotlib version changes. Release to the world via github
 					// is based on version numbers and robotlib.json.
 					//
+					// When ready to release or even before, for a new version of Robotlib,
+					// don't forget to update the version in LibraryVersion.java, overview.html
+					// and gradle.properties.
+					//
 					// When all development on a version of robotlib is done and ready to
-					// release, change local above to actual version, push then compose
+					// release, change local above to actual version, commit, push, then compose
 					// a release on github for the new version. Change back to "local"
 					// above when done to start development cycle again.
 					
 // This task updates the vendor json file for this project to the specified version.					
 vendorJSON {
-    fileName = "robotLib.json"
+    fileName = jsonFileName
     version = LibraryVersion
     addJavaArtifact(group, archivesBaseName, LibraryVersion)
 }
