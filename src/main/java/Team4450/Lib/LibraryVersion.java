@@ -18,7 +18,7 @@ public class LibraryVersion
 	// When you change this, update src/main/resources/overview.html, readme.md,
 	// gradle.properties and RobotLib.json files.	
 
-	public static final String version = "3.6.0 (03.15.2020)";	
+	public static final String version = "3.6.0 (03.30.2020)";	
 
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()

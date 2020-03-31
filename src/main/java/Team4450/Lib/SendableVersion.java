@@ -1,8 +1,10 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.Sendable;
+//import edu.wpi.first.wpilibj.Sendable;
+import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 
 import java.net.URL;
 import java.util.jar.Attributes;
@@ -30,13 +32,14 @@ public class SendableVersion implements Sendable
     
     private SendableVersion()
     {
-        this.name = "VersionInfo";
-        this.branch = "unknown";
-        this.commit = "unknown";
-        this.programVersion = "unknown";
-        this.robotlibVersion = "unknown";
-        this.time = "unknown";
-        this.user = "unknown";
+        branch = "unknown";
+        commit = "unknown";
+        programVersion = "unknown";
+        robotlibVersion = "unknown";
+        time = "unknown";
+        user = "unknown";
+		
+		registerSendable("SendableVersion");
     }
 
     /**
@@ -87,36 +90,6 @@ public class SendableVersion implements Sendable
         builder.addStringProperty("Time: ", () -> time, null);
         builder.addStringProperty("User: ", () -> user, null);
     }
-
-    /**
-     * Returns Sendable's subsystem name.
-     * @return The name.
-     */
-    @Override
-    public String getSubsystem()
-    { return name; }
-
-    /**
-     * Sets Sendable's subsystem name.
-     * @param subsystem The name.
-     */    @Override
-    public void setSubsystem(String subsystem)
-    { this.name = subsystem; }
-
-    /**
-     * Returns Sendable's name.
-     * @return The name.
-     */    @Override
-    public String getName()
-    { return name; }
-
-    /**
-     * Sets Sendable's name.
-     * @param name The name.
-     */
-    @Override
-    public void setName(String name)
-    { this.name = name; }
     
     /**
      * Returns the git branch this program was compiled from.

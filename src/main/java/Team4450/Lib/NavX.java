@@ -6,8 +6,9 @@ import com.kauailabs.navx.frc.AHRS;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
+import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.Sendable;
+//import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 //import edu.wpi.first.wpilibj.PIDSource;
@@ -90,7 +91,7 @@ public class NavX implements Sendable, PIDSource
 				ahrs = new AHRS(SPI.Port.kMXP);
 		}
 		
-		SendableRegistry.add(this, "NavX");
+		registerSendable("NavX");
 	}
 	
 	/**
@@ -498,7 +499,7 @@ public class NavX implements Sendable, PIDSource
 	public void dumpValuesToNetworkTables()
 	{
 		NetworkTableInstance instance = NetworkTableInstance.getDefault();
-		NetworkTable table = instance.getTable("NavX");
+		NetworkTable table = instance.getTable("NavX-Dump");
 		
 		table.getEntry(    "IMU_Connected")       .setBoolean(ahrs.isConnected());
 		if (!ahrs.isConnected()) return;
@@ -581,33 +582,6 @@ public class NavX implements Sendable, PIDSource
         table.getEntry(    "IMU_Byte_Count")      .setNumber( ahrs.getByteCount());
         table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
 	}
-
-	// Functions that implement the Sendable interface. Most of it replaced by
-	// SendableRegistry methods.
-	
-//	@Override
-//	public String getName()
-//	{
-//		return name;
-//	}
-//
-//	@Override
-//	public void setName( String name )
-//	{
-//		this.name = name;
-//	}
-//
-//	@Override
-//	public String getSubsystem()
-//	{
-//		return subSystem;
-//	}
-//
-//	@Override
-//	public void setSubsystem( String subsystem )
-//	{
-//		subSystem = subsystem;
-//	}
 
 	@Override
 	public void initSendable( SendableBuilder builder )

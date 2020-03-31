@@ -1,8 +1,8 @@
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.Sendable;
+//import edu.wpi.first.wpilibj.Sendable;
+import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -15,6 +15,8 @@ import edu.wpi.first.hal.util.BoundaryException;
 
 public class SynchronousPID implements Sendable
 {
+	private static int	instances;
+	
     private double m_P; 	// factor for "proportional" control.
     private double m_I; 	// factor for "integral" control.
     private double m_D; 	// factor for "derivative" control.
@@ -23,20 +25,19 @@ public class SynchronousPID implements Sendable
     private double m_minimumOutput = -1.0; 	// minimum output.
     private double m_maximumInput = 0.0; 	// maximum input - limit setpoint to this.
     private double m_minimumInput = 0.0; 	// minimum input - limit setpoint to this.
-    private boolean m_continuous = false; 	// do the endpoints wrap around? eg. Absolute encoder.
+    private boolean m_continuous = false; 	// do the end points wrap around? eg. Absolute encoder.
     private double m_prevError = 0.0; 	// the prior sensor input (used to compute velocity).
     private double m_totalError = 0.0; 	// the sum of the errors for use in the integral calc.
     private double m_setpoint = 0.0;
     private double m_error = 0.0;
     private double m_result = 0.0;
     private double m_last_input = Double.NaN;
-    private double m_deadband = 0.0; // If the absolute error is less than deadband.
+    private double m_deadband = 0.0; // If the absolute error is less than dead band.
                                      // then treat error for the proportional term as 0.
-	private String name = "SynchronousPID";	//, subSystem = "Ungrouped";
 
     public SynchronousPID() 
     {
-    	SendableRegistry.add(this, name);
+    	registerSendable("SynchronousPID");
     }
 
     /**
@@ -56,7 +57,9 @@ public class SynchronousPID implements Sendable
         m_D = Kd;
         m_F = 0;
 
-        SendableRegistry.add(this, name);
+        instances++;
+        
+    	registerSendable("SynchronousPID", instances);
     }
 
     /**
@@ -78,7 +81,17 @@ public class SynchronousPID implements Sendable
         m_D = Kd;
         m_F = Kf;
 
-        SendableRegistry.add(this, name);
+        instances++;
+        
+    	registerSendable("SynchronousPID", instances);
+    }
+    
+    /**
+     * Release resources in preparation to destroy this object.
+     */
+    public void close()
+    {
+    	removeSendable();
     }
 
     /**
@@ -414,49 +427,6 @@ public class SynchronousPID implements Sendable
     {
         return "PIDController";
     }
-
-    // Functions that implement the Sendable interface. Most if it replaced by
-    // SendableRegistry methods.
-	
-//    /**
-//     * Returns the Sendable name.
-//     * @return The Sendable name. 
-//     */
-//	@Override
-//	public String getName()
-//	{
-//		return name;
-//	}
-//
-//	/**
-//	 * Sets the Sendable name.
-//	 * @param name The name of the Sendable.
-//	 */
-//	@Override
-//	public void setName( String name )
-//	{
-//		this.name = name;
-//	}
-//
-//	/**
-//	 * Returns the Sendable's subsystem name.
-//	 * @return The Sendable's subsystem name.
-//	 */
-//	@Override
-//	public String getSubsystem()
-//	{
-//		return subSystem;
-//	}
-//
-//	/**
-//	 * Sets the name of the subsystem the Sendable is part of.
-//	 * @param subsystem The subsystem name.
-//	 */
-//	@Override
-//	public void setSubsystem( String subsystem )
-//	{
-//		subSystem = subsystem;
-//	}
 
 	/**
 	 * Initialize the Sendable. Called by SmartDashboard.putData().

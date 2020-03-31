@@ -128,6 +128,15 @@ public class JoyStick
 	}
 	
 	/**
+	 * Return the Wpilib Joystick object underlying this RobotLib JoyStick object.
+	 * @return Reference to Joystick.
+	 */
+	public Joystick getJoyStick()
+	{
+		return joyStick;
+	}
+	
+	/**
 	 * Returns the name of this joystick object.
 	 * @return Joystick name.
 	 */

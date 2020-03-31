@@ -369,8 +369,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	}
 	
 	/**
-	 * Return the number of encoder rotations since reset. Based on
-	 * 4096 ticks per encoder revolution.
+	 * Return the number of encoder full rotations since reset. Based on
+	 * 4096 ticks per encoder full rotation.
 	 * @return The number of rotations.
 	 */
 	public double getRotations()
