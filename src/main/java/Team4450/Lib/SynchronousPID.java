@@ -10,7 +10,7 @@ import edu.wpi.first.hal.util.BoundaryException;
  * 
  * Does all computation synchronously (i.e. the calculate() function must be called by the user from his own thread)
  * 
- * This class courtesy of Team 254.
+ * This class courtesy of Team 254 with modifications.
  */
 
 public class SynchronousPID implements Sendable
@@ -95,15 +95,15 @@ public class SynchronousPID implements Sendable
     }
 
     /**
-     * Read the input, calculate the output accordingly, and write to the output. This should be called at a constant
+     * Read the input, calculate the output accordingly, and return the result. This should be called at a constant
      * rate by the user (ex. in a timed thread)
      *
      * @param input
-     *            the input
+     *            the input.
      * @param dt
-     *            time passed since previous call to calculate
+     *            time passed since previous call to calculate in seconds.
      * @return
-     *            the output           
+     *            the output.           
      */
     public double calculate(double input, double dt) 
     {
@@ -380,6 +380,16 @@ public class SynchronousPID implements Sendable
     {
         return m_error;
     }
+
+    /**
+     * Returns the current input to the calculate() function.
+     *
+     * @return the current input.
+     */
+    public double getInput() 
+    {
+        return m_last_input;
+    }
  
     /**
      * Return true if the error is within the tolerance
@@ -435,12 +445,15 @@ public class SynchronousPID implements Sendable
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
-		builder.setSmartDashboardType("PIDController");
+		builder.setSmartDashboardType("SynchronousPID");
 	    builder.addDoubleProperty("p", this::getP, this::setP);
 	    builder.addDoubleProperty("i", this::getI, this::setI);
 	    builder.addDoubleProperty("d", this::getD, this::setD);
 	    builder.addDoubleProperty("f", this::getF, this::setF);
 	    builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
+	    builder.addDoubleProperty("input", this::getInput, null);
+	    builder.addDoubleProperty("error", this::getError, null);
+	    builder.addDoubleProperty("result", this::get, null);
 	}
     
 }

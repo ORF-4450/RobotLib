@@ -28,10 +28,18 @@ public class PIDSourceShim implements PIDSource
 {
 	public PIDSource		pidSource;
 	private PIDController	pid;
+	private double			input;
+	private PIDSourceType	sourceType = PIDSourceType.kDisplacement;
+	private boolean			logInput;
 	
 	public PIDSourceShim(PIDSource pidSource)
 	{
 		this.pidSource = pidSource;
+	}
+	
+	public void set(double input)
+	{
+		this.input = input;
 	}
 	
 	@Override
@@ -39,12 +47,16 @@ public class PIDSourceShim implements PIDSource
 	{
 		double sp, src;
 		
-		Util.consoleLog();
+		//Util.consoleLog();
 		
 		sp = pid.getSetpoint();
-		src = pidSource.pidGet();
+		
+		if (pidSource == null)
+			src = input;
+		else
+			src = pidSource.pidGet();
 
-		Util.consoleLog("sp=%.3f src=%.3f err=%.3f", sp, src, sp - src);	
+		if (logInput) Util.consoleLog("sp=%.3f src=%.3f err=%.3f", sp, src, sp - src);	
 
 		return src;
 	}
@@ -52,18 +64,31 @@ public class PIDSourceShim implements PIDSource
 	@Override
 	public void setPIDSourceType( PIDSourceType pidSourceType )
 	{
+		if (pidSource == null)
+		{
+			sourceType = pidSourceType;
+			return;
+		}
+		
 		this.pidSource.setPIDSourceType(pidSourceType);
 	}
 
 	@Override
 	public PIDSourceType getPIDSourceType()
 	{
+		if (pidSource == null) return sourceType;
+		
 		return pidSource.getPIDSourceType();
 	}
 	
 	public void setPidController(PIDController pid)
 	{
 		this.pid = pid;
+	}
+	
+	public void enableLogging(boolean enabled)
+	{
+		logInput = enabled;
 	}
 }
 

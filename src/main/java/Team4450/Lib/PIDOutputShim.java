@@ -25,7 +25,7 @@ import Team4450.Lib.Wpilib.PIDOutput;
 public class PIDOutputShim implements PIDOutput
 {
 	public PIDOutput		pidOutput;
-	private boolean			disableOutput;
+	private boolean			disableOutput, logOutput;
 	private PIDController	pid;
 	
 	public PIDOutputShim(PIDOutput pidOutput)
@@ -36,12 +36,26 @@ public class PIDOutputShim implements PIDOutput
 	@Override
 	public void pidWrite(double output)
 	{
-		Util.consoleLog("%.3f  ont=%b", output, pid.onTarget());
+		if (logOutput)
+		{
+			if (pid != null) 
+				Util.consoleLog("%.3f  ont=%b", output, pid.onTarget());
+			else
+				Util.consoleLog("%.3f", output);
+		}
 		
-		if (disableOutput)
-			pidOutput.pidWrite(0);
-		else
-			pidOutput.pidWrite(output);
+		if (pidOutput != null)
+		{
+			if (disableOutput)
+				pidOutput.pidWrite(0);
+			else
+				pidOutput.pidWrite(output);
+		}
+	}
+	
+	public void enableLogging(boolean enabled)
+	{
+		logOutput = enabled;
 	}
 	
 	public void disableOutput(boolean disabled)

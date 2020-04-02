@@ -15,7 +15,7 @@ import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.util.BoundaryException;
 import edu.wpi.first.wpilibj.LinearFilter;
 //import edu.wpi.first.wpilibj.PIDInterface;
-import edu.wpi.first.wpilibj.Sendable;
+//import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
@@ -96,6 +96,7 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
   @SuppressWarnings("PMD.UnusedPrivateField")
   private double m_error;
   private double m_result;
+  private double m_input;
 
   private LinearFilter m_filter;
 
@@ -215,20 +216,20 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    */
   @SuppressWarnings({"LocalVariableName", "PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
   protected void calculate() {
-    if (m_pidInput == null || m_pidOutput == null) {
-      return;
-    }
+    if (m_pidInput == null || m_pidOutput == null) return;
 
     boolean enabled;
 
     m_thisMutex.lock();
+    
     try {
       enabled = m_enabled;
     } finally {
       m_thisMutex.unlock();
     }
 
-    if (enabled) {
+    if (enabled) 
+    {
       double input;
 
       // Storage for function inputs
@@ -246,6 +247,7 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
       double totalError;
 
       m_thisMutex.lock();
+      
       try {
         input = m_filter.calculate(m_pidInput.pidGet());
 
@@ -266,15 +268,18 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
       // Storage for function outputs
       double result;
 
-      if (pidSourceType.equals(PIDSourceType.kRate)) {
-        if (P != 0) {
+      if (pidSourceType.equals(PIDSourceType.kRate)) 
+      {
+        if (P != 0) 
+        {
           totalError = clamp(totalError + error, minimumOutput / P,
               maximumOutput / P);
         }
 
         result = P * totalError + D * error + feedForward;
       } else {
-        if (I != 0) {
+        if (I != 0) 
+        {
           totalError = clamp(totalError + error, minimumOutput / I,
               maximumOutput / I);
         }
@@ -287,10 +292,15 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
 
       // Ensures m_enabled check and pidWrite() call occur atomically
       m_pidWriteMutex.lock();
-      try {
+      
+      try 
+      {
         m_thisMutex.lock();
-        try {
-          if (m_enabled) {
+        
+        try 
+        {
+          if (m_enabled) 
+          {
             // Don't block other PIDController operations on pidWrite()
             m_thisMutex.unlock();
 
@@ -305,10 +315,13 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
         m_pidWriteMutex.unlock();
       }
 
-      if (m_logging) Util.consoleLog("sp=%.3f src=%.3f err=%.3f", m_setpoint, input, error);
+      if (m_logging) Util.consoleLog("sp=%.3f src=%.3f err=%.3f out=%.3f", m_setpoint, input, error, result);
       
       m_thisMutex.lock();
-      try {
+      
+      try 
+      {
+    	m_input = input;
         m_prevError = error;
         m_error = error;
         m_totalError = totalError;
@@ -646,15 +659,47 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
   }
 
   /**
-   * Returns the current difference of the input from the setpoint.
+   * Returns the current difference of the input from the setpoint from the
+   * last execution of the calculate() function.
    *
-   * @return the current error
+   * @return the current error.
    */
   @Override
   public double getError() {
     m_thisMutex.lock();
     try {
-      return getContinuousError(getSetpoint() - m_filter.calculate(m_pidInput.pidGet()));
+      //return getContinuousError(getSetpoint() - m_filter.calculate(m_pidInput.pidGet()));
+      return m_error;
+    } finally {
+      m_thisMutex.unlock();
+    }
+  }
+
+  /**
+   * Returns the last result of the calculate() function which is the output, or what is
+   * sent to the PIDOutput object via pidWrite().
+   *
+   * @return the last calculated result (output).
+   */
+  public double getResult() {
+    m_thisMutex.lock();
+    try {
+      return m_result;
+    } finally {
+      m_thisMutex.unlock();
+    }
+  }
+
+  /**
+   * Returns the last input to the calculate() function, which is the input obtained
+   * from the PIDSource object via pidGet().
+   *
+   * @return the last input.
+   */
+  public double getInput() {
+    m_thisMutex.lock();
+    try {
+      return m_input;
     } finally {
       m_thisMutex.unlock();
     }
@@ -779,9 +824,12 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    * Reset the previous error, the integral term, and disable the controller.
    */
   @Override
-  public void reset() {
+  public void reset() 
+  {
     m_thisMutex.lock();
-    try {
+    
+    try 
+    {
       m_prevError = 0;
       m_totalError = 0;
       m_result = 0;
@@ -813,6 +861,9 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
     builder.addDoubleProperty("d", this::getD, this::setD);
     builder.addDoubleProperty("f", this::getF, this::setF);
     builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
+    builder.addDoubleProperty("input", this::getInput, null);
+    builder.addDoubleProperty("error", this::getError, null);
+    builder.addDoubleProperty("result", this::getResult, null);
   }
 
   /**

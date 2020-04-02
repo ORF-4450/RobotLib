@@ -45,7 +45,8 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    */
   @SuppressWarnings("ParameterName")
   public PIDController(double Kp, double Ki, double Kd, double Kf, PIDSource source,
-                       PIDOutput output, double period) {
+                       PIDOutput output, double period) 
+  {
     super(Kp, Ki, Kd, Kf, source, output);
     m_controlLoop.startPeriodic(period);
   }
@@ -65,7 +66,8 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    */
   @SuppressWarnings("ParameterName")
   public PIDController(double Kp, double Ki, double Kd, PIDSource source, PIDOutput output,
-                       double period) {
+                       double period) 
+  {
     this(Kp, Ki, Kd, 0.0, source, output, period);
   }
 
@@ -79,7 +81,8 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * @param output The PIDOutput object that is set to the output percentage
    */
   @SuppressWarnings("ParameterName")
-  public PIDController(double Kp, double Ki, double Kd, PIDSource source, PIDOutput output) {
+  public PIDController(double Kp, double Ki, double Kd, PIDSource source, PIDOutput output) 
+  {
     this(Kp, Ki, Kd, source, output, kDefaultPeriod);
   }
 
@@ -95,7 +98,8 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    */
   @SuppressWarnings("ParameterName")
   public PIDController(double Kp, double Ki, double Kd, double Kf, PIDSource source,
-                       PIDOutput output) {
+                       PIDOutput output) 
+  {
     this(Kp, Ki, Kd, Kf, source, output, kDefaultPeriod);
   }
 
@@ -116,9 +120,12 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * Begin running the PIDController.
    */
   @Override
-  public void enable() {
+  public void enable() 
+  {
     m_thisMutex.lock();
-    try {
+    
+    try 
+    {
       m_enabled = true;
     } finally {
       m_thisMutex.unlock();
@@ -129,12 +136,16 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * Stop running the PIDController, this sets the output to zero before stopping.
    */
   @Override
-  public void disable() {
+  public void disable() 
+  {
     // Ensures m_enabled check and pidWrite() call occur atomically
     m_pidWriteMutex.lock();
+    
     try {
       m_thisMutex.lock();
-      try {
+      
+      try 
+      {
         m_enabled = false;
       } finally {
         m_thisMutex.unlock();
@@ -150,8 +161,10 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * Set the enabled state of the PIDController.
    * @param enable True to enable, false to disable.
    */
-  public void setEnabled(boolean enable) {
-    if (enable) {
+  public void setEnabled(boolean enable) 
+  {
+    if (enable) 
+    {
       enable();
     } else {
       disable();
@@ -162,8 +175,10 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * Return PIDController is enable status.
    * @return True if enabled.
    */
-  public boolean isEnabled() {
+  public boolean isEnabled() 
+  {
     m_thisMutex.lock();
+    
     try {
       return m_enabled;
     } finally {
@@ -175,14 +190,16 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * Reset the previous error, the integral term, and disable the controller.
    */
   @Override
-  public void reset() {
+  public void reset() 
+  {
     disable();
 
     super.reset();
   }
 
   @Override
-  public void initSendable(SendableBuilder builder) {
+  public void initSendable(SendableBuilder builder) 
+  {
     super.initSendable(builder);
     builder.addBooleanProperty("enabled", this::isEnabled, this::setEnabled);
   }
@@ -192,7 +209,8 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * controller loop.
    * @param enable True to log values.
    */
-  public void enableLogging(boolean enable) {
+  public void enableLogging(boolean enable) 
+  {
     m_thisMutex.lock();
     try {
       m_logging = enable;
@@ -208,7 +226,8 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * actually driving the controlled object.
    * @param disable True to disable output.
    */
-  public void disableOuptut(boolean disable) {
+  public void disableOuptut(boolean disable) 
+  {
     m_thisMutex.lock();
     try {
       m_disableOutput = disable;

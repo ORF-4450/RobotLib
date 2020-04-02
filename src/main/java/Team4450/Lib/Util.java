@@ -614,7 +614,7 @@ public class Util
 	 */
 	public static double inchesToMeters(double inches)
 	{
-		return inches * .0254;
+		return inches * .02775;	//.0254;
 	}
 	
 	/** 
