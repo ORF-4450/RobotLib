@@ -229,6 +229,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		return getMaxRate(PIDRateType.ticksPer100ms) * 600 / 4096;
 	}
 	
+	/**
+	 * Returns the current rate of encoder rotation in ticks/100ms.
+	 * @return
+	 */
 	private int getRawRate()
 	{
 		return isInverted() ? talon.getSensorCollection().getQuadratureVelocity() * -1 :
