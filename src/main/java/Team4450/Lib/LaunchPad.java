@@ -429,7 +429,7 @@ public class LaunchPad
         BUTTON_BLUE_RIGHT(10),
         BUTTON_YELLOW(11);
         
-        private int value;
+        public int value;
 
         private LaunchPadControlIDs(int value) 
         {
