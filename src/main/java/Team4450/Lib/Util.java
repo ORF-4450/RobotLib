@@ -43,8 +43,8 @@ public class Util
 
 	/**
 	 * Logging class for use by other classes to log though this custom logging scheme. All
-	 * logging should be done by calls to methods on this class instance or with the 
-	 * convenience methods elsewhere in the Util class.
+	 * logging should be done by calls to methods on this class (logger) instance or with the 
+	 * convenience methods elsewhere in this class (Util).
 	 */
 	public final static Logger logger = Logger.getGlobal();
 	
@@ -74,7 +74,6 @@ public class Util
 		
 		is.close();
 		
-		//props.list(new PrintStream(System.out));
 		props.list(logPrintStream);
 
 		return props;
@@ -83,7 +82,7 @@ public class Util
 	/**
 	 * Configures and holds (static) classes for our custom logging system. 
 	 * Call setup() method to initialize logging. Logging is then done via
-	 * the logging convenience methods in the Util class.
+	 * the logging convenience methods in this class (Util).
 	 */
 	public static class CustomLogger 
 	{
@@ -103,20 +102,23 @@ public class Util
                    
             logger.setLevel(Level.ALL);
 
-            // If we decide to redirect system.out to our log handler, then following
+            // Note: console in this discussion is the RioLog.
+            // If we decide to redirect system.out to our log file, then following
             // code will delete the default log handler for the console to prevent
             // a recursive loop. We would only redirect system.out if we only want to
-            // log to the file. If we delete the console handler we can skip setting
-            // the formatter...otherwise we set our formatter on the console logger.
+            // log to the file (no Riolog). If we delete the console handler we can skip 
+            // setting the formatter...otherwise we set our formatter on the console logger.
             
             Logger rootLogger = Logger.getLogger("");
 
             Handler[] handlers = rootLogger.getHandlers();
             
+//            System.setErr(logPrintStream);
+//            System.setOut(logPrintStream);
+            
 //            if (handlers[0] instanceof ConsoleHandler) 
 //            {
 //                rootLogger.removeHandler(handlers[0]);
-//                return;
 //            }
 
             logFormatter = new LogFormatter();
@@ -133,6 +135,9 @@ public class Util
 //            else
 //            	throw new IOException("Max number of log files reached.");
 
+            // If we reach 99 log files, file 99 is deleted so there is room
+            // to create a new log file at position 0.
+            
             if (new File("/home/lvuser/Logging.txt.99").exists() == true)
             	new File("/home/lvuser/Logging.txt.99").delete();
 
@@ -216,7 +221,7 @@ public class Util
 	        count++;
 	    }
 
-	    @SuppressWarnings("deprecation")
+	    //@SuppressWarnings("deprecation")
 		public void flush() 
 	    {
 	        if (count == 0) return;
@@ -227,7 +232,8 @@ public class Util
 	        
 	        String str = new String(bytes);
 	        
-	        LCD.consoleLogNoFormat(str);
+	        //LCD.consoleLogNoFormat(str);
+			logger.log(Level.INFO, String.format("robot: %s", str));
 	        
 	        count = 0;
 	    }

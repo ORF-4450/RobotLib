@@ -27,6 +27,7 @@ public class SendableVersion implements Sendable
     private String robotlibVersion;
     private String time;
     private String user;
+    private int	   updateCount;
 
     // Private constructor since this class is a singleton.
     
@@ -89,6 +90,7 @@ public class SendableVersion implements Sendable
         builder.addStringProperty("RobotLib: ", () -> robotlibVersion, null);
         builder.addStringProperty("Time: ", () -> time, null);
         builder.addStringProperty("User: ", () -> user, null);
+        builder.addDoubleProperty("UpdateCount", this::getUpdateCount, null);
     }
     
     /**
@@ -126,6 +128,11 @@ public class SendableVersion implements Sendable
     public String getUser()
     {
     	return user;
+    }
+    
+    public int getUpdateCount()
+    {
+    	return ++updateCount;
     }
 }
 

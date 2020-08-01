@@ -37,3 +37,9 @@ whitebalance
 gearbox
 pneumatic
 odometer
+quirk
+watchdog
+drivebase
+watchdogs
+wpilib
+odometry

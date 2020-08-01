@@ -2,6 +2,8 @@ package Team4450.Lib;
 
 import java.util.EventListener;
 import java.util.EventObject;
+import java.util.function.DoubleSupplier;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import Team4450.Lib.Wpilib.PIDSource;
@@ -25,7 +27,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
  * Wrapper class for NavX MXP navigation sensor board.
  */
 
-public class NavX implements Sendable, PIDSource
+public class NavX implements Sendable, PIDSource, DoubleSupplier
 {
 	private static NavX		navx;
 	private AHRS			ahrs;
@@ -821,4 +823,14 @@ public class NavX implements Sendable, PIDSource
     {
         if (eventListener != null) eventListener.event(new NavXEvent(this, eventType, eventData));
     }
+
+	/**
+	 * Returns a double when this class is used as a DoubleSupplier.
+	 * @return The current yaw value, same as getYaw() method.
+	 */
+	@Override
+	public double getAsDouble()
+	{
+		return getYaw();
+	}
 }

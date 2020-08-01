@@ -13,8 +13,8 @@ install.finalizedBy 'vendorJSON'
 // Configuration for install task which does the install of robotlib in local maven cache.
 // Also used by Jitpack.
 
-version = LibraryVersion	// Uncomment this line, comment out the next for release push.
-//version = "local"	// Version identifier for local maven cache and github releases.
+//version = LibraryVersion	// Uncomment this line, comment out the next for release push.
+version = "local"	// Version identifier for local maven cache and github releases.
 					// Should stay as local. This allows the robot* projects on the
 					// same PC as RobotLib to pull from the local cache with the fixed
 					// version name "local" and so always be pointing at the current RobotLib

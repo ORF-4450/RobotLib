@@ -1,5 +1,7 @@
 package Team4450.Lib;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -14,7 +16,7 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * Wrapper for SRX Magnetic Encoder used in relative (quadrature) mode.
  */
-public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
+public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier
 {
 	private WPI_TalonSRX	talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
@@ -196,17 +198,18 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	public double getVelocity( PIDRateType rateType )
 	{
 		if (rateType == PIDRateType.velocityMPS)
-			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0) * .3048;
 		else if (rateType == PIDRateType.velocityFPS)
-			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
-			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 60);
+			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 60.0);
 		
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
 	
 	/**
 	 * Return max rate of rotation recorded since start up.
+	 * Relies on regular calls to getRate(), getRPM() or getVelocity().
 	 * @param rateType Ticks unit: per 100ms or per Second.
 	 * @return The highest rotation rate seen in ticks per selected unit.
 	 */
@@ -222,6 +225,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	
 	/**
 	 * Return the max RPM recorded since start up.
+	 * Relies on regular calls to getRate(), getRPM() or getVelocity().
 	 * @return The highest RPM seen.
 	 */
 	public int getMaxRPM()
@@ -241,17 +245,18 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 	
 	/**
 	 * Return the max velocity recorded since start up (distance unit per second).
+	 * Relies on regular calls to getRate(), getRPM() or getVelocity().
 	 * @param rateType MPS/FPS/IPS.
 	 * @return Max velocity recorded based on RPM and gear ratio in units requested.
 	 */
 	public double getMaxVelocity( PIDRateType rateType )
 	{
 		if (rateType == PIDRateType.velocityMPS)
-			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60) * .3048;
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0) * .3048;
 		else if (rateType == PIDRateType.velocityFPS)
-			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12 / 60);
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
-			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 60);
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 60.0);
 		
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
@@ -279,7 +284,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		if (unit == DistanceUnit.Meters)
 			return Util.inchesToMeters(getDistance());
 		else if (unit == DistanceUnit.Feet)
-			return getDistance() / 12;
+			return getDistance() / 12.0;
 		else if (unit == DistanceUnit.Inches)
 			return getDistance();
 			
@@ -570,5 +575,15 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource
 		Meters,
 		Feet,
 		Inches
+	}
+
+	/**
+	 * Returns a double when this class is used as a DoubleSupplier.
+	 * @return The current encoder count, same as get() method.
+	 */
+	@Override
+	public double getAsDouble()
+	{
+		return get();
 	}
 }

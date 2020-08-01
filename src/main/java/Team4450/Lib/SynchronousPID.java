@@ -63,7 +63,7 @@ public class SynchronousPID implements Sendable
     }
 
     /**
-     * Allocate a PID object with the given constants for P, I, D
+     * Allocate a PID object with the given constants for P, I, D, F
      *
      * @param Kp
      *            the proportional coefficient
@@ -134,8 +134,8 @@ public class SynchronousPID implements Sendable
         // Don't blow away m_error so as to not break derivative.
         double proportionalError = Math.abs(m_error) < m_deadband ? 0 : m_error;
 
-        m_result = (m_P * proportionalError + m_I * m_totalError + m_D * (m_error - m_prevError) / dt
-                	+ m_F * m_setpoint);
+        m_result = (m_P * proportionalError) + (m_I * m_totalError) + (m_D * (m_error - m_prevError) / dt)
+                	+ (m_F * m_setpoint);
         
         m_prevError = m_error;
 
