@@ -131,14 +131,14 @@ public class SynchronousPID implements Sendable
         else 
             m_totalError = 0;
 
-        // Don't blow away m_error so as to not break derivative.
+        // Don't blow away m_error so as to not break derivative but apply deadband.
         double proportionalError = Math.abs(m_error) < m_deadband ? 0 : m_error;
 
         m_result = (m_P * proportionalError) + (m_I * m_totalError) + (m_D * (m_error - m_prevError) / dt)
                 	+ (m_F * m_setpoint);
         
         m_prevError = m_error;
-
+        
         if (m_result > m_maximumOutput) 
             m_result = m_maximumOutput;
         else if (m_result < m_minimumOutput) 
