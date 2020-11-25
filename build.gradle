@@ -119,6 +119,7 @@ javadoc {
     destinationDir = file("doc")
     title = "RobotLib"
     options.overview = "src/main/resources/overview.html"
+    options.addBooleanOption "-no-module-directories", true
 }
 
 // Create Javadoc Jar
