@@ -120,6 +120,7 @@ javadoc {
     title = "RobotLib"
     options.overview = "src/main/resources/overview.html"
     options.addBooleanOption "-no-module-directories", true
+    options.addBooleanOption "-frames", true
 }
 
 // Create Javadoc Jar

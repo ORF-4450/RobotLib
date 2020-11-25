@@ -27,6 +27,10 @@ Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REV
 ### NOTICE
 
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
+
+### NOTICE TO DEVELOPERS
+Read the documentation in build.gradle and LibraryVersion class for the procedure to do development on this
+library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
 Version 3.6.0
 

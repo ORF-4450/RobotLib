@@ -26,6 +26,11 @@ public class ValveDA
 	private boolean			valveOpen = false;
 	private int				port, pcmCanId = 0;
 
+	/**
+	 * Sets the time to apply power to make sure valve slide moves correctly.
+	 * The movement takes time so power has to be applied until slide has
+	 * moved from one side to the other. In seconds, defaults to .05 sec.
+	 */
 	public double           solenoidSlideTime;
 
 	/**
