@@ -18,6 +18,7 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.cscore.UsbCameraInfo;
 import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.Timer;
 
 /**
  * USB camera feed task. Runs as a thread separate from Robot class.
@@ -46,6 +47,7 @@ public class CameraFeed extends Thread
 	private CvSink				imageSource;
 	private CvSource			imageOutputStream;
 	private boolean				changingCamera;
+	private Object				lockObj = new Object();
 	
 	private ArrayList<Rect>			targetRectangles;
 	private ArrayList<MatOfPoint>	contours;
@@ -252,7 +254,7 @@ public class CameraFeed extends Thread
 	{
 		Util.consoleLog();
 		
-	    synchronized (this) 
+	    synchronized (lockObj) 
 	    {
 	    	if (image == null)
 	    		return null;
@@ -278,7 +280,7 @@ public class CameraFeed extends Thread
 		{
 			if (currentCamera != null)
 			{	
-			    synchronized (this) 
+			    synchronized (lockObj) 
 			    {
 			    	result = imageSource.grabFrame(image);
 			    }
@@ -348,7 +350,7 @@ public class CameraFeed extends Thread
 		
 		Util.consoleLog("current=(%d) %s", currentCameraIndex, currentCamera.getName());
 		
-	    synchronized (this) 
+	    synchronized (lockObj) 
 	    {
 	    	imageSource.setSource(currentCamera);
 	    }
@@ -374,7 +376,7 @@ public class CameraFeed extends Thread
 		
 		currentCamera = camera;
 		
-	    synchronized (this) 
+	    synchronized (lockObj) 
 	    {
 	    	imageSource.setSource(camera);
 	    }
@@ -394,7 +396,7 @@ public class CameraFeed extends Thread
 //		{
 //			if (currentCamera != null)
 //			{	
-//			    synchronized (this) 
+//			    synchronized (lockObj) 
 //			    {
 //			    	result = imageSource.grabFrame(image);
 //			    }
@@ -418,7 +420,7 @@ public class CameraFeed extends Thread
 	 */
 	public void putImage(Mat image)
 	{
-		synchronized(this)
+		synchronized(lockObj)
 		{
 			if (contours != null) Imgproc.drawContours(image, contours, -1, targetColor, targetWidth);
 			
@@ -441,7 +443,7 @@ public class CameraFeed extends Thread
 	 */
 	public void addTargetRectangle(Rect rectangle)
 	{
-		synchronized(this)
+		synchronized(lockObj)
 		{
 			if (rectangle == null)
 			{
@@ -461,7 +463,7 @@ public class CameraFeed extends Thread
 	 */
 	public void setContours(ArrayList<MatOfPoint> contours)
 	{
-		synchronized(this)
+		synchronized(lockObj)
 		{
 			this.contours = contours;
 		}
@@ -473,7 +475,10 @@ public class CameraFeed extends Thread
 	 */
 	public void setTargetColor(Scalar color)
 	{
-		targetColor = color;
+		synchronized(lockObj)
+		{
+			targetColor = color;
+		}
 	}
 	
 	/**
@@ -482,7 +487,7 @@ public class CameraFeed extends Thread
 	 */
 	public void setTargetWidth(int width)
 	{
-		if (width > 0) targetWidth =  width;
+		if (width > 0) targetWidth = width;
 	}
 	
 	/**

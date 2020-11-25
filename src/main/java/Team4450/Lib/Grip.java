@@ -3,7 +3,7 @@ package Team4450.Lib;
 import edu.wpi.first.wpilibj.networktables.NetworkTable;
 
 /**
- * This class manages Grip run in a separate process. 
+ * This static class manages Grip run in a separate process. 
  * Starts/Stops that process and obtains Grip contour reports from 
  * that process via network tables. 
  */
@@ -23,6 +23,12 @@ public final class Grip
 		
 	}
 	
+	/**
+	 * Contains a list of Contours returned by Grip for an image. Each Contour describes
+	 * an object (artifact) in the image.
+	 * @author rcorn
+	 *
+	 */
 	public static class ContoursReport
 	{
 		public double	area[];
@@ -72,6 +78,12 @@ public final class Grip
 		}
 	}
 	
+	/**
+	 * Contains information describing a single object (artifact) found
+	 * by Grip in an image.
+	 * @author rcorn
+	 *
+	 */
 	public static class Contour
 	{
 		public int		area;
