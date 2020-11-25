@@ -32,16 +32,17 @@ public class LibraryVersion
 	 * Robot projects on other PCs use a RobotLib.json with an actual version number
 	 * to pull that version from the online artifact library Jitpack.io.
 	 * 
-	 * When you are ready to release, update the readme.md and src/main/resources/overview.html 
-	 * files for the new version. Then do a final compile to update the Javadoc locally. Next 
-	 * update the gradle.properties file to the new version number. Then push to github. Then on 
-	 * the github repository you generate a new release for the new version. This will trigger a 
-	 * Travis compile which will update the RobotLib.json file on github to the new version, 
-	 * generate the release artifacts and store the release artifacts on Jitpack.io. 
+	 * When you are ready to release, update the readme.md, src/main/resources/overview.html 
+	 * and gradle.properties files to the new version number. Do a final compile. Next, edit 
+	 * build.gradle file to switch version = "local" to version = LibraryVersion. Then push to 
+	 * github. After push switch the build.gradle version = back to "local". Then on the github 
+	 * repository you generate a new release for the new version. This will trigger a Travis 
+	 * compile on github which will generate the release artifacts and store the release artifacts 
+	 * on Jitpack.io. 
 	 * 
-	 * Robot program projects on other computers can then download the updated RobotLib.json. 
-	 * With the updated RobotLib.json file, on the next compile gradle will then pull down the 
-	 * new library release from Jitpack.
+	 * Robot program projects on other computers can then download or update RobotLib.json with. 
+	 * the new version number. On the next compile gradle will then pull down the new library 
+	 * release from Jitpack.
 	 * 
 	 * Note: The Javadoc output is not pushed to github. Javadoc will be generated as an artifact 
 	 * of the Travis compile and will be available in the release for consumption by others.
