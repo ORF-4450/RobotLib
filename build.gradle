@@ -10,11 +10,20 @@ plugins {
  
 install.finalizedBy 'vendorJSON'
 
+if (System.getProperty("local")) {
+	println("This is a local Compile:")
+	version = "local"
+}
+else {
+	println("This is a Travis Compile:")
+	version = LibraryVersion
+}
+
 // Configuration for install task which does the install of robotlib in local maven cache.
 // Also used by Jitpack.
 
 //version = LibraryVersion	// Uncomment this line, comment out the next for release push.
-version = "local"	// Version identifier for local maven cache and github releases.
+//version = "local"	// Version identifier for local maven cache and github releases.
 					// Should stay as local. This allows the robot* projects on the
 					// same PC as RobotLib to pull from the local cache with the fixed
 					// version name "local" and so always be pointing at the current RobotLib
@@ -30,6 +39,8 @@ version = "local"	// Version identifier for local maven cache and github release
 					// release, change local above to actual version, commit, push, then compose
 					// a release on github for the new version. Change back to "local"
 					// above when done to start development cycle again.
+
+println("LibraryVersion=" + LibraryVersion + "; compile version=" + version)
 					
 // This task updates the vendor json file for this project to the specified version.					
 vendorJSON {

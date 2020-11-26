@@ -48,7 +48,7 @@ public class LibraryVersion
 	 * of the Travis compile and will be available in the release for consumption by others.
 	 */
 	
-	public static final String version = "3.6.1 (11.24.2020)";	
+	public static final String version = "3.6.1 (11.26.2020)";	
 
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
