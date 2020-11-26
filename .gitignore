@@ -17,3 +17,6 @@ doc/
 
 # Eclipse folder
 .settings/
+
+# Don't track RobotLib, will be handled by Travis during github release process.
+robotlib.*
