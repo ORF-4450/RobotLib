@@ -9,6 +9,7 @@ plugins {
 }
  
 install.finalizedBy 'vendorJSON'
+assemble.finalizedBy 'vendorJSON'
 
 if (System.getProperty("local")) {
 	println("This is a local Compile:")
