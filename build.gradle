@@ -8,8 +8,8 @@ plugins {
     id "io.github.mosadie.vendorJSON" version "1.0"
 }
  
-install.finalizedBy 'vendorJSON'
-assemble.finalizedBy 'vendorJSON'
+// Configuration for install task which does the install of robotlib in local maven cache.
+// Also used by Jitpack.
 
 if (System.getProperty("local")) {
 	println("This is a local Compile:")
@@ -20,26 +20,35 @@ else {
 	version = LibraryVersion
 }
 
-// Configuration for install task which does the install of robotlib in local maven cache.
-// Also used by Jitpack.
-
-//version = LibraryVersion	// Uncomment this line, comment out the next for release push.
-//version = "local"	// Version identifier for local maven cache and github releases.
-					// Should stay as local. This allows the robot* projects on the
+                    // Version identifier used for local maven cache and github releases.
+					// Should stay as "local". This allows the robot* projects on the
 					// same PC as RobotLib to pull from the local cache with the fixed
 					// version name "local" and so always be pointing at the current RobotLib
 					// version including those under development and not have to be updated
 					// each time the robotlib version changes. Release to the world via github
-					// is based on version numbers and robotlib.json.
+					// is based on actual version numbers and robotlib.json.
 					//
-					// When ready to release or even before, for a new version of Robotlib,
-					// don't forget to update the version in LibraryVersion.java, overview.html
-					// and gradle.properties.
+					// When starting a new version you can update LibraryVersion.java,
+					// overview.html and gradle.properties. Build in Eclispe but don't use
+					// the Build RobotLib (Release) run configuration. Use Build RobotLib
+					// (or offline). You can push to github as much as you want. Do not
+					// manually change RobotLib.json, gradle will handle that.
 					//
-					// When all development on a version of robotlib is done and ready to
-					// release, change local above to actual version, commit, push, then compose
-					// a release on github for the new version. Change back to "local"
-					// above when done to start development cycle again.
+					// When ready to release, make sure the version number and dates are 
+					// correct in the files named above then run the Build RobotLib (Release)
+					// for final compile. It will update RobotLib.json. Then push to github.
+					// Then on github, create a new release. This will create the release
+					// and then Travis-ci will be triggered to complile the project and add
+					// all the constituent files to the release. Additionally, the release
+					// artifacts (files) will be added to Jitpack.io repository. Note that
+					// the IF statement above detects when gradle is running under Travis
+					// and sets the version varible to the actual version number (instead
+					// of "local") when compiling for release.
+					//
+					// When all this is done, other users robot projects that want the updated
+					// RobotLib edit thier local RobotLib.json to reflect the new version number 
+					// and on next compile, gradle will pull the new library to thier PC.
+					//
 
 println("LibraryVersion=" + LibraryVersion + "; compile version=" + version)
 					
