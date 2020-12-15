@@ -52,6 +52,7 @@ public class SendableVersion implements Sendable
     public void init(String programVersion)
     {
     	this.programVersion = programVersion;
+    	
     	robotlibVersion = LibraryVersion.version;
     	
         Class<SendableVersion> clazz = SendableVersion.class;
@@ -93,6 +94,14 @@ public class SendableVersion implements Sendable
         builder.addDoubleProperty("UpdateCount", this::getUpdateCount, null);
     }
     
+    /**
+     * Returns program version.
+     * @return The program version.
+     */
+    public String getProgramVersion()
+    {
+    	return programVersion;
+    }
     /**
      * Returns the git branch this program was compiled from.
      * @return The branch name.

@@ -1,4 +1,4 @@
-
+ 
 package Team4450.Lib;
 
 import java.io.File;
@@ -22,9 +22,11 @@ import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.hal.can.CANJNI;
 import edu.wpi.first.hal.util.BoundaryException;
@@ -64,11 +66,20 @@ public class Util
 	 */
 	public static Properties readProperties() throws IOException
 	{
-		consoleLog();
+		String	path;
 		
+		consoleLog();
+        
+        // Determine directory path on robot or local disk under simulation.
+        
+        if (RobotBase.isSimulation())
+        	path = Paths.get("").toAbsolutePath().toString() + "\\robot-properties\\";
+        else
+        	path = "/home/lvuser/";
+
 		Properties props = new Properties();
 		
-		FileInputStream is = new FileInputStream("/home/lvuser/Robot.properties");
+		FileInputStream is = new FileInputStream(path + "Robot.properties");
 		
 		props.load(is);
 		
@@ -97,6 +108,8 @@ public class Util
          */
         static public void setup() throws IOException 
         {
+        	String	path;
+        	
             // get the global logger to configure it and add a file handler.
             Logger logger = Logger.getGlobal();
                    
@@ -128,6 +141,13 @@ public class Util
 
             // Now create a handler to log to a file on roboRio "disk".
             
+            // Determine directory path on robot or local disk under simulation.
+            
+            if (RobotBase.isSimulation())
+            	path = Paths.get("").toAbsolutePath().toString() + "\\logging\\";
+            else
+            	path = "/home/lvuser/";
+            
             //if (true) throw new IOException("Test Exception");
             
 //            if (new File("/home/lvuser/Logging.txt.99").exists() != true)
@@ -138,10 +158,10 @@ public class Util
             // If we reach 99 log files, file 99 is deleted so there is room
             // to create a new log file at position 0.
             
-            if (new File("/home/lvuser/Logging.txt.99").exists() == true)
-            	new File("/home/lvuser/Logging.txt.99").delete();
+            if (new File(path + "Logging.txt.99").exists() == true)
+            	new File(path + "Logging.txt.99").delete();
 
-            fileTxt = new FileHandler("/home/lvuser/Logging.txt", 0, 99);
+            fileTxt = new FileHandler(path + "Logging.txt", 0, 99);
             
             fileTxt.setFormatter(logFormatter);
 

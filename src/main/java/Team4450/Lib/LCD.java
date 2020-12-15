@@ -6,12 +6,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.logging.Level;
 
 /**
- * Wrapper class for Driver Station LCD panel.
+ * Wrapper class for Driver Station LCD panel. Will format and send data
+ * to the dashboard simulated lines 1-10. Can send lines on demand or
+ * store them in memory to be sent later.
  */
 
 public class LCD
 {
-	private LCD	lcd;
+	private LCD				lcd;
+	private static String	lcdLines[] = new String[11];
 
 	/**
 	 * Get a reference to the global instance of LCD class.
@@ -62,7 +65,8 @@ public class LCD
 	}
 
 	/**
-	 * Print data to LCD line starting at column (no clear of line).
+	 * Print data to LCD line starting at column (no clear of line). Data
+	 * is sent immediately to dashboard.
 	 * @param line LCD line to print on (1-based).
 	 * @param column Column in which to start printing (1-based).
 	 * @param message Message to display with optional formatting parameters.
@@ -125,14 +129,21 @@ public class LCD
 			StringBuffer oldMessage = new StringBuffer(SmartDashboard.getString(lcdLine,""));
 			String newMessage = String.format(message, parms);
 			oldMessage.replace(column, newMessage.length() + column, newMessage);
-			SmartDashboard.putString(lcdLine, oldMessage.toString());
+			lcdLines[line] = oldMessage.toString();
+			//SmartDashboard.putString(lcdLine, oldMessage.toString());
 		}
 		else
-			SmartDashboard.putString(lcdLine, String.format(message, parms));
+		{
+			lcdLines[line] = String.format(message, parms);
+			//SmartDashboard.putString(lcdLine, String.format(message, parms));
+		}
+		
+		SmartDashboard.putString(lcdLine, lcdLines[line]);
 	}
 
 	/**
-	 * Print data to LCD line (line cleared firat).
+	 * Print data to LCD line (line cleared first). Data is sent to dashboard
+	 * immediately.
 	 * @param line LCD line to print on (1-based).
 	 * @param message Message to display with optional formatting parameters.
 	 * @param parms optional objects matching formatting parameters.
@@ -146,25 +157,173 @@ public class LCD
 	}
 
 	/**
-	 * Clear LCD line.
+	 * Clear LCD line. Line is cleared on dashboard immediately.
 	 * @param line Line to clear (1-based).
 	 */
 	
 	public static void clearLine(int line)
 	{
-		String blankLine = "                                          ";
+		String blankLine = String.format("%0$-42s", "");	//"                                          ";
 
 		print(line, 1, blankLine);
 	} 
 
 	/**
-	 * Clear all LCD lines.
+	 * Clear all LCD lines. Lines are cleared on dashboard immediately.
 	 */
 	
 	public static void clearAll()
 	{
-		String blankLine = "                                          ";
+		String blankLine = String.format("%0$-42s", "");	//"                                          ";
 		
 		for (int i = 1; i < 11; i++) {print(i, 1, blankLine);}
 	} 
+
+	/**
+	 * Print data to LCD line starting at column (no clear of line). Data
+	 * is stored in memory to be sent later by sendLine() or sendAll().
+	 * @param line LCD line to print on (1-based).
+	 * @param column Column in which to start printing (1-based).
+	 * @param message Message to display with optional formatting parameters.
+	 * @param parms optional objects matching formatting parameters.
+	 */
+
+	public static void set(int line, int column, String message, Object... parms)
+	{
+		if (column < 1) column = 1;
+		
+		column--;	// in here, the column is zero based.
+
+		if (column > 1)
+		{
+			StringBuffer oldMessage = new StringBuffer(lcdLines[line]);
+			String newMessage = String.format(message, parms);
+			oldMessage.replace(column, newMessage.length() + column, newMessage);
+			lcdLines[line] = oldMessage.toString();
+		}
+		else
+		{
+			lcdLines[line] = String.format(message, parms);
+		}
+	}
+
+	/**
+	 * Print data to LCD line (line cleared first). Data is stored to be sent
+	 * later by sendLine() or sendAll().
+	 * @param line LCD line to print on (1-based).
+	 * @param message Message to display with optional formatting parameters.
+	 * @param parms optional objects matching formatting parameters.
+	 */
+
+	public static void setLine(int line, String message, Object... parms)
+	{
+		clearLine(line);
+
+		set(line, 1, message, parms);
+	}
+
+	/**
+	 * Clear LCD line. Line is cleared in memory to be sent later by sendLine() or sendAll().
+	 * @param line Line to clear (1-based).
+	 */
+	
+	public static void setClearLine(int line)
+	{
+		String blankLine = String.format("%0$-42s", "");	//"                                          ";
+
+		set(line, 1, blankLine);
+	} 
+
+	/**
+	 * Clear all LCD lines. Lines are cleared in memory to be sent later.
+	 */
+	
+	public static void setClearAll()
+	{
+		String blankLine = String.format("%0$-42s", "");	//"                                          ";
+		
+		for (int i = 1; i < 11; i++) {set(i, 1, blankLine);}
+	} 
+
+	/**
+	 * Append data to LCD line stored in memory starting at column (no clear of line). Data
+	 * is stored to be sent later by sendLine() or sendAll().
+	 * @param line LCD line to print on (1-based).
+	 * @param message Message to display with optional formatting parameters.
+	 * @param parms optional objects matching formatting parameters.
+	 */
+
+	public static void append(int line, String message, Object... parms)
+	{
+		if (lcdLines[line] == String.format("%0$-42s", ""))
+		{
+			lcdLines[line] = String.format(message, parms);
+		}
+		else
+		{
+			lcdLines[line] += String.format(message, parms);
+		}
+	}
+	
+	/**
+	 * Send an LCD line from memory to the dashboard.
+	 * @param line Line number (1-10) to send.
+	 */
+	public static void sendLine(int line)
+	{
+		String	lcdLine = "";
+		
+		switch (line)
+		{
+			case 1:
+                lcdLine = "LCD_Line_1";
+				break;
+
+			case 2:
+				lcdLine = "LCD_Line_2";
+				break;
+
+			case 3:
+				lcdLine = "LCD_Line_3";
+				break;
+
+			case 4:
+				lcdLine = "LCD_Line_4";
+				break;
+
+			case 5:
+				lcdLine = "LCD_Line_5";
+				break;
+
+			case 6:
+				lcdLine = "LCD_Line_6";
+				break;
+
+			case 7:
+				lcdLine = "LCD_Line_7";
+				break;
+
+			case 8:
+				lcdLine = "LCD_Line_8";
+				break;
+
+			case 9:
+				lcdLine = "LCD_Line_9";
+				break;
+
+			case 10:
+				lcdLine = "LCD_Line_10";
+				break;
+		}
+
+		SmartDashboard.putString(lcdLine, lcdLines[line]);
+	}
+	
+	/**
+	 * Send all LCD lines stored in memory to the dashboard.
+	 */
+	public static void sendAll()
+	{
+		for (int i = 1; i < 11; i++) {sendLine(i);}
+	}
 }
