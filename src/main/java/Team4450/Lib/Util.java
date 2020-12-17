@@ -26,6 +26,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.hal.can.CANJNI;
@@ -253,7 +254,7 @@ public class Util
 	        String str = new String(bytes);
 	        
 	        //LCD.consoleLogNoFormat(str);
-			logger.log(Level.INFO, String.format("robot: %s", str));
+			logger.log(Level.INFO, String.format("robot: %s\r", str));
 	        
 	        count = 0;
 	    }
@@ -318,7 +319,7 @@ public class Util
 	public static void consoleLog(String message, Object... parms)
 	{
 		// logs to the console as well as our log file on RR disk.
-		logger.log(Level.INFO, String.format("robot: %s: %s", currentMethod(2), String.format(message, parms)));
+		logger.log(Level.INFO, String.format("robot: %s: %s\r", currentMethod(2), String.format(message, parms)));
 	}
     
 	/**
@@ -327,7 +328,7 @@ public class Util
 	public static void consoleLog()
 	{
 		// logs to the console as well as our log file on RR disk.
-		logger.log(Level.INFO, String.format("robot: %s", currentMethod(2)));
+		logger.log(Level.INFO, String.format("robot: %s\r", currentMethod(2)));
 	}
     
 	/**
@@ -654,5 +655,15 @@ public class Util
 	public static double squareInput(double input)
 	{
 		return Math.copySign(input * input, input);	
+	}
+	
+	/**
+	 * Return path to the "deploy" directory on the robot or a Windows directory
+	 * under simulation.
+	 * @return The path to the deploy directory.
+	 */
+	public static String getDelpoyDirectory()
+	{
+		return Filesystem.getDeployDirectory().getAbsolutePath();
 	}
 }

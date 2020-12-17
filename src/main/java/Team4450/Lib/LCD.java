@@ -124,19 +124,10 @@ public class LCD
 				break;
 		}
 
-		if (column > 1)
-		{
-			StringBuffer oldMessage = new StringBuffer(SmartDashboard.getString(lcdLine,""));
-			String newMessage = String.format(message, parms);
-			oldMessage.replace(column, newMessage.length() + column, newMessage);
-			lcdLines[line] = oldMessage.toString();
-			//SmartDashboard.putString(lcdLine, oldMessage.toString());
-		}
-		else
-		{
-			lcdLines[line] = String.format(message, parms);
-			//SmartDashboard.putString(lcdLine, String.format(message, parms));
-		}
+		StringBuffer oldMessage = new StringBuffer(SmartDashboard.getString(lcdLine,""));
+		String newMessage = String.format(message, parms);
+		oldMessage.replace(column, newMessage.length() + column, newMessage);
+		lcdLines[line] = oldMessage.toString();
 		
 		SmartDashboard.putString(lcdLine, lcdLines[line]);
 	}
@@ -194,17 +185,10 @@ public class LCD
 		
 		column--;	// in here, the column is zero based.
 
-		if (column > 1)
-		{
-			StringBuffer oldMessage = new StringBuffer(lcdLines[line]);
-			String newMessage = String.format(message, parms);
-			oldMessage.replace(column, newMessage.length() + column, newMessage);
-			lcdLines[line] = oldMessage.toString();
-		}
-		else
-		{
-			lcdLines[line] = String.format(message, parms);
-		}
+		StringBuffer oldMessage = new StringBuffer(lcdLines[line]);
+		String newMessage = String.format(message, parms);
+		oldMessage.replace(column, newMessage.length() + column, newMessage);
+		lcdLines[line] = oldMessage.toString();
 	}
 
 	/**

@@ -299,7 +299,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * heading to the direction the robot is pointing relative to
 	 * the direction the driver is looking. Typically called at the
 	 * start of autonomous per the starting direction of the robot.
-	 * 0 degrees is always straight down the field.
+	 * 0 degrees is always straight down the field going clockwise
+	 * toward 359.
 	 */
 	public void setHeading(double offset)
 	{

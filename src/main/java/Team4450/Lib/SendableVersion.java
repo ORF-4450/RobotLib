@@ -80,7 +80,8 @@ public class SendableVersion implements Sendable
     }
 
     /**
-     * Initialize Sendable. Do not call, used by SmartDashboard.
+     * Initialize Sendable. Do not call, used by SmartDashboard. The function defined
+     * for each property will be called each time the SB updates this sendable.
      */
     @Override
     public void initSendable(SendableBuilder builder)
@@ -139,6 +140,11 @@ public class SendableVersion implements Sendable
     	return user;
     }
     
+    /**
+     * Used to track when and how often this sendable is updated 
+     * by the SmartDashboard.
+     * @return The current update count.
+     */
     public int getUpdateCount()
     {
     	return ++updateCount;
