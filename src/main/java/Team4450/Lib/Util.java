@@ -649,8 +649,8 @@ public class Util
 	 * 0.0 returns 0.0, .50 returns .25 and 1.0 input returns full 1.0 output. 
 	 * This is what is in the DifferentialDrive.tankDrive method that scales motor input 
 	 * to reduce sensitivity. The sign of the input value is maintained.
-	 * @param input The input value 0..1..0.
-	 * @return The scaled output 0..1..0.
+	 * @param input The input value -1..0..+1.
+	 * @return The scaled output -1..0..+1.
 	 */
 	public static double squareInput(double input)
 	{

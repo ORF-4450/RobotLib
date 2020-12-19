@@ -9,6 +9,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 import edu.wpi.first.wpilibj.CounterBase;
+import edu.wpi.first.wpilibj.Encoder;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
@@ -24,6 +25,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
 	private boolean			inverted = false, direction = false;
+	private Encoder			simEncoder;
 	
 	public static final int	TICKS_PER_REVOLUTION = 4096;
 
@@ -156,8 +158,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	private int getRaw()
 	{
-		return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
-			talon.getSensorCollection().getQuadraturePosition();
+		if (simEncoder == null)
+			return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
+				talon.getSensorCollection().getQuadraturePosition();
+		else
+			return isInverted() ? simEncoder.get() * -1 : simEncoder.get();
 	}
 	
 	/**
@@ -187,7 +192,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public int getRPM()
 	{
-		return getRate(PIDRateType.ticksPer100ms) * 600 / 4096;
+		return getRate(PIDRateType.ticksPer100ms) * 600 / TICKS_PER_REVOLUTION;
 	}
 	
 	/**
@@ -198,11 +203,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public double getVelocity( PIDRateType rateType )
 	{
 		if (rateType == PIDRateType.velocityMPS)
-			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0) * .3048;
+			return ((getRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0) * .3048;
 		else if (rateType == PIDRateType.velocityFPS)
-			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0);
+			return ((getRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
-			return ((getRPM() * gearRatio) * (wheelDiameter * 3.14) / 60.0);
+			return ((getRPM() * gearRatio) * (wheelDiameter * Math.PI) / 60.0);
 		
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
@@ -230,7 +235,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public int getMaxRPM()
 	{
-		return getMaxRate(PIDRateType.ticksPer100ms) * 600 / 4096;
+		return getMaxRate(PIDRateType.ticksPer100ms) * 600 / TICKS_PER_REVOLUTION;
 	}
 	
 	/**
@@ -252,11 +257,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public double getMaxVelocity( PIDRateType rateType )
 	{
 		if (rateType == PIDRateType.velocityMPS)
-			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0) * .3048;
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0) * .3048;
 		else if (rateType == PIDRateType.velocityFPS)
-			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 12.0 / 60.0);
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
-			return ((getMaxRPM() * gearRatio) * (wheelDiameter * 3.14) / 60.0);
+			return ((getMaxRPM() * gearRatio) * (wheelDiameter * Math.PI) / 60.0);
 		
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
@@ -264,12 +269,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	/**
 	 * Return the distance in inches the encoder has recorded since last
 	 * reset. If encoder goes backwards the distance is reduced. Computed
-	 * from encoder rotations x gear ratio factor x (wheel diameter(in) x 3.14).
+	 * from encoder rotations x gear ratio factor x (wheel diameter(in) x PI).
 	 * @return The distance in inches.
 	 */
 	public double getDistance()
 	{
-		return (getRotations() * gearRatio) * (wheelDiameter * 3.14);
+		return (getRotations() * gearRatio) * (wheelDiameter * Math.PI);
 	}
 	
 	/**
@@ -299,7 +304,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	@Override
 	public void reset()
 	{
-		talon.getSensorCollection().setQuadraturePosition(0, 0);
+		if (simEncoder == null)
+			talon.getSensorCollection().setQuadraturePosition(0, 0);
+		else
+			simEncoder.reset();
 	}
 
 	/**
@@ -312,9 +320,17 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public int reset(int timeout)
 	{
+		ErrorCode	errorCode;
+		
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
-		ErrorCode errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
+		if (simEncoder == null)
+			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
+		else
+		{
+			simEncoder.reset();
+			errorCode = ErrorCode.OK;
+		}
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
 		// the reset command. It may take up to 160 additional ms for the zeroing to be reflected
@@ -353,7 +369,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 
 	/**
-	 * Return if robot is stopped. No movement for Max Period seconds.
+	 * Return if robot is stopped. No movement for Max Period seconds. Relies on regular calls
+	 * to get() or getRate() to update the movement status.
 	 * @return True if stopped, false if moving.
 	 */
 	@Override
@@ -585,5 +602,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public double getAsDouble()
 	{
 		return get();
+	}
+	
+	public void setSimEncoder(Encoder encoder)
+	{
+		simEncoder = encoder;
 	}
 }

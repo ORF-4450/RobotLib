@@ -150,7 +150,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Return yaw angle from zero point, which is direction robot was pointing when
 	 * resetYaw() last called. Uses Navx internal function which is updated on a
-	 * timed basis (update rate). There can be a delay between calling zeroYaw()
+	 * timed basis (update rate). There can be a delay between calling resetYaw()
 	 * and getting a zero returned from getYaw(), as much as 150ms.
 	 * @return Yaw angle in degrees -179 to +179, - is left of zero, + is right.
 	 */
@@ -160,7 +160,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return total yaw angle accumulated since last reset.
+	 * Return total yaw angle accumulated since last call to setHeading().
 	 * @return Total yaw angle in degrees.
 	 */
 	public double getTotalYaw()
@@ -169,7 +169,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return total yaw angle accumulated since last reset.
+	 * Return total yaw angle accumulated since last call to setHeading().
 	 * Note: Rotation2d angle is + for left of zero, - for right.
 	 * @return Total yaw angle in a Rotation2d object.
 	 */
