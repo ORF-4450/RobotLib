@@ -174,7 +174,7 @@ public class Util
 	
 	private static class LogFormatter extends Formatter 
 	{
-        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss:S");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss:SSS");
         
         public LogFormatter()
         {

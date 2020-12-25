@@ -10,6 +10,7 @@ import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.AnalogGyro;
 //import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
@@ -44,6 +45,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 
 	private final eventMonitor	runnable = new eventMonitor();
 	private final Notifier 		eventNotifier = new Notifier(runnable);
+	
+	private AnalogGyro			simGyro;
+	private double				simGyroResetAngle;
 	
 	/**
 	 * Identifies port the NavX is plugged into
@@ -152,11 +156,14 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * resetYaw() last called. Uses Navx internal function which is updated on a
 	 * timed basis (update rate). There can be a delay between calling resetYaw()
 	 * and getting a zero returned from getYaw(), as much as 150ms.
-	 * @return Yaw angle in degrees -179 to +179, - is left of zero, + is right.
+	 * @return Yaw angle in degrees -179 to +179, - is left (clockwise) of zero, + is right.
 	 */
 	public float getYaw()
 	{
-		return ahrs.getYaw();
+		if  (simGyro == null)
+			return ahrs.getYaw();
+		else
+			return (float) (simGyro.getAngle() - simGyroResetAngle);
 	}
 	
 	/**
@@ -165,7 +172,10 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public double getTotalYaw()
 	{
-		return ahrs.getAngle();
+		if (simGyro == null)
+			return ahrs.getAngle();
+		else
+			return simGyro.getAngle();
 	}
 	
 	/**
@@ -205,7 +215,10 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public double getYawRate()
 	{
-		return ahrs.getRate();
+		if (simGyro == null)
+			return ahrs.getRate();
+		else
+			return simGyro.getRate();
 	}
 	
 	/**
@@ -240,8 +253,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		double heading;
 		
-		heading = ahrs.getAngle() + totalAngle;
-		
+		heading = getTotalYaw() + totalAngle;
+		//heading = ahrs.getAngle() + totalAngle;
+
 		heading = heading - ((int) (heading / 360) * 360);
 		
 		if (heading < 0) heading += 360;
@@ -268,7 +282,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * @param degrees Specified degrees value.
 	 * @return Degrees value converted to radians.
 	 */
-	public double getHeadingR(double degrees)
+	public double getRadians(double degrees)
 	{
 		return Math.toRadians(360 - degrees);
 	}
@@ -304,9 +318,13 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void setHeading(double offset)
 	{
+		Util.consoleLog("%.2f", offset);
+		
 		Util.checkRange(offset, 0, 359, "offset");
 
 		totalAngle = offset;
+		
+		simGyroResetAngle = 0;
 	}
 
 	/**
@@ -375,7 +393,13 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		totalAngle += ahrs.getAngle();
 		
-        ahrs.zeroYaw();
+		if (simGyro == null)
+			ahrs.zeroYaw();
+		else
+		{
+			simGyroResetAngle = simGyro.getAngle();
+			simGyro.reset();
+		}
 	}	
 	
 	/**
@@ -833,5 +857,10 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	public double getAsDouble()
 	{
 		return getYaw();
+	}
+	
+	public void setSimGyro(AnalogGyro gyro)
+	{
+		simGyro = gyro;
 	}
 }
