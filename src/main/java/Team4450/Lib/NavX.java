@@ -155,7 +155,10 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * Return yaw angle from zero point, which is direction robot was pointing when
 	 * resetYaw() last called. Uses Navx internal function which is updated on a
 	 * timed basis (update rate). There can be a delay between calling resetYaw()
-	 * and getting a zero returned from getYaw(), as much as 150ms.
+	 * and getting a zero returned from getYaw(), as much as 150ms or more.
+	 * Note: Under simulation this function will not return a correct value after
+	 * yaw reset until after the first pass through the simulationPeriodic() 
+	 * function of the robot code.
 	 * @return Yaw angle in degrees -179 to +179, - is left (clockwise) of zero, + is right.
 	 */
 	public float getYaw()
@@ -167,7 +170,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return total yaw angle accumulated since last call to setHeading().
+	 * Return total yaw angle accumulated since last call to resetYaw().
 	 * @return Total yaw angle in degrees.
 	 */
 	public double getTotalYaw()
@@ -179,7 +182,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return total yaw angle accumulated since last call to setHeading().
+	 * Return total yaw angle accumulated since last call to resetYaw().
 	 * Note: Rotation2d angle is + for left of zero, - for right.
 	 * @return Total yaw angle in a Rotation2d object.
 	 */
@@ -247,6 +250,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * Return current robot heading (0-359.n) relative to direction robot was
 	 * pointed at last heading reset (setHeading). Will return fractional angle.
 	 * 1 degree is right of zero (clockwise) and 359 is left (counter clockwise).
+	 * Note: Under simulation this function will not return a correct value after
+	 * yaw reset until after the first pass through the simulationPeriodic() 
+	 * function of the robot code.
 	 * @return Robot heading in degrees.
 	 */
 	public double getHeading()
@@ -254,7 +260,6 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		double heading;
 		
 		heading = getTotalYaw() + totalAngle;
-		//heading = ahrs.getAngle() + totalAngle;
 
 		heading = heading - ((int) (heading / 360) * 360);
 		
@@ -308,21 +313,21 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Set heading tracking angle to offset value.
-	 * @param offset Offset from 0-359 that is used to adjust the
-	 * heading to the direction the robot is pointing relative to
+	 * Set heading tracking start angle.
+	 * @param heading Heading from 0-359 that is used to set the
+	 * internal heading to the direction the robot is pointing relative to
 	 * the direction the driver is looking. Typically called at the
 	 * start of autonomous per the starting direction of the robot.
 	 * 0 degrees is always straight down the field going clockwise
 	 * toward 359.
 	 */
-	public void setHeading(double offset)
+	public void setHeading(double heading)
 	{
-		Util.consoleLog("%.2f", offset);
+		Util.consoleLog("%.2f", heading);
 		
-		Util.checkRange(offset, 0, 359, "offset");
+		Util.checkRange(heading, 0, 359, "heading");
 
-		totalAngle = offset;
+		totalAngle = heading;
 		
 		simGyroResetAngle = 0;
 	}
@@ -387,19 +392,25 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * is pointing. getYaw may not return zero immediately after
 	 * calling this function as zeroYaw takes a varying amount of time
 	 * to be reflected in getYaw return. Manufacturer suggests it could
-	 * be up to 150ms but we have observed 300ms in some cases.
+	 * be up to 150ms but we have observed 300ms in some cases and might
+	 * be longer still if robot is moving when this call is made.
 	 */
 	public void resetYaw()
 	{
-		totalAngle += ahrs.getAngle();
-		
 		if (simGyro == null)
+		{
+			totalAngle += ahrs.getAngle();
+			
 			ahrs.zeroYaw();
+		}
 		else
 		{
 			simGyroResetAngle = simGyro.getAngle();
+			
 			simGyro.reset();
 		}
+
+		Util.consoleLog("yaw=%.2f hdg=%.2f", getYaw(), getHeading());
 	}	
 	
 	/**
@@ -409,6 +420,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void resetYawWait()
 	{
+		Util.consoleLog();
+		
 		resetYaw();
 		
         Timer.delay(yawResetDelay);
@@ -421,6 +434,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void resetYawWait(double wait)
 	{
+		Util.consoleLog();
+		
 		Util.checkRange(wait, 0, 2000, "Yaw wait");
 
 		resetYaw();
@@ -434,6 +449,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void setYawResetWait(double wait)
 	{
+		Util.consoleLog();
+		
 		Util.checkRange(wait, 0, 2000, "Yaw wait");
 		
 		yawResetDelay = wait;
@@ -442,10 +459,11 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Reset yaw zero reference to current direction the robot
 	 * is pointing and wait for reset to complete. Wait is determined
-	 * by watching getYaw to return a value 0..tolerance (degrees).
-	 * Checked every 10ms or until wait max is reached.
+	 * by watching getYaw to return a value 0 to tolerance (degrees).
+	 * Checked every 10ms or until wait milliseconds is reached.
 	 * @param tolerance Tolerance (degrees) to determine reset complete (0-10).
-	 * @param wait Number of milliseconds to wait (10, 5000-10ms resolution).
+	 * @param wait Number of milliseconds to wait (10-5000ms resolution). Should be evenly
+	 * divisible by 10.
 	 */
 	public void resetYawWait(double tolerance, int wait)
 	{
@@ -465,7 +483,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 			waitCount--;
 		}
 		
-		Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, Math.abs(ahrs.getYaw()));
+		Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, ahrs.getYaw());
 	}
 	
 	/**
