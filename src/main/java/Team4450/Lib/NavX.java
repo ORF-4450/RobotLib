@@ -159,7 +159,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * Note: Under simulation this function will not return a correct value after
 	 * yaw reset until after the first pass through the simulationPeriodic() 
 	 * function of the robot code.
-	 * @return Yaw angle in degrees -179 to +179, - is left (clockwise) of zero, + is right.
+	 * @return Yaw angle in degrees -180 to +180, - is left of zero, + is right (clockwise) .
 	 */
 	public float getYaw()
 	{
@@ -405,6 +405,10 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		}
 		else
 		{
+			// We track the current angle as representing zero because even though
+			// we reset the simGyro here, the AnalogGyroSim class in the robot code
+			// will stuff its idea of the accumulated gyro angle right back into the
+			// simGryo. This is a quirk of the simulation design. 
 			simGyroResetAngle = simGyro.getAngle();
 			
 			simGyro.reset();
