@@ -170,6 +170,15 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
+	 * Return the result of getYaw() in radians.
+	 * @return Current yaw in radians.
+	 */
+	public double getYawR()
+	{
+		return Math.toRadians(getYaw());
+	}
+	
+	/**
 	 * Return total yaw angle accumulated since last call to resetYaw().
 	 * @return Total yaw angle in degrees.
 	 */
@@ -183,7 +192,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	
 	/**
 	 * Return total yaw angle accumulated since last call to resetYaw().
-	 * Note: Rotation2d angle is + for left of zero, - for right.
+	 * Note: Rotation2d angle is + for left of zero, - for right. This is
+	 * opposite our convention of - for left + for right (clockwise).
 	 * @return Total yaw angle in a Rotation2d object.
 	 */
 	public Rotation2d getTotalYaw2d()
@@ -289,7 +299,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public double getRadians(double degrees)
 	{
-		return Math.toRadians(360 - degrees);
+		// Don't remember why the 360- here...does not seem to make sense.
+		//return Math.toRadians(360 - degrees);
+		return Math.toRadians(degrees);
 	}
 	
 	/**
@@ -405,11 +417,11 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		}
 		else
 		{
-			// We track the current angle as representing zero because even though
+			// We track the current angle as representing zero yaw because even though
 			// we reset the simGyro here, the AnalogGyroSim class in the robot code
 			// will stuff its idea of the accumulated gyro angle right back into the
 			// simGryo. This is a quirk of the simulation design. 
-			simGyroResetAngle = simGyro.getAngle();
+			simGyroResetAngle = simGyro.getAngle();			
 			
 			simGyro.reset();
 		}

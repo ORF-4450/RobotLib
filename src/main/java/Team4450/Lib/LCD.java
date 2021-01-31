@@ -154,7 +154,7 @@ public class LCD
 	
 	public static void clearLine(int line)
 	{
-		String blankLine = String.format("%0$-42s", "");	//"                                          ";
+		String blankLine = String.format("%0$-100s", "");	//"                                          ";
 
 		print(line, 1, blankLine);
 	} 
@@ -165,7 +165,7 @@ public class LCD
 	
 	public static void clearAll()
 	{
-		String blankLine = String.format("%0$-42s", "");	//"                                          ";
+		String blankLine = String.format("%0$-100s", "");	//"                                          ";
 		
 		for (int i = 1; i < 11; i++) {print(i, 1, blankLine);}
 	} 
@@ -213,7 +213,7 @@ public class LCD
 	
 	public static void setClearLine(int line)
 	{
-		String blankLine = String.format("%0$-42s", "");	//"                                          ";
+		String blankLine = String.format("%0$-100s", "");	//"                                          ";
 
 		set(line, 1, blankLine);
 	} 
@@ -224,7 +224,7 @@ public class LCD
 	
 	public static void setClearAll()
 	{
-		String blankLine = String.format("%0$-42s", "");	//"                                          ";
+		String blankLine = String.format("%0$-100s", "");	//"                                          ";
 		
 		for (int i = 1; i < 11; i++) {set(i, 1, blankLine);}
 	} 
@@ -239,7 +239,7 @@ public class LCD
 
 	public static void append(int line, String message, Object... parms)
 	{
-		if (lcdLines[line] == String.format("%0$-42s", ""))
+		if (lcdLines[line] == String.format("%0$-100s", ""))
 		{
 			lcdLines[line] = String.format(message, parms);
 		}
