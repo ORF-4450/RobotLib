@@ -600,12 +600,34 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	@Override
 	public double getAsDouble()
-	{
+	{ 
 		return get();
 	}
 	
+	/**
+	 * Sets the dummy encoder used during simulation to drive the SRX encoder.
+	 * The dummy encoder is a regular Encoder which is passed to the EncoderSim
+	 * Wpilib class and to this SRX encoder. The regular Encoder links this SRX 
+	 * encoder to the simulation as exposed by EncoderSim. So when this simulated
+	 * encoder is set, the SRXMagneticEncoderRelative class is driven by the simulated
+	 * encoder NOT the actual encoders on the robot.
+	 * @param encoder Encoder object used in simulation.
+	 */
 	public void setSimEncoder(Encoder encoder)
 	{
 		simEncoder = encoder;
+	}
+	
+	/**
+	 * Get the number of ticks (encoder counts) equal to the target distance.
+	 * @param distance Target distance in inches.
+	 * @param wheelDiameter In inches.
+	 * @return Ticks to equal to the target distance.
+	 */
+	public static int getTicksForDistance(double distance, double wheelDiameter)
+	{
+		double distancePerTickInches = Math.PI * wheelDiameter / TICKS_PER_REVOLUTION;
+
+		return (int) (distance / distancePerTickInches);
 	}
 }
