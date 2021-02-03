@@ -204,7 +204,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Returns Yaw angle between target heading set by setTargetHeading()
 	 * and the current robot heading.
-	 * @return Yaw angle (0-180), - is yaw left of target heading, + is yaw right of target.
+	 * @return Yaw angle in degrees (0-180), - is yaw left of target heading, + is yaw right of target.
 	 */
 	public double getHeadingYaw()
 	{
@@ -220,6 +220,16 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 			yaw = 360 + yaw;
 		
 		return yaw;
+	}
+	
+	/**
+	 * Returns Yaw angle between target heading set by setTargetHeading()
+	 * and the current robot heading.
+	 * @return Yaw angle in radians, + is yaw left of target heading, - is yaw right of target.
+	 */
+	public double getHeadingYawR()
+	{
+		return Math.toRadians(-getHeadingYaw());
 	}
 	
 	/**
