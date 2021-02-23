@@ -19,7 +19,6 @@ else {
 	println("This is a Travis Compile:")
 	version = LibraryVersion
 }
-
                     // Version identifier used for local maven cache and github releases.
 					// Should stay as "local". This allows the robot* projects on the
 					// same PC as RobotLib to pull from the local cache with the fixed
@@ -67,8 +66,11 @@ deploy {
     }
 }
 
-// Set this to true to enable desktop support.
-def includeDesktopSupport = false
+// Look in local maven cache first, then maven central for dependent libraries.
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
 
 // Setup eclipse classpath settings, so the javadoc and sources are available in eclipse
 eclipse {
@@ -78,10 +80,18 @@ eclipse {
     }
 }
 
-// Defining my dependencies. In this case, WPILib (+ friends), and some vendor libraries (NavX, CTRE)
+// Defining dependencies. In this case, WPILib (+ friends), and some vendor libraries (NavX, CTRE)
 dependencies {
-    compile wpi.deps.wpilib()
-    compile wpi.deps.vendor.java()
+    //compile wpi.deps.wpilib()
+    //compile wpi.deps.vendor.java()
+    //nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    //nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    
+    implementation wpi.deps.wpilib()
+    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
+    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
+
+    implementation wpi.deps.vendor.java()
     nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 

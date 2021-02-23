@@ -4,8 +4,7 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 import edu.wpi.first.wpilibj.CounterBase;
@@ -15,11 +14,11 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * Wrapper for Talon SRX Magnetic Encoder used in relative (quadrature) mode.
+ * Wrapper for Talon FX Encoder in relative (quadrature) mode.
  */
-public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier
+public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 {
-	private WPI_TalonSRX	talon;
+	private WPI_TalonFX		talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
@@ -27,18 +26,18 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private boolean			inverted = false, direction = false;
 	private Encoder			simEncoder;
 	
-	public static final int	TICKS_PER_REVOLUTION = 4096;
+	public static final int	TICKS_PER_REVOLUTION = 2048;
 
-	public SRXMagneticEncoderRelative()
+	public FXEncoder()
 	{	
 	}
 	
 	/**
-	 * Create SRXMagneticEncoderRelative and set the Talon the encoder is
+	 * Create FXEncoder and set the Talon the encoder is
 	 * connected to.
-	 * @param talon Talon SRX object encoder is connected to.
+	 * @param talon Talon FX object encoder is connected to.
 	 */
-	public SRXMagneticEncoderRelative( WPI_TalonSRX talon )
+	public FXEncoder( WPI_TalonFX talon )
 	{
 		Util.consoleLog("%s", talon.getDescription());
 		
@@ -48,12 +47,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
-	 * Create SRXMagneticEncoderRelative setting the Talon the encoder is
+	 * Create FXEncoder setting the Talon the encoder is
 	 * connected to and the wheel diameter of the wheel being monitored.
-	 * @param talon Talon SRX object encoder is connected to.
+	 * @param talon Talon FX object encoder is connected to.
  	 * @param wheelDiameter Wheel diameter in inches.
 	 */
-	public SRXMagneticEncoderRelative( WPI_TalonSRX talon, double wheelDiameter )
+	public FXEncoder( WPI_TalonFX talon, double wheelDiameter )
 	{
 		Util.consoleLog("%s", talon.getDescription());
 		
@@ -159,8 +158,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private int getRaw()
 	{
 		if (simEncoder == null)
-			return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
-				talon.getSensorCollection().getQuadraturePosition();
+			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
+				(int) talon.getSensorCollection().getIntegratedSensorPosition();
 		else
 			return isInverted() ? simEncoder.get() * -1 : simEncoder.get();
 	}
@@ -244,8 +243,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	private int getRawRate()
 	{
-		return isInverted() ? talon.getSensorCollection().getQuadratureVelocity() * -1 :
-			talon.getSensorCollection().getQuadratureVelocity();
+		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
+			(int) talon.getSensorCollection().getIntegratedSensorVelocity();
 	}
 	
 	/**
@@ -305,7 +304,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public void reset()
 	{
 		if (simEncoder == null)
-			talon.getSensorCollection().setQuadraturePosition(0, 0);
+			talon.getSensorCollection().setIntegratedSensorPosition(0, 0);
 		else
 			simEncoder.reset();
 	}
@@ -325,7 +324,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
 		if (simEncoder == null)
-			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
+			errorCode = talon.getSensorCollection().setIntegratedSensorPosition(0, timeout);
 		else
 		{
 			simEncoder.reset();
@@ -408,7 +407,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 * Returns the Talon the encoder is connected to.
 	 * @return The Talon instance the encoder is connected to.
 	 */
-	public WPI_TalonSRX getTalon()
+	public WPI_TalonFX getTalon()
 	{
 		return talon;
 	}
@@ -417,7 +416,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 * Sets the Talon the encoder is connected to.
 	 * @param talon The Talon the encoder is connected to.
 	 */
-	public void setTalon( WPI_TalonSRX talon )
+	public void setTalon( WPI_TalonFX talon )
 	{
 		Util.consoleLog("%s", talon.getDescription());
 		
