@@ -25,7 +25,7 @@ public class JoyStick
 	
 	/**
 	 * Constructor which adds all JoyStick buttons to be monitored.
-	 * @param joystick JoyStick object representing the GamePad.
+	 * @param joystick JoyStick object.
 	 * @param name Identifying name for the JoyStick object.
 	 */
 	

@@ -3,6 +3,7 @@ package Team4450.Lib;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import Team4450.Lib.Wpilib.PIDSource;
@@ -42,7 +43,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
-		
+
+		// Select Talon FX integrated encoder as feedback device.
+		this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+
 		reset();
 	}
 	
@@ -57,6 +61,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
+		
+		// Select Talon FX integrated encoder as feedback device.
+		this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 		
 		setWheelDiameter(wheelDiameter);
 		
@@ -158,8 +165,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	private int getRaw()
 	{
 		if (simEncoder == null)
-			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
-				(int) talon.getSensorCollection().getIntegratedSensorPosition();
+//			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
+//				(int) talon.getSensorCollection().getIntegratedSensorPosition();
+			return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
+				(int) talon.getSelectedSensorPosition();
 		else
 			return isInverted() ? simEncoder.get() * -1 : simEncoder.get();
 	}
@@ -243,8 +252,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	 */
 	private int getRawRate()
 	{
-		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
-			(int) talon.getSensorCollection().getIntegratedSensorVelocity();
+//		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
+//			(int) talon.getSensorCollection().getIntegratedSensorVelocity();
+		return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
+			(int) talon.getSelectedSensorVelocity();
 	}
 	
 	/**
@@ -304,7 +315,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	public void reset()
 	{
 		if (simEncoder == null)
-			talon.getSensorCollection().setIntegratedSensorPosition(0, 0);
+			//talon.getSensorCollection().setIntegratedSensorPosition(0, 0);
+			talon.setSelectedSensorPosition(0);
 		else
 			simEncoder.reset();
 	}
@@ -324,7 +336,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
 		if (simEncoder == null)
-			errorCode = talon.getSensorCollection().setIntegratedSensorPosition(0, timeout);
+			//errorCode = talon.getSensorCollection().setIntegratedSensorPosition(0, timeout);
+			errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
 		else
 		{
 			simEncoder.reset();
@@ -426,8 +439,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Set the period that the Talon updates the RR with encoder count value.
-	 * Defaults to 160ms per CTRE doc. An update is called a frame. This method
+	 * Set the period that the Talon FX updates the RR with encoder count value.
+	 * Defaults to ~200ms per CTRE doc. An update is called a frame. This method
 	 * will take 10ms to complete.
 	 * @param period Frame period in milliseconds.
 	 */
@@ -435,7 +448,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, period);
+		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
 		
 		Timer.delay(.010);
 	}
