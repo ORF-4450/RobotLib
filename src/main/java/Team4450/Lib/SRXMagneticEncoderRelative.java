@@ -3,6 +3,7 @@ package Team4450.Lib;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
@@ -36,7 +37,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	/**
 	 * Create SRXMagneticEncoderRelative and set the Talon the encoder is
 	 * connected to.
-	 * @param talon Talon SRX object encoder is connected to.
+	 * @param talon Talon SRX object instance encoder is connected to.
 	 */
 	public SRXMagneticEncoderRelative( WPI_TalonSRX talon )
 	{
@@ -44,6 +45,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		
 		this.talon = talon;
 		
+		// Select Talon CTRE Magnetic encoder as feedback device.
+		this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+
 		reset();
 	}
 	
@@ -58,6 +62,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
+		
+		// Select Talon CTRE Magnetic encoder as feedback device.
+		this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 		
 		setWheelDiameter(wheelDiameter);
 		
@@ -159,8 +166,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private int getRaw()
 	{
 		if (simEncoder == null)
-			return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
-				talon.getSensorCollection().getQuadraturePosition();
+//			return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
+//				talon.getSensorCollection().getQuadraturePosition();
+			return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
+				(int) talon.getSelectedSensorPosition();
 		else
 			return isInverted() ? simEncoder.get() * -1 : simEncoder.get();
 	}
@@ -244,8 +253,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	private int getRawRate()
 	{
-		return isInverted() ? talon.getSensorCollection().getQuadratureVelocity() * -1 :
-			talon.getSensorCollection().getQuadratureVelocity();
+//		return isInverted() ? talon.getSensorCollection().getQuadratureVelocity() * -1 :
+//			talon.getSensorCollection().getQuadratureVelocity();
+		return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
+			(int) talon.getSelectedSensorVelocity();
 	}
 	
 	/**
@@ -298,14 +309,15 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	
 	/**
 	 * Reset the encoder count. Note: this method returns immediately but the
-	 * encoder may take up to 160 milliseconds to actually reset. If you read
+	 * encoder may take up to 30 milliseconds to actually reset. If you read
 	 * the encoder too soon it may not be reset.
 	 */
 	@Override
 	public void reset()
 	{
 		if (simEncoder == null)
-			talon.getSensorCollection().setQuadraturePosition(0, 0);
+//			talon.getSensorCollection().setQuadraturePosition(0, 0);
+			talon.setSelectedSensorPosition(0);
 		else
 			simEncoder.reset();
 	}
@@ -313,8 +325,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	/**
 	 * Reset the encoder count. Will wait the specified milliseconds for the
 	 * encoder reset to complete. To make sure the next get() call returns zero counts
-	 * the wait should be at least 170ms as the default update period of current counts
-	 * is 160ms plus max of 10ms to transmit the reset command.
+	 * the wait should be at least 30ms as the default update period of current counts
+	 * is 20ms plus max of 10ms to transmit the reset command.
 	 * @param timeout Number of milliseconds to wait for reset completion, zero for no wait.
 	 * @return Zero if reset completes, non-zero if times out before reset complete.
 	 */
@@ -325,7 +337,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
 		if (simEncoder == null)
-			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
+//			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
+			errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
 		else
 		{
 			simEncoder.reset();
@@ -428,7 +441,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	
 	/**
 	 * Set the period that the Talon updates the RR with encoder count value.
-	 * Defaults to 160ms per CTRE doc. An update is called a frame. This method
+	 * Defaults to 20ms per CTRE doc. An update is called a frame. This method
 	 * will take 10ms to complete.
 	 * @param period Frame period in milliseconds.
 	 */
@@ -436,7 +449,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_3_Quadrature, period);
+		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
 		
 		Timer.delay(.010);
 	}

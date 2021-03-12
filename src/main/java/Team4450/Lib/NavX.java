@@ -97,6 +97,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 				ahrs = new AHRS(SPI.Port.kMXP);
 		}
 		
+		//ahrs.enableBoardlevelYawReset(true);
+		
 		registerSendable("NavX");
 	}
 	
@@ -493,6 +495,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void resetYawWait(double tolerance, int wait)
 	{
+		Util.consoleLog("t=%.1f w=%d", tolerance, wait);
+		
 		int		waits = 0, waitCount;
 		
 		Util.checkRange(tolerance, 0, 10, "Tolerance");
@@ -578,7 +582,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         /* Sensor Board Information                                                 */
         table.getEntry(    "IMU_FirmwareVersion") .setString( ahrs.getFirmwareVersion());
         table.getEntry(    "IMU_UpdateRate(hz)")  .setNumber( ahrs.getActualUpdateRate());
-        
+        table.getEntry(    "IMU_BoardLevelYawReset").setBoolean( ahrs.isBoardlevelYawResetEnabled());
+
         table.getEntry(    "IMU_IsCalibrating")   .setBoolean(ahrs.isCalibrating());
         table.getEntry(    "IMU_Yaw")             .setNumber( ahrs.getYaw());
         table.getEntry(    "IMU_Pitch")           .setNumber( ahrs.getPitch());
@@ -596,6 +601,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         /* path for upgrading from the Kit-of-Parts gyro to the navx MXP            */
         
         table.getEntry(    "IMU_TotalYaw")        .setNumber( ahrs.getAngle());
+        table.getEntry(    "IMU_AngleAdjustment") .setNumber( ahrs.getAngleAdjustment());
         table.getEntry(    "IMU_YawRateDPS")      .setNumber( ahrs.getRate());
 
         /* Display Processed Acceleration Data (Linear Acceleration, Motion Detect) */

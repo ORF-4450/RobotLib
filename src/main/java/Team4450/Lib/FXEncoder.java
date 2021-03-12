@@ -308,7 +308,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Reset the encoder count. Note: this method returns immediately but the
-	 * encoder may take up to 160 milliseconds to actually reset. If you read
+	 * encoder may take up to 30 milliseconds to actually reset. If you read
 	 * the encoder too soon it may not be reset.
 	 */
 	@Override
@@ -324,8 +324,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	/**
 	 * Reset the encoder count. Will wait the specified milliseconds for the
 	 * encoder reset to complete. To make sure the next get() call returns zero counts
-	 * the wait should be at least 170ms as the default update period of current counts
-	 * is 160ms plus max of 10ms to transmit the reset command.
+	 * the wait should be at least 30ms as the default update period of current counts
+	 * is 20ms plus max of 10ms to transmit the reset command.
 	 * @param timeout Number of milliseconds to wait for reset completion, zero for no wait.
 	 * @return Zero if reset completes, non-zero if times out before reset complete.
 	 */
@@ -345,13 +345,13 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		}
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
-		// the reset command. It may take up to 160 additional ms for the zeroing to be reflected
-		// in a call to getQuadraturePosition() (our get()) as that is the default update period for the
-		// encoder counts from SRXEnc to the API. We go ahead and delay the requested amount to guarantee
+		// the reset command. It may take up to 20 additional ms for the zeroing to be reflected
+		// in a call to getSelectedSensorPosition() (our get()) as that is the default update period for the
+		// encoder counts from FXEnc to the API. We go ahead and delay the requested amount to guarantee
 		// we wait long enough that next get() call returns zero counts.
 		
 		if (errorCode == ErrorCode.OK) 
-			Timer.delay(timeout / 1000.0);
+			Timer.delay(timeout / 1000.0);	// delay value is seconds so we convert.
 		else
 			Util.consoleLog("encoder reset failed (%d)", errorCode.value);
 	
@@ -440,8 +440,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Set the period that the Talon FX updates the RR with encoder count value.
-	 * Defaults to ~200ms per CTRE doc. An update is called a frame. This method
-	 * will take 10ms to complete.
+	 * Defaults to ~20ms per CTRE doc. An update is called a frame. This method
+	 * will take up to 10ms to complete.
 	 * @param period Frame period in milliseconds.
 	 */
 	public void setStatusFramePeriod(int period)
