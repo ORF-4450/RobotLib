@@ -176,7 +176,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	/**
 	 * Return rate of rotation.
 	 * @param rateType Ticks unit: per 100ms or per Second.
-	 * @return The rotation rate in ticks per selected unit.
+	 * @return The rotation rate in ticks per selected time unit.
 	 */
 	public int getRate( PIDRateType rateType )
 	{
@@ -224,7 +224,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	 * Return max rate of rotation recorded since start up.
 	 * Relies on regular calls to getRate(), getRPM() or getVelocity().
 	 * @param rateType Ticks unit: per 100ms or per Second.
-	 * @return The highest rotation rate seen in ticks per selected unit.
+	 * @return The highest rotation rate seen in ticks per selected time unit.
 	 */
 	public int getMaxRate( PIDRateType rateType )
 	{
@@ -632,14 +632,14 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Get the number of ticks (encoder counts) equal to the target distance.
-	 * @param distance Target distance in inches.
+	 * @param distance Target distance in feet.
 	 * @param wheelDiameter In inches.
 	 * @return Ticks to equal to the target distance.
 	 */
 	public static int getTicksForDistance(double distance, double wheelDiameter)
 	{
-		double distancePerTickInches = Math.PI * wheelDiameter / TICKS_PER_REVOLUTION;
+		double distancePerTickFeet = (Math.PI * wheelDiameter / TICKS_PER_REVOLUTION) / 12;
 
-		return (int) (distance / distancePerTickInches);
+		return (int) (distance / distancePerTickFeet);
 	}
 }

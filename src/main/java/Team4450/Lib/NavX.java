@@ -33,7 +33,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	private static NavX		navx;
 	private AHRS			ahrs;
 	private double 			totalAngle = 0, targetHeading = 0;
-	private double			yawResetDelay = .175;
+	private double			yawResetDelaySec = .050;	// 50ms.
 	//private String			name = "NavX", subSystem = "Ungrouped";
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDDispType		pidDispType = PIDDispType.getYaw;
@@ -416,7 +416,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * is pointing. getYaw may not return zero immediately after
 	 * calling this function as zeroYaw takes a varying amount of time
 	 * to be reflected in getYaw return. Manufacturer suggests it could
-	 * be up to 150ms but we have observed 300ms in some cases and might
+	 * be up to 50ms but we have observed longer in some cases and might
 	 * be longer still if robot is moving when this call is made.
 	 */
 	public void resetYaw()
@@ -444,7 +444,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Reset yaw zero reference to current direction the robot
 	 * is pointing and wait for reset to complete. Set wait time
-	 * with setYawResetWait(). Defaults to 175ms.
+	 * with setYawResetWait(). Defaults to 50ms which is 2 * Navx 
+	 * update period.
 	 */
 	public void resetYawWait()
 	{
@@ -452,7 +453,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		
 		resetYaw();
 		
-        Timer.delay(yawResetDelay);
+        Timer.delay(yawResetDelaySec);
 	}	
 	
 	/**
@@ -460,7 +461,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * is pointing and wait the specified time for reset to complete.
 	 * @param wait Wait time in milliseconds (0-2000).
 	 */
-	public void resetYawWait(double wait)
+	public void resetYawWait(int wait)
 	{
 		Util.consoleLog();
 		
@@ -468,20 +469,20 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 
 		resetYaw();
 		
-        Timer.delay(wait);
+        Timer.delay(wait / 1000.0);
 	}
 	
 	/**
 	 * Set yaw reset wait time.
 	 * @param wait Wait time in milliseconds (0-2000).
 	 */
-	public void setYawResetWait(double wait)
+	public void setYawResetWait(int wait)
 	{
 		Util.consoleLog();
 		
 		Util.checkRange(wait, 0, 2000, "Yaw wait");
 		
-		yawResetDelay = wait;
+		yawResetDelaySec = wait / 1000.0;
 	}
 	
 	/**
@@ -495,7 +496,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void resetYawWait(double tolerance, int wait)
 	{
-		Util.consoleLog("t=%.1f w=%d", tolerance, wait);
+		Util.consoleLog("t=%.2f w=%d", tolerance, wait);
 		
 		int		waits = 0, waitCount;
 		
@@ -511,9 +512,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 			Timer.delay(.010);
 			waits++;
 			waitCount--;
+			
+			Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, ahrs.getYaw());
 		}
-		
-		Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, ahrs.getYaw());
 	}
 	
 	/**
@@ -900,7 +901,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
     }
 
 	/**
-	 * Returns a double when this class is used as a DoubleSupplier.
+	 * Returns yaw as a double when this class is used as a DoubleSupplier.
 	 * @return The current yaw value, same as getYaw() method.
 	 */
 	@Override
