@@ -32,6 +32,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 {
 	private static NavX		navx;
 	private AHRS			ahrs;
+	private byte			navxUpdateRate = 50;		// 50hz or 20ms.
 	private double 			totalAngle = 0, targetHeading = 0;
 	private double			yawResetDelaySec = .050;	// 50ms.
 	//private String			name = "NavX", subSystem = "Ungrouped";
@@ -75,15 +76,15 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		switch (portType)
 		{
 			case SPI:
-				ahrs = new AHRS(SPI.Port.kMXP);
+				ahrs = new AHRS(SPI.Port.kMXP, navxUpdateRate);
 				break;
 				
 			case I2C:
-				ahrs = new AHRS(I2C.Port.kOnboard);
+				ahrs = new AHRS(I2C.Port.kOnboard, navxUpdateRate);
 				break;
 
 			case I2C_MXP:
-				ahrs = new AHRS(I2C.Port.kMXP);
+				ahrs = new AHRS(I2C.Port.kMXP, navxUpdateRate);
 				break;
 
 			case USB:
@@ -94,7 +95,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 				break;
 				
 			default:
-				ahrs = new AHRS(SPI.Port.kMXP);
+				ahrs = new AHRS(SPI.Port.kMXP, navxUpdateRate);
 		}
 		
 		//ahrs.enableBoardlevelYawReset(true);
