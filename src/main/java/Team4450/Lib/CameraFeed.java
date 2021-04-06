@@ -55,8 +55,8 @@ public class CameraFeed extends Thread
 	private int						targetWidth = 1;
 	
 	// Default Camera settings
-	private final int 		imageWidth = 320; 		//640;
-	private final int 		imageHeight = 240;		//480;
+	public final int 		imageWidth = 320; 		//640;
+	public final int 		imageHeight = 240;		//480;
 	//public final double 	fovH = 48.0;
 	//public final double 	fovV = 32.0;
 	private final double	frameRate = 20;			// frames per second

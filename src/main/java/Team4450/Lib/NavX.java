@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -414,14 +413,22 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	
 	/**
 	 * Reset yaw zero reference to current direction the robot
-	 * is pointing. getYaw may not return zero immediately after
-	 * calling this function as zeroYaw takes a varying amount of time
-	 * to be reflected in getYaw return. Manufacturer suggests it could
-	 * be up to 50ms but we have observed longer in some cases and might
-	 * be longer still if robot is moving when this call is made.
+	 * is pointing. Yaw reset can be done in Navx hardware or software.
+	 * If software reset (our default), then getYaw will return zero
+	 * immediately and start tracking. If hardware, it can take up to 
+	 * 50ms for an update from the hardware causes getYaw to reflect the 
+	 * reset. While waiting for the update getYaw may return old data
+	 * until updated. When waiting, any robot movement can cause zero yaw
+	 * to never be returned. getAngle will reset to zero immediately but 
+	 * always returns zero until next update from hardware. So yaw and angle
+	 * can be out of sync between reset call and next hardware update of Navx
+	 * information.
 	 */
 	public void resetYaw()
 	{
+		//Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+		//				ahrs.getAngle(), totalAngle);
+
 		if (simGyro == null)
 		{
 			totalAngle += ahrs.getAngle();
@@ -439,14 +446,20 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 			simGyro.reset();
 		}
 
-		Util.consoleLog("yaw=%.2f hdg=%.2f", getYaw(), getHeading());
+		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+						ahrs.getAngle(), totalAngle);
+		
+		//Timer.delay(.040);
+		
+		//Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+		//		ahrs.getAngle(), totalAngle);		
 	}	
 	
 	/**
 	 * Reset yaw zero reference to current direction the robot
 	 * is pointing and wait for reset to complete. Set wait time
 	 * with setYawResetWait(). Defaults to 50ms which is 2 * Navx 
-	 * update period.
+	 * update period +10ms.
 	 */
 	public void resetYawWait()
 	{
@@ -474,7 +487,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Set yaw reset wait time.
+	 * Set yaw reset wait time. Defaults to 50ms.
 	 * @param wait Wait time in milliseconds (0-2000).
 	 */
 	public void setYawResetWait(int wait)
