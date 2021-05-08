@@ -34,7 +34,7 @@ public class LibraryVersion
 	 * to pull that version from the online artifact library Jitpack.io where our
 	 * releases are stored.
 	 * 
-	 * When you are ready to release, update the readme.md, src/main/resources/overview.html 
+	 * When you are ready to release, make sure the readme.md, src/main/resources/overview.html 
 	 * and gradle.properties files are set to the new version number. Do a final compile using
 	 * Build RobotLib (Release). Then push to github. Then on the github repository create a 
 	 * new release for the new version. This will trigger a Travis-ci compile (on github) which 
@@ -49,7 +49,7 @@ public class LibraryVersion
 	 * of the Travis compile and will be available in the release for consumption by others.
 	 */
 	
-	public static final String version = "3.7.0 (04.05.2021-1)";	
+	public static final String version = "3.7.0 (05.08.2021-1)";	
 	
 
 	// Private constructor means this class can't be instantiated.
