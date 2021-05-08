@@ -34,13 +34,13 @@ library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
 Version 3.7.0
 
-R. Corn, May 8 2021
-
 *	Add support for simulation.
 *	Add support for TalonFX.
 *	Fix various bugs/issues revealed during the extensive testing of simulation and 2021 complex
 	autonomous programs. Primarily in NavX and Talon encoder classes.
 *	Modify to better support motion profiling and path following.
+
+R. Corn, May 8 2021
 
 Version 3.6.1
 
