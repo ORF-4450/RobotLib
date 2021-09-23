@@ -35,8 +35,8 @@ else {
 					//
 					// When ready to release, make sure the version number and dates are 
 					// correct in the files named above and update readme.md. then run the
-					// Build RobotLib (Release) final compile. It will update RobotLib.json.
-					// Then push to github.
+					// Build RobotLib (Release) final compile. It will update RobotLib.json
+					// then push to github.
 					//
 					// Then on github, create a new release. This will create the release
 					// and then Travis-ci will be triggered to complile the project and add

@@ -23,7 +23,7 @@ public class GamePad
 	
 	private static GamePadButton	povButton;
 	
-	public  double			deadZone = 0.1;
+	private double			deadZone = 0.1, invertX = 1.0, invertY = 1.0;
 	
 	/**
 	 * Constructor which adds all GamePad buttons to be monitored.
@@ -77,7 +77,7 @@ public class GamePad
 	 * @param name Identifying name for the pad object.
 	 * @param button Enum value identifying button to add.
 	 */
-	GamePad(Joystick joyStick, String name, GamePadButtonIDs button)
+	public GamePad(Joystick joyStick, String name, GamePadButtonIDs button)
 	{
 		Util.consoleLog("%s (single button)", name);
 
@@ -132,6 +132,15 @@ public class GamePad
 	}
 	
 	/**
+	 * Return the Wpilib Joystick object underlying this RobotLib GamePad object.
+	 * @return Reference to Joystick.
+	 */
+	public Joystick getJoyStick()
+	{
+		return joyStick;
+	}
+		
+	/**
 	 *  Call to start GamePad button monitoring once all buttons are added.
 	 */
 	public void Start()
@@ -163,7 +172,43 @@ public class GamePad
 		
 		if (monitorGamePadThread != null) monitorGamePadThread.interrupt();
 	}
-
+	
+	/**
+	 * Set global axis dead zone. Applied if no axis specific dead zone is set.
+	 * @param dz Dead zone value, 0.0 to 1.0.
+	 * @throws Exception
+	 */
+	public void deadZone(double dz) throws Exception
+	{
+		Util.checkRange(dz, 0.0, 1.0, "Dead Zone.");
+		
+		deadZone = dz;
+	}
+	
+	/**
+	 * Invert the X axis output.
+	 * @param invert True is invert, false is normal.
+	 */
+	public void invertX(boolean invert)
+	{
+		if (invert)
+			invertX = -1.0;
+		else
+			invertX = 1.0;
+	}
+	
+	/**
+	 * Invert the Y axis output.
+	 * @param invert True is invert, false is normal.
+	 */
+	public void invertY(boolean invert)
+	{
+		if (invert)
+			invertY = -1.0;
+		else
+			invertY = 1.0;
+	}
+	
 	/**
 	 * Get left joystick X value.
 	 * @return X axis deflection value.
@@ -174,7 +219,7 @@ public class GamePad
 		
 		x = joyStick.getRawAxis(0);
 		if (Math.abs(x) < deadZone) x = 0.0;
-		return x;
+		return x * invertX;
 	}
 	
 	/**
@@ -187,7 +232,7 @@ public class GamePad
 		
 		y = joyStick.getRawAxis(1);
 		if (Math.abs(y) < deadZone) y = 0.0;
-		return y;
+		return y * invertY;
 	}
 
 	/**
@@ -200,11 +245,11 @@ public class GamePad
 		
 		x = joyStick.getRawAxis(4);
 		if (Math.abs(x) < deadZone) x = 0.0;
-		return x;
+		return x * invertX;
 	}
 	
 	/**
-	 * Get rightt joystick Y value.
+	 * Get right joystick Y value.
 	 * @return Y axis deflection value.
 	 */
 	public double GetRightY()
@@ -213,7 +258,7 @@ public class GamePad
 		
 		y = joyStick.getRawAxis(5);
 		if (Math.abs(y) < deadZone) y = 0.0;
-		return y;
+		return y * invertY;
 	}
 
 	/**
@@ -467,7 +512,7 @@ public class GamePad
       START (8),
       POV (9);
       
-      private int value;
+      public int value;
       
       private GamePadButtonIDs(int value) 
       {
