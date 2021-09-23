@@ -15,13 +15,8 @@ if (System.getProperty("local")) {
 	println("This is a local Compile:")
 	version = "local"
 }
-else if (project.hasProperty('version')) {
-        // This occurs when the version is set manually using the -Pversion flag. For example in .github/workflows/gradleRelease.yml
-    println("This is a manual Version Compile:")
-    // version is set already
-}
 else {
-	println("This is a default Version Compile:")
+	println("This is a Version Compile:")
 	version = LibraryVersion
 }
                     // Version identifier used for local maven cache and github releases.
