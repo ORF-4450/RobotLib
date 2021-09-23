@@ -32,6 +32,13 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle and LibraryVersion.java for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 3.8.0
+
+*	Fixed bugs in GamePad class.
+*	Updated project to use 2021 WpiLib.
+
+R. Corn, September 23 2021
+
 Version 3.7.0
 
 *	Add support for simulation.
