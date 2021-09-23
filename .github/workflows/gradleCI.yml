@@ -15,12 +15,8 @@ jobs:
       - name: Build
         run: './gradlew build'
       - name: DEBUG CODE # Debug code, remove after figuring out why upload-artifact doesn not work
-        run: |
-          'ls'
-          'cd build'
-          'ls'
-          'cd libs'
-          'ls'
+        run: 'ls'
+        working-directory: ./build
       - name: Upload Artifacts
         uses: actions/upload-artifact@v2
         with:
