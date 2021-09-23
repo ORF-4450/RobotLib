@@ -17,8 +17,8 @@ jobs:
         with:
           name: Generated Files
           path: |
-            build/lib/*
-            robotlib.json
+            ./build/lib/*
+            ./robotlib.json
   versionTest: # Debug job, delete after verifying -Pversion works
     runs-on: ubuntu-latest
     steps:
@@ -33,5 +33,5 @@ jobs:
         with:
           name: Version Test Files
           path: |
-            build/lib/*
-            robotlib.json
+            ./build/lib/*
+            ./robotlib.json

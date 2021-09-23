@@ -18,7 +18,7 @@ jobs:
       with:
         java-version: 11
     - name: Build with Gradle
-      run: ./gradlew build -Pversion="${{ env.GITHUB_TAG_NAME }}"
+      run: ./gradlew build vendorJSON -Pversion="${{ env.GITHUB_TAG_NAME }}"
     - name: Get Release Upload URL
       uses: actions/github-script@0.3.0
       with:
