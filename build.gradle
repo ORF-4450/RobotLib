@@ -2,7 +2,7 @@ plugins {
     id "java-library"
     id "eclipse"
     id "idea"
-    id "edu.wpi.first.GradleRIO" version "2020.1.2"
+    id "edu.wpi.first.GradleRIO" version "2021.3.1" // "2020.1.2"
     id "org.ajoberstar.grgit" version "3.0.0"
     id "maven"
     id "io.github.mosadie.vendorJSON" version "1.0"
