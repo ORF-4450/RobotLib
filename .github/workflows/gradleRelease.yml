@@ -53,15 +53,6 @@ jobs:
         java-version: 11
     - name: Generate robotLib.json
       run: './gradlew vendorJSON'
-    - name: Get Author
-      id: getUser
-      uses: actions/github-script@0.3.0
-      with:
-        github-token: ${{secrets.GITHUB_TOKEN}}
-        script: |
-          const user = await github.users.getAuthenticated()
-          core.setOutput('email', user.email)
-          core.setOutput('username', user.login)
     - name: Commit robotLib.json
       uses: EndBug/add-and-commit@v7.3.0
       with:
