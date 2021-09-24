@@ -1,5 +1,5 @@
 # RobotLib
-Travis: [![Build Status](https://travis-ci.org/ORF-4450/RobotLib.svg?branch=master)](https://travis-ci.org/ORF-4450/RobotLib)
+[![Build CI](https://github.com/MoSadie/RobotLib/actions/workflows/gradleCI.yml/badge.svg?branch=actions)](https://github.com/MoSadie/RobotLib/actions/workflows/gradleCI.yml)
 [![](https://jitpack.io/v/ORF-4450/robotlib.svg)](https://jitpack.io/#ORF-4450/robotlib)
 
 FRC Team 4450 Robot Control program library classes.
@@ -29,7 +29,7 @@ Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REV
 v2.x is not compatible with 2019 (full release) or later FRC robotics platform. Only use this library for pre-2019 projects that will run on a RoboRIO with a pre-2019 image.
 
 ### NOTICE TO DEVELOPERS
-Read the documentation in build.gradle and LibraryVersion.java for the procedure to do development on this
+Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
 Version 3.8.0
