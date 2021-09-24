@@ -45,8 +45,8 @@ else {
 					// and sets the version varible to the actual version number (instead
 					// of "local") when compiling for release.
 					//
-					// When all this is done, other users robot projects that want the updated
-					// RobotLib edit thier local RobotLib.json to reflect the new version number 
+					// When all this is done, other user's robot projects that want the updated
+					// RobotLib edit their local RobotLib.json to reflect the new version number 
 					// and on next compile, gradle will pull the new library to their PC.
 					//
 
