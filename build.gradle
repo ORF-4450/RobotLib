@@ -30,7 +30,7 @@ else {
 					// When starting a new version you can update LibraryVersion.java,
 					// overview.html and gradle.properties. Build in Eclispe using the Build RobotLib
 					// or Build RobotLib (Offline) configurations. You can push to github as much as you want.
-					// Do not manually change robotLib.json, GitHub ACtions will handle that on release.
+					// Do not manually change robotLib.json, GitHub Actions will handle that on release.
 					//
 					// When ready to release, make sure the version number and dates are 
 					// correct in the files named above and update README.md and that all
