@@ -38,13 +38,3 @@ jobs:
         asset_path: ./build/libs/RobotLib-${{ env.GITHUB_TAG_NAME }}.jar
         asset_name: RobotLib-${{ env.GITHUB_TAG_NAME }}.jar
         asset_content_type: application/java-archive
-    - name: Upload JSON
-      id: upload-release-asset 
-      uses: actions/upload-release-asset@v1.0.1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ env.UPLOADURL }} 
-        asset_path: ./robotLib.json
-        asset_name: robotLib.json
-        asset_content_type: application/json
