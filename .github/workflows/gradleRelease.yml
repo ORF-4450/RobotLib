@@ -28,6 +28,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          const core = require('@actions/core')
           core.setOutput("uploadurl",context.payload.release.upload_url)
     - name: Upload RobotLib Jar
       id: upload-release-asset 
@@ -63,6 +64,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
+          const core = require('@actions/core')
           core.setOutput("uploadurl",context.payload.release.upload_url)
     - name: Upload robotLib.json to Release
       id: upload-release-asset 
