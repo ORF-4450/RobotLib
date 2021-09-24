@@ -12,7 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Get tag name
-      uses: olegtarasov/get-tag@v1
+      uses: olegtarasov/get-tag@v2.1.1
+      id: getTag
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
@@ -20,7 +21,7 @@ jobs:
     - name: Generate robotLib.json
       run: './gradlew vendorJSON'
     - name: Build RobotLib with Gradle
-      run: './gradlew build'
+      run: './gradlew build -PoverrideVersion="${{ steps.getTag.output.tag }}"'
     - name: Get Release Upload URL
       uses: actions/github-script@0.3.0
       with:
@@ -35,6 +36,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ env.UPLOADURL }} 
-        asset_path: ./build/libs/RobotLib-${{ env.GITHUB_TAG_NAME }}.jar
-        asset_name: RobotLib-${{ env.GITHUB_TAG_NAME }}.jar
+        asset_path: ./build/libs/RobotLib-${{ steps.getTag.output.tag }}.jar
+        asset_name: RobotLib-${{ steps.getTag.output.tag }}.jar
         asset_content_type: application/java-archive
