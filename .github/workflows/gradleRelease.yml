@@ -38,7 +38,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ steps.getReleaseURL.output.uploadurl }} 
-        asset_path: ./build/libs/RobotLib-${{ steps.getTag.output.tag }}.jar
-        asset_name: RobotLib-${{ steps.getTag.output.tag }}.jar
+        upload_url: ${{ steps.getReleaseURL.outputs.uploadurl }} 
+        asset_path: ./build/libs/RobotLib-${{ steps.getTag.outputs.tag }}.jar
+        asset_name: RobotLib-${{ steps.getTag.outputs.tag }}.jar
         asset_content_type: application/java-archive
