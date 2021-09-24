@@ -59,7 +59,7 @@ jobs:
       with:
         github-token: ${{secrets.GITHUB_TOKEN}}
         script: |
-          const user = await github.rest.users.getAuthenticated()
+          const user = await github.users.getAuthenticated()
           core.setOutput('email', user.email)
           core.setOutput('username', user.login)
     - name: Commit robotLib.json
