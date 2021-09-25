@@ -8,8 +8,8 @@ plugins {
     id "io.github.mosadie.vendorJSON" version "1.0"
 }
 
-sourceCompatibility = 11 // java 11
-targetCompatibility = 11
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
  
 // Configuration for install task which does the install of RobotLib in local maven cache.
 // Also used by Jitpack/GitHub Actions.
