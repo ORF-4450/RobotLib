@@ -57,7 +57,7 @@ println("LibraryVersion=" + LibraryVersion + "; compile version=" + version)
 vendorJSON {
     fileName = jsonFileName
     version = LibraryVersion
-    addJavaArtifact(group, archivesBaseName, LibraryVersion)
+    addJavaArtifact(archivesGroup, archivesBaseName, LibraryVersion)
 }
 
 // This section is to prevent people from accidently deploying this project to a robot. 

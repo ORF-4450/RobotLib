@@ -9,6 +9,7 @@
   "fileName": "robotlib.json",
   "javaDependencies": [
     {
+      "groupId": "com.github.ORF-4450",
       "artifactId": "RobotLib",
       "version": "3.8.0"
     }
