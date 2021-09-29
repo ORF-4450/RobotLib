@@ -32,7 +32,7 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
-Version 3.8.1
+Version 3.8.2
 
 *	Due to problems with Travis-ci, replaced the travis deployment steps with github Actions.
 *	Fixed a bug in how the Robotlib.json file was being created.
