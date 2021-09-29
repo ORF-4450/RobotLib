@@ -33,15 +33,9 @@ else {
 					// Do not manually change robotLib.json, GitHub Actions will handle that on release.
 					//
 					// When ready to release, make sure the version number and dates are 
-<<<<<<< HEAD
-					// correct in the files named above and update readme.md. then run the
-					// Build RobotLib (Release) final compile. It will update RobotLib.json.
-					// Then push to github.
-=======
-					// correct in the files named above and update README.md and that all
+					// correct in the files named above and update README.md and that all of your
                     // changes are pushed to GitHub. Also check if the latest commit has a checkmark,
                     // indicating if GitHub was able to build the code successfully.
->>>>>>> b0c98b46895394da5cdb8b716d471826a863784b
 					//
 					// Then on GitHub, create a new release. This will create the release
 					// and then GitHub Actions will be triggered to compile the project and
