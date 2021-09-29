@@ -47,12 +47,6 @@ jobs:
         asset_name: RobotLib-${{ steps.getTag.outputs.tag }}.jar
         asset_content_type: application/java-archive
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: Generated Files
-        path: ./build/libs/*
-
   generateJSON:
     # The build job (above) must complete successfully in order for this job to run.
     needs: build
