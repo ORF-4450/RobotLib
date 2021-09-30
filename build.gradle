@@ -7,7 +7,9 @@ plugins {
     id "maven"
     id "io.github.mosadie.vendorJSON" version "1.0"
 }
- 
+
+group = archivesGroup
+
 // Configuration for install task which does the install of RobotLib in local maven cache.
 // Also used by Jitpack/GitHub Actions.
 

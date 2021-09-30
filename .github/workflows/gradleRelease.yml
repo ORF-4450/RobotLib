@@ -69,11 +69,6 @@ jobs:
         asset_name: RobotLib-${{ steps.getTag.outputs.tag }}-sources.jar
         asset_content_type: application/java-archive
 
-    - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: Generated Files
-        path: ./build/libs/*
 
   generateJSON:
     # The build job (above) must complete successfully in order for this job to run.
@@ -96,8 +91,8 @@ jobs:
     - name: Commit robotLib.json
       uses: EndBug/add-and-commit@v7.3.0
       with:
-        add: './robotLib.json'
-        message: 'Automated - Update robotLib.json'
+        add: 'robotLib.json --verbose --force'
+        message: 'Automated - Update robotLib.json for release'
 
     - name: Get Release Upload URL
       uses: actions/github-script@0.3.0
