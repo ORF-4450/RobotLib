@@ -1,6 +1,8 @@
 name: Build Release
 
 # Only triggers when a release is published, draft releases do not count.
+# Warning: use no tabs when editing this file
+
 on:
   release:
     types: published

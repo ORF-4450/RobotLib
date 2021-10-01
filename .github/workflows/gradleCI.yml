@@ -1,6 +1,8 @@
 name: Build CI
 
 # Triggers every time a commit or tag is pushed to GitHub
+# Warning: use no tabs when editing this file
+
 on: push
 
 jobs:
