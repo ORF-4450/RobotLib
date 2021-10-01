@@ -30,26 +30,37 @@ else {
 					// is based on actual version numbers and robotLib.json.
 					//
 					// When starting a new version you can update LibraryVersion.java,
-					// overview.html and gradle.properties. Build in Eclispe using the Build RobotLib
-					// or Build RobotLib (Offline) configurations. You can push to github as much as you want.
-					// Do not manually change robotLib.json, GitHub Actions will handle that on release.
+					// overview.html and gradle.properties. DO NOT update robotlib.json. It is
+					// maintained by the release action when you release with github.
+					//
+					// Build in Eclispe using the Build RobotLib or Build RobotLib (Offline) 
+					// run configurations. You can push to github as much as you want.
 					//
 					// When ready to release, make sure the version number and dates are 
-					// correct in the files named above and update README.md and that all of your
-                    // changes are pushed to GitHub. Also check if the latest commit has a checkmark,
-                    // indicating if GitHub was able to build the code successfully.
+					// correct in the files named above then update README.md. FinalpPush all of your
+                    // changes to GitHub. Also check on github Actions tab if the latest commit has a
+                    // checkmark, indicating if GitHub was able to build the code successfully.
 					//
 					// Then on GitHub, create a new release. This will create the release
 					// and then GitHub Actions will be triggered to compile the project and
-					// add the generated files to the release. Additionally, the release
+					// add the generated files (artifacts) to the release. Additionally, the release
 					// will become available from the Jitpack.io repository. Note that
 					// the IF statement above detects when gradle is running on GitHub Actions
 					// and sets the version varible to the actual version number (instead
-					// of "local") when compiling for release.
+					// of "local") when compiling for release. The release action with update
+					// robolib.json to the new version on github. After release action is complete
+					// you can fetch from github with tags to get the updated robotlib.json and
+					// release tag.
 					//
 					// When all this is done, other user's robot projects that want the updated
 					// RobotLib edit their local RobotLib.json to reflect the new version number 
 					// and on next compile, gradle will pull the new library to their PC.
+					//
+					// If using VSCode, run the Manage Vendor Libraries (online) and it will detect
+					// the new RobotLib version and offer to update the VSCode project.
+					//
+					// Warning: The github release action only works on the master branch. Do not
+					// create releases from other branches.
 					//
 
 println("LibraryVersion=" + LibraryVersion + "; compile version=" + version)
