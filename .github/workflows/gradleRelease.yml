@@ -85,14 +85,14 @@ jobs:
       with:
         java-version: 11
 
-    - name: Generate robotLib.json
+    - name: Generate robotlib.json
       run: './gradlew vendorJSON'
 
-    - name: Commit robotLib.json
+    - name: Commit robotlib.json
       uses: EndBug/add-and-commit@v7.3.0
       with:
-        add: './robotLib.json'
-        message: 'Automated - Update robotLib.json for release'
+        add: './robotlib.json'
+        message: 'Automated - Update robotlib.json for release'
 
     - name: Get Release Upload URL
       uses: actions/github-script@0.3.0
