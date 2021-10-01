@@ -2,21 +2,34 @@
 <projectDescription>
 	<name>RobotLib</name>
 	<comment></comment>
-	<projects/>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
-	<buildSpec>
-		<buildCommand>
-			<name>org.eclipse.jdt.core.javabuilder</name>
-			<arguments/>
-		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.buildship.core.gradleprojectbuilder</name>
-			<arguments/>
-		</buildCommand>
-	</buildSpec>
-	<linkedResources/>
-	<filteredResources/>
+	<linkedResources>
+		<link>
+			<name>gradle/gradleCI.yml</name>
+			<type>1</type>
+			<location>C:/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleCI.yml</location>
+		</link>
+		<link>
+			<name>gradle/gradleRelease.yml</name>
+			<type>1</type>
+			<location>C:/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleRelease.yml</location>
+		</link>
+	</linkedResources>
 </projectDescription>
