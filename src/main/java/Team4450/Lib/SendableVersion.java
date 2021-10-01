@@ -5,6 +5,7 @@ package Team4450.Lib;
 import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
 import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.wpilibj.util.WPILibVersion;
 
 import java.net.URL;
 import java.util.jar.Attributes;
@@ -90,6 +91,7 @@ public class SendableVersion implements Sendable
         builder.addStringProperty("Commit: ", () -> commit, null);
         builder.addStringProperty("Program: ", () -> programVersion, null);
         builder.addStringProperty("RobotLib: ", () -> robotlibVersion, null);
+        builder.addStringProperty("WPILib: ", () -> WPILibVersion.Version, null);
         builder.addStringProperty("Time: ", () -> time, null);
         builder.addStringProperty("User: ", () -> user, null);
         builder.addDoubleProperty("UpdateCount", this::getUpdateCount, null);

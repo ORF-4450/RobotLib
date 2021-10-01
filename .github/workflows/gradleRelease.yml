@@ -91,7 +91,7 @@ jobs:
     - name: Commit robotLib.json
       uses: EndBug/add-and-commit@v7.3.0
       with:
-        add: 'robotLib.json --verbose --force'
+        add: './robotLib.json'
         message: 'Automated - Update robotLib.json for release'
 
     - name: Get Release Upload URL
