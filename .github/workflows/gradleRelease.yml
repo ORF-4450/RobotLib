@@ -92,6 +92,7 @@ jobs:
       uses: EndBug/add-and-commit@v7.3.0
       with:
         add: './robotlib.json'
+	branch: 'MoSadie-actions'
         message: 'Automated - Update robotlib.json for release'
 
     - name: Get Release Upload URL
@@ -103,13 +104,13 @@ jobs:
           const core = require('@actions/core')
           core.setOutput("uploadurl",context.payload.release.upload_url)
 
-    - name: Upload robotLib.json to Release
+    - name: Upload robotlib.json to Release
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.getReleaseURL.outputs.uploadurl }} 
-        asset_path: ./robotLib.json
-        asset_name: robotLib.json
+        asset_path: ./robotlib.json
+        asset_name: robotlib.json
         asset_content_type: application/json
