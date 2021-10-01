@@ -92,7 +92,7 @@ jobs:
       uses: EndBug/add-and-commit@v7.3.0
       with:
         add: './robotlib.json'
-        branch: 'MoSadie-actions'
+        branch: 'master'
         message: 'Automated - Update robotlib.json for release'
 
     - name: Get Release Upload URL
