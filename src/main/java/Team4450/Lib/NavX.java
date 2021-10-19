@@ -20,6 +20,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.hal.SimDouble;
+import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -48,6 +50,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	
 	private AnalogGyro			simGyro;
 	private double				simGyroResetAngle;
+	
+	private SimDouble 			simAngle;
 	
 	/**
 	 * Identifies port the NavX is plugged into
@@ -203,6 +207,19 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		return Rotation2d.fromDegrees(-getTotalYaw());
 	}
 	
+	public double getTotalAngle()
+	{
+		if (simGyro == null)
+			return ahrs.getAngle() + totalAngle;
+		else
+			return simGyro.getAngle();
+	}
+	
+	public Rotation2d getTotalAngle2d()
+	{
+		return Rotation2d.fromDegrees(-getTotalAngle());
+	}
+	
 	/**
 	 * Returns Yaw angle between target heading set by setTargetHeading()
 	 * and the current robot heading.
@@ -235,7 +252,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return yaw rate.
+	 * Return yaw rate. This does not work in simulation.
 	 * @return Yaw rate in degrees/second.
 	 */
 	public double getYawRate()
@@ -924,8 +941,43 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		return getYaw();
 	}
 	
+	/**
+	 * Sets the AnalogGyro object that is being used for simulation. The calling program must
+	 * create that AnalogGyro object and attach it to a GyroSim object that is used to feed
+	 * the AnalogGyro during simulation. Our initial implementation was done before sim was
+	 * added to the NavX by Kauai Labs so we use an AnalogGyro to simulate the NavX. Setting
+	 * this object puts this wrapper into simulation mode.
+	 * @param gyro The AnalogGyro attached to a GyroSim object by the calling program.
+	 */
 	public void setSimGyro(AnalogGyro gyro)
 	{
 		simGyro = gyro;
+	}
+	
+	/**
+	 * Initializes simulation by the NavX object using the built in sim support added to the
+	 * NavX by Kauai Labs. This was added in the hope we could drop the more complex original
+	 * sim solution using an AnalogGyro. However, the NavX sim has some bugs that make it 
+	 * unreliable so we continue to use the original solution but retain this code for the
+	 * Navx direct support in case the problems are fixed in a future release.
+	 */
+	public void initSimV2()
+	{
+		int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+		
+		simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+	}
+	
+	/**
+	 * When using the direct sim support in the NavX, this method sets the current angle the
+	 * NavX should be pointing. The angle is calculated by the DifferentialDriveTrainsim object
+	 * in the calling program. Note that direct sim support is not reliable at the time of this
+	 * release. This method is retained for use if the problems in direct sim support are fixed.
+	 * @param angle Direction robot is pointing in degrees 0-360. This value is supplied by the
+	 * DifferentialDriveTrainsim object.
+	 */
+	public void setSimAngle(double angle)
+	{	
+		simAngle.set(angle);
 	}
 }

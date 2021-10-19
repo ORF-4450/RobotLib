@@ -5,6 +5,7 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import Team4450.Lib.Wpilib.PIDSource;
@@ -28,7 +29,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private boolean			inverted = false, direction = false;
 	private Encoder			simEncoder;
 	
-	public static final int	TICKS_PER_REVOLUTION = 4096;
+	private TalonSRXSimCollection	simCollection;
+	
+	public static final int			TICKS_PER_REVOLUTION = 4096;
 
 	public SRXMagneticEncoderRelative()
 	{	
@@ -623,7 +626,15 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 * Wpilib class and to this SRX encoder. The regular Encoder links this SRX 
 	 * encoder to the simulation as exposed by EncoderSim. So when this simulated
 	 * encoder is set, the SRXMagneticEncoderRelative class is driven by the simulated
-	 * encoder NOT the actual encoders on the robot.
+	 * encoder NOT the actual encoders on the robot. We use a regular encoder because
+	 * native support for Talon simulation was not available when we started working
+	 * with simulation. So we did our own thing by using a regular encoder inside our
+	 * SRX encoder wrapper class. Hopefully we will switch to using the built in Talon
+	 * sim support at some point. The calling program must create the regular encoder
+	 * and link it to an EncoderSim instance and drive the EncoderSim instance with
+	 * values returned by the DifferntialDriveTrainsim object used by robot programs
+	 * to do simulation. Setting this object put the SRX encoder instance into simulation
+	 * mode.
 	 * @param encoder Encoder object used in simulation.
 	 */
 	public void setSimEncoder(Encoder encoder)
@@ -642,5 +653,43 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		double distancePerTickFeet = (Math.PI * wheelDiameter / TICKS_PER_REVOLUTION) / 12;
 
 		return (int) (distance / distancePerTickFeet);
+	}
+	
+	/**
+	 * Initialize the built-in simulation support in the SRX encoder. Must be called before sim
+	 * run starts. Note that the built-in sim support is not reliable as of this time so we will
+	 * retain our original solution with dummy encoders. This code is retained in the event that
+	 * the built-in support is fixed. We will have to test after CTRE updates to see if the problems
+	 * get fixed. The main issue is spurious values being returned and encoder resets not being
+	 * obeyed. It mostly works...
+	 */
+	public void initSimV2()
+	{
+		simCollection = talon.getSimCollection();
+	}
+	
+	/**
+	 * During simulation built-in sim support, sets the current value for the encoder. Note that
+	 * the built-in sim support is not reliable at this time. This function is retained for future
+	 * testing to see of the built-in support gets fixed. 
+	 * @param position Current position in meters (from DifferentialDrivesim).
+	 * @param velocity Current velocity in meters/sec (from DifferentialDrivesim).
+	 */
+	public void setSimValues(double position, double velocity)
+	{
+		Util.consoleLog("%.3f, %.3f", position, velocity);
+		simCollection.setQuadratureRawPosition((int) metersToTicks(position));
+		simCollection.setQuadratureVelocity((int) (metersToTicks(velocity) / 10d));
+	}
+	
+	/**
+	 * Convert meters into encoder ticks.
+	 * @param meters Meters value.
+	 * @return Encoder ticks.
+	 */
+	public double metersToTicks(double meters) 
+	{
+	    double rotations = meters / Util.inchesToMeters(wheelDiameter);
+	    return (double) TICKS_PER_REVOLUTION * rotations;
 	}
 }
