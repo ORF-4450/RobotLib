@@ -32,6 +32,16 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 3.9.0
+
+*	Added support for built-in simulation in SRXMagneticEncoder and NavX. This was hoped to replace our more
+	complex solution using dummy encoders and analog gyro. However, the built-in support for both did not
+	work reliably. Could not determine if caused by our code or theirs, but it appear theirs. Will continue
+	with our original solution for simulation on these devices via our wrapper classes. Will keep the changes
+	for built-in sim support and revisit in the future. Need to stop now and prepare for 2022 WPILib changes.
+	
+R. Corn, October 20, 2021
+
 Version 3.8.2
 
 *	Due to problems with Travis-ci, replaced the travis deployment steps with github Actions.
