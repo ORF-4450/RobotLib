@@ -37,7 +37,7 @@ else {
 					// run configurations. You can push to github as much as you want.
 					//
 					// When ready to release, make sure the version number and dates are 
-					// correct in the files named above then update README.md. FinalpPush all of your
+					// correct in the files named above then update README.md. Final push all of your
                     // changes to GitHub. Also check on github Actions tab if the latest commit has a
                     // checkmark, indicating if GitHub was able to build the code successfully.
 					//
