@@ -6,7 +6,7 @@
     <booleanAttribute key="build_scans_enabled" value="false"/>
     <stringAttribute key="gradle_distribution" value="GRADLE_DISTRIBUTION(WRAPPER)"/>
     <stringAttribute key="gradle_user_home" value=""/>
-    <stringAttribute key="java_home" value="C:\Users\Public\wpilib\2021\jdk"/>
+    <stringAttribute key="java_home" value="C:\Users\Public\wpilib\2022\jdk"/>
     <listAttribute key="jvm_arguments"/>
     <booleanAttribute key="offline_mode" value="false"/>
     <listAttribute key="org.eclipse.debug.ui.favoriteGroups">
@@ -16,7 +16,7 @@
     <booleanAttribute key="show_console_view" value="true"/>
     <booleanAttribute key="show_execution_view" value="true"/>
     <listAttribute key="tasks">
-        <listEntry value="install"/>
+        <listEntry value="build"/>
     </listAttribute>
     <booleanAttribute key="use_gradle_distribution_from_import" value="false"/>
     <stringAttribute key="working_dir" value="${workspace_loc:/RobotLib}"/>

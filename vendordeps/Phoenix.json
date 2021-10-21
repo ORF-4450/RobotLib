@@ -6,7 +6,7 @@
     "mavenUrls": [
         "https://devsite.ctr-electronics.com/maven/release/"
     ],
-    "jsonUrl": "https://devsite.ctr-electronics.com/maven/release/com/ctre/phoenix/Phoenix-latest.json",
+    "jsonUrl": "http://devsite.ctr-electronics.com/maven/release/com/ctre/phoenix/Phoenix-latest.json",
     "javaDependencies": [
         {
             "groupId": "com.ctre.phoenix",

@@ -1,7 +1,7 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -16,7 +16,7 @@ public class MonitorPDP extends Thread
 {
   private final double		  		LOW_BATTERY = 11, MAX_CURRENT = 180;
   private static MonitorPDP			monitorPDP;
-  private PowerDistributionPanel	pdp;
+  private PowerDistribution			pdp;
   private double					sampleInterval = 1.0;	// Seconds
   private boolean					alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
   private boolean					ports[] = new boolean[16];
@@ -44,7 +44,7 @@ public class MonitorPDP extends Thread
    * @return Reference to global MonitorPDP object.
    */
         
-  public static MonitorPDP getInstance(PowerDistributionPanel pdp) 
+  public static MonitorPDP getInstance(PowerDistribution pdp) 
   {
   	  Util.consoleLog();
       	
@@ -58,11 +58,11 @@ public class MonitorPDP extends Thread
   private MonitorPDP()
   {
 	  Util.consoleLog();
-	  pdp = new PowerDistributionPanel();
+	  pdp = new PowerDistribution();
 	  this.setName("MonitorPDP");
   }
 
-  private MonitorPDP(PowerDistributionPanel pdp)
+  private MonitorPDP(PowerDistribution pdp)
   {
 	  Util.consoleLog();
 	  this.pdp = pdp;

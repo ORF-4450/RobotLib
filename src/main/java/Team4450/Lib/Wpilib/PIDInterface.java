@@ -11,7 +11,6 @@ package Team4450.Lib.Wpilib;
 
 
 public interface PIDInterface {
-  @SuppressWarnings("ParameterName")
   void setPID(double p, double i, double d);
 
   double getP();

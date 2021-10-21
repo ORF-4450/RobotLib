@@ -1,13 +1,13 @@
 package Team4450.Lib.Wpilib;
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.util.sendable.SendableRegistry;
 
 /**
  * Wraps Wpilib Sendable interface to get rid of the deprecation warnings
  * if you used the default methods of Sendable. Uses SendableRegistry as
  * directed by Wpilib authors to implement the default methods of Sendable.
  */
-public interface Sendable extends edu.wpi.first.wpilibj.Sendable
+public interface Sendable extends edu.wpi.first.util.sendable.Sendable
 {
 	/**
 	 * Register this Sendable with the SendableRegistry.

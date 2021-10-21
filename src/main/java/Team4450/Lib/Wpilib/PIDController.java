@@ -7,7 +7,7 @@ package Team4450.Lib.Wpilib;
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableBuilder;
 //import edu.wpi.first.wpilibj.Controller;
 import edu.wpi.first.wpilibj.Notifier;
 //import edu.wpi.first.wpilibj.PIDBase;
@@ -43,7 +43,6 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    *               the integral and differential terms.
    *               The default is 0.05 (50ms).
    */
-  @SuppressWarnings("ParameterName")
   public PIDController(double Kp, double Ki, double Kd, double Kf, PIDSource source,
                        PIDOutput output, double period) 
   {
@@ -64,7 +63,6 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    *               the integral and differential terms.
    *               The default is 0.05 (50ms).
    */
-  @SuppressWarnings("ParameterName")
   public PIDController(double Kp, double Ki, double Kd, PIDSource source, PIDOutput output,
                        double period) 
   {
@@ -80,7 +78,6 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * @param source The PIDSource object that is used to get values
    * @param output The PIDOutput object that is set to the output percentage
    */
-  @SuppressWarnings("ParameterName")
   public PIDController(double Kp, double Ki, double Kd, PIDSource source, PIDOutput output) 
   {
     this(Kp, Ki, Kd, source, output, kDefaultPeriod);
@@ -96,7 +93,6 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
    * @param source The PIDSource object that is used to get values
    * @param output The PIDOutput object that is set to the output percentage
    */
-  @SuppressWarnings("ParameterName")
   public PIDController(double Kp, double Ki, double Kd, double Kf, PIDSource source,
                        PIDOutput output) 
   {

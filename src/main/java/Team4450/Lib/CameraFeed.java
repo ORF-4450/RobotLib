@@ -11,12 +11,12 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.UsbCameraInfo;
-import edu.wpi.cscore.VideoMode;
+import edu.wpi.first.cscore.CvSink;
+import edu.wpi.first.cscore.CvSource;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.UsbCameraInfo;
+import edu.wpi.first.cscore.VideoMode;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -102,7 +102,7 @@ public class CameraFeed extends Thread
     		
             // Create Mjpeg stream server.
             
-            mjpegServer = CameraServer.getInstance().addServer("4450-mjpegServer", 1180);
+			mjpegServer = CameraServer.addServer("4450-mjpegServer", 1180);
 
             // Create image source.
             

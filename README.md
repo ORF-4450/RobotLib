@@ -32,6 +32,14 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 3.10.0
+
+*	Updated for 2022 WPILib:
+	Update Gradle to 7.1.1.
+	Update build.gradle for 2022 following VSCode project build.gradle.
+
+R. Corn, October 2021
+
 Version 3.9.0
 
 *	Added support for built-in simulation in SRXMagneticEncoder and NavX. This was hoped to replace our more

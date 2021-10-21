@@ -2,9 +2,9 @@ plugins {
     id "java-library"
     id "eclipse"
     id "idea"
-    id "edu.wpi.first.GradleRIO" version "2021.3.1" // "2020.1.2"
+    id "edu.wpi.first.GradleRIO" version "2022.1.1-beta-1" 
     id "org.ajoberstar.grgit" version "3.0.0"
-    id "maven"
+    //id "maven"
     id "io.github.mosadie.vendorJSON" version "1.0"
 }
 
@@ -85,6 +85,12 @@ deploy {
 
 // Look in local maven cache first, then maven central for dependent libraries.
 repositories {
+	// This is needed to fix problem with the url below redirecting to an http (insecure) url.
+	maven {
+        url "https://www.revrobotics.com/content/sw/color-sensor-v3/sdk/maven/"
+        allowInsecureProtocol = true
+    }
+
 	mavenLocal()
 	mavenCentral()
 }
@@ -104,13 +110,16 @@ dependencies {
     //nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
     //nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
     
-    implementation wpi.deps.wpilib()
-    nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
+    implementation wpi.java.deps.wpilib()
+    implementation wpi.java.vendor.java()
+        
+	//implementation wpi.deps.wpilib()
+    //nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
+    //nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
 
-    implementation wpi.deps.vendor.java()
-    nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
+    //implementation wpi.deps.vendor.java()
+    //nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
+    //nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
 
     // For reference, here are a few more of the easy to add libraries not currently used:
    	//implementation pathfinder() (Jaci's)

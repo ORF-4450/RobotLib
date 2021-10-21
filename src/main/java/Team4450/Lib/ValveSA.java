@@ -1,6 +1,7 @@
 
 package Team4450.Lib;
 
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -25,7 +26,7 @@ public class ValveSA
 
 	  	this.port = port;
 	  	
-		valveOpenSide = new Solenoid(port);
+		valveOpenSide = new Solenoid(PneumaticsModuleType.CTREPCM, port);
 	}
 
 	/**
@@ -39,7 +40,7 @@ public class ValveSA
 	  	this.port = port;
 	  	this.pcmCanId = pcmCanId;
 	  	
-		valveOpenSide = new Solenoid(pcmCanId, port);
+		valveOpenSide = new Solenoid(pcmCanId, PneumaticsModuleType.CTREPCM, port);
 	}
 
 	/**

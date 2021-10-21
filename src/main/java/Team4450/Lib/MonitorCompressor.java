@@ -3,6 +3,7 @@ package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
@@ -14,11 +15,13 @@ import edu.wpi.first.wpilibj.Compressor;
  * LED on DS. Can also monitor an air pressure sensor and report the
  * pressure to the DS. Assumes compressor is plugged into the first
  * PCM, device id 0.
+ * Note: for 2022 only CTRE PCM is supported at this time. REV Pneumatic
+ * Hub will be added later.
  */
 
 public class MonitorCompressor extends Thread
 {
-  private final Compressor			compressor = new Compressor(0);
+  private final Compressor			compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
   private static MonitorCompressor	monitorCompressor;
   private AnalogInput				pressureSensor;
   private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;

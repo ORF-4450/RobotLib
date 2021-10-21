@@ -2,6 +2,7 @@
 package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
 /**
@@ -42,8 +43,8 @@ public class ValveDA
 	{
 	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
 
-		valveOpenSide = new Solenoid(port);
-		valveCloseSide = new Solenoid(port + 1);
+		valveOpenSide = new Solenoid(PneumaticsModuleType.CTREPCM, port);
+		valveCloseSide = new Solenoid(PneumaticsModuleType.CTREPCM, port + 1);
     
 		this.port = port;
 		
@@ -61,8 +62,8 @@ public class ValveDA
 	{
 	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
 
-		valveOpenSide = new Solenoid(pcmCanId, port);
-		valveCloseSide = new Solenoid(pcmCanId, port + 1);
+		valveOpenSide = new Solenoid(pcmCanId, PneumaticsModuleType.CTREPCM, port);
+		valveCloseSide = new Solenoid(pcmCanId, PneumaticsModuleType.CTREPCM, port + 1);
     
 		this.port = port;
 		this.pcmCanId = pcmCanId;

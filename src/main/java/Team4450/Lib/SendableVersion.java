@@ -3,8 +3,8 @@ package Team4450.Lib;
 
 //import edu.wpi.first.wpilibj.Sendable;
 import Team4450.Lib.Wpilib.Sendable;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 
 import java.net.URL;

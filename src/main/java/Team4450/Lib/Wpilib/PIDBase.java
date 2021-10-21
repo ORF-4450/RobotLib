@@ -10,15 +10,16 @@ package Team4450.Lib.Wpilib;
 import java.util.concurrent.locks.ReentrantLock;
 
 import Team4450.Lib.Util;
+
 import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import edu.wpi.first.hal.HAL;
 import edu.wpi.first.hal.util.BoundaryException;
-import edu.wpi.first.wpilibj.LinearFilter;
+import edu.wpi.first.math.filter.LinearFilter;
 //import edu.wpi.first.wpilibj.PIDInterface;
 //import edu.wpi.first.wpilibj.Sendable;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SendableBuilder;
-import edu.wpi.first.wpilibj.smartdashboard.SendableRegistry;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 
 import static edu.wpi.first.wpilibj.util.ErrorMessages.requireNonNullParam;
 
@@ -34,25 +35,20 @@ import static edu.wpi.first.wpilibj.util.ErrorMessages.requireNonNullParam;
  *
  * Copied from Wpilib so we can still use it if WPI removes it.
  */
-@SuppressWarnings("PMD.TooManyFields")
 public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable {
   public static final double kDefaultPeriod = 0.05;
   private static int instances;
 
   // Factor for "proportional" control
-  @SuppressWarnings("MemberName")
   private double m_P;
 
   // Factor for "integral" control
-  @SuppressWarnings("MemberName")
   private double m_I;
 
   // Factor for "derivative" control
-  @SuppressWarnings("MemberName")
   private double m_D;
 
   // Factor for "feed forward" control
-  @SuppressWarnings("MemberName")
   private double m_F;
 
   // |maximum output|
@@ -93,7 +89,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
 
   private double m_setpoint;
   private double m_prevSetpoint;
-  @SuppressWarnings("PMD.UnusedPrivateField")
   private double m_error;
   private double m_result;
   private double m_input;
@@ -166,7 +161,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    * @param source The PIDSource object that is used to get values
    * @param output The PIDOutput object that is set to the output percentage
    */
-  @SuppressWarnings("ParameterName")
   public PIDBase(double Kp, double Ki, double Kd, double Kf, PIDSource source,
                  PIDOutput output) {
     requireNonNullParam(source, "PIDSource", "PIDBase");
@@ -200,7 +194,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    * @param source the PIDSource object that is used to get values
    * @param output the PIDOutput object that is set to the output percentage
    */
-  @SuppressWarnings("ParameterName")
   public PIDBase(double Kp, double Ki, double Kd, PIDSource source, PIDOutput output) {
     this(Kp, Ki, Kd, 0.0, source, output);
   }
@@ -214,7 +207,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    * Read the input, calculate the output accordingly, and write to the output. This should only be
    * called by the PIDTask and is created during initialization.
    */
-  @SuppressWarnings({"LocalVariableName", "PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
   protected void calculate() {
     if (m_pidInput == null || m_pidOutput == null) return;
 
@@ -367,7 +359,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    * @param d Differential coefficient
    */
   @Override
-  @SuppressWarnings("ParameterName")
   public void setPID(double p, double i, double d) {
     m_thisMutex.lock();
     try {
@@ -388,7 +379,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    * @param d Differential coefficient
    * @param f Feed forward coefficient
    */
-  @SuppressWarnings("ParameterName")
   public void setPID(double p, double i, double d, double f) {
     m_thisMutex.lock();
     try {
@@ -406,7 +396,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    *
    * @param p Proportional coefficient
    */
-  @SuppressWarnings("ParameterName")
   public void setP(double p) {
     m_thisMutex.lock();
     try {
@@ -421,7 +410,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    *
    * @param i Integral coefficient
    */
-  @SuppressWarnings("ParameterName")
   public void setI(double i) {
     m_thisMutex.lock();
     try {
@@ -436,7 +424,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    *
    * @param d differential coefficient
    */
-  @SuppressWarnings("ParameterName")
   public void setD(double d) {
     m_thisMutex.lock();
     try {
@@ -451,7 +438,6 @@ public class PIDBase implements PIDInterface, PIDOutput, Sendable, AutoCloseable
    *
    * @param f feed forward coefficient
    */
-  @SuppressWarnings("ParameterName")
   public void setF(double f) {
     m_thisMutex.lock();
     try {

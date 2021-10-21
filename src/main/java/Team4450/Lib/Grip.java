@@ -1,6 +1,7 @@
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.networktables.NetworkTable;
+import  edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
 
 /**
  * This static class manages Grip run in a separate process. 
@@ -14,7 +15,7 @@ public final class Grip
 	public static final  int			IMAGE_HEIGHT = 240;
 	
 	private static 		 Process		gripProcess = null;
-	private static final NetworkTable	gripTable = NetworkTable.getTable("GRIP/myContoursReport");
+	private static final NetworkTable	gripTable = NetworkTableInstance.getDefault().getTable("GRIP/myContoursReport");
 	
 	// Private constructor means this class cannot be instantiated. All access is static.
 	
@@ -26,8 +27,6 @@ public final class Grip
 	/**
 	 * Contains a list of Contours returned by Grip for an image. Each Contour describes
 	 * an object (artifact) in the image.
-	 * @author rcorn
-	 *
 	 */
 	public static class ContoursReport
 	{
@@ -81,8 +80,6 @@ public final class Grip
 	/**
 	 * Contains information describing a single object (artifact) found
 	 * by Grip in an image.
-	 * @author rcorn
-	 *
 	 */
 	public static class Contour
 	{
@@ -139,7 +136,7 @@ public final class Grip
 	{
 		Util.consoleLog("%b", suspend);
 		
-		gripTable.putBoolean("run", !suspend);
+		gripTable.getEntry("run").setBoolean(!suspend);
 	}
  
 	/**
@@ -157,12 +154,12 @@ public final class Grip
 		
 		Util.consoleLog();
 		
-		report.area = gripTable.getNumberArray("area", new double[0]);
-		report.centerX = gripTable.getNumberArray("centerX", new double[0]);
-		report.centerY = gripTable.getNumberArray("centerY", new double[0]);
-		report.width = gripTable.getNumberArray("width", new double[0]);
-		report.height = gripTable.getNumberArray("height", new double[0]);
-		report.solidity = gripTable.getNumberArray("solidity", new double[0]);
+		report.area = gripTable.getEntry("area").getDoubleArray(new double[0]);
+		report.centerX = gripTable.getEntry("centerX").getDoubleArray(new double[0]);
+		report.centerY = gripTable.getEntry("centerY").getDoubleArray(new double[0]);
+		report.width = gripTable.getEntry("width").getDoubleArray(new double[0]);
+		report.height = gripTable.getEntry("height").getDoubleArray(new double[0]);
+		report.solidity = gripTable.getEntry("solidity").getDoubleArray(new double[0]);
 		
 		return report;
 	}
