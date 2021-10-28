@@ -1,16 +1,17 @@
 plugins {
     id "java-library"
     id "eclipse"
-    id "idea"
+    //id "idea"
     id "edu.wpi.first.GradleRIO" version "2022.1.1-beta-1" 
     id "org.ajoberstar.grgit" version "3.0.0"
-    //id "maven"
+    id "maven-publish"
     id "io.github.mosadie.vendorJSON" version "1.0"
 }
 
 group = archivesGroup
 
-// Configuration for install task which does the install of RobotLib in local maven cache.
+// Configuration for build task which compiles RobotLib, generates the javadoc and does the install 
+// of RobotLib in local maven cache.
 // Also used by Jitpack/GitHub Actions.
 
 if (System.getProperty("local")) {
@@ -190,4 +191,16 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+// Required with gradle 7.1.1. Configures PublishToMavenLocal task. This task is noq required to get our
+// jars published to the local maven repository on this PC for consumption by robot projects on this PC.
+// The PubishToMavenLocal task is executed in the eclipse .launch files that run this build.
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+	    	artifactId = 'RobotLib'
+            from components.java
+        }
+    }
 }

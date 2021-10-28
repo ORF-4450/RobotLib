@@ -6,7 +6,7 @@
     "mavenUrls": [
         "https://www.revrobotics.com/content/sw/color-sensor-v3/sdk/maven/"
     ],
-    "jsonUrl": "http://www.revrobotics.com/content/sw/color-sensor-v3/sdk/REVColorSensorV3.json",
+    "jsonUrl": "https://www.revrobotics.com/content/sw/color-sensor-v3/sdk/REVColorSensorV3.json",
     "javaDependencies": [
         {
             "groupId": "com.revrobotics.frc",
