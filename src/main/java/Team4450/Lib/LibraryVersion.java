@@ -43,7 +43,7 @@ public class LibraryVersion
 	 * of the Jitpack compile when requested and will be automatically made available via JitPack 
 	 */
 	
-	public static final String version = "3.9.0 (10.20.2021)";	
+	public static final String version = "3.10.0 (11.06.2021)";	
 	
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
