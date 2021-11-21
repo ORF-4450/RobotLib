@@ -11,9 +11,12 @@ import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 /**
- * Obtain and transmit version information to SmartDasboard as a Sendable.
+ * Obtain and transmit version information to SmartDashboard as a Sendable.
  * Reads version info from jar manifest as written by build.gradle.
- * Courtesy of Team 2502.
+ * Courtesy of Team 2502. 
+ * Note: for 2022 this does not work under simulation as this implementation 
+ * depends on the calling code being run from a "fat" jar as if on the physical
+ * robot. Sim changed for 2022 and does not run from a jar.
  */
 public class SendableVersion implements Sendable
 {
@@ -27,6 +30,7 @@ public class SendableVersion implements Sendable
     private String robotlibVersion;
     private String time;
     private String user;
+    private String manifestPath;
     private int	   updateCount;
 
     // Private constructor since this class is a singleton.
@@ -47,7 +51,7 @@ public class SendableVersion implements Sendable
      * Initialize version info with the calling program's version, the
      * RobotLib version and information from manifest file in the program jar.
      * Must be called before using SmartDashboard.putData() to send this class.
-     * @param programVersion Robot program version.
+     * @param programVersion Robot program version string.
      */
     public void init(String programVersion)
     {
@@ -60,9 +64,11 @@ public class SendableVersion implements Sendable
         String className = clazz.getSimpleName() + ".class";
         String classPath = clazz.getResource(className).toString();
         
+        manifestPath = classPath;
+        
         if(!classPath.startsWith("jar")) { return; }
         
-        String manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
+        manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
         
         Manifest manifest;
         
@@ -139,6 +145,16 @@ public class SendableVersion implements Sendable
     public String getUser()
     {
     	return user;
+    }
+    
+    /**
+     * Return the path to the jar the manifest information is
+     * pulled from.
+     * @return Path to jar file.
+     */
+    public String getPath()
+    {
+    	return manifestPath;
     }
     
     /**
