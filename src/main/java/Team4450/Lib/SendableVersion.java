@@ -51,6 +51,8 @@ public class SendableVersion implements Sendable
      * Initialize version info with the calling program's version, the
      * RobotLib version and information from manifest file in the program jar.
      * Must be called before using SmartDashboard.putData() to send this class.
+     * Depends on the fat that the robot program jar is a "fat" jar containing
+     * the robot code and all dependent libraries.
      * @param programVersion Robot program version string.
      */
     public void init(String programVersion)
@@ -59,16 +61,23 @@ public class SendableVersion implements Sendable
     	
     	robotlibVersion = LibraryVersion.version;
     	
+    	// The scheme here depends on the build.gradle adding information to the
+    	// output jar manifest at build time. We can then use the load path of any
+    	// resource in the jar (this class in this implementation) to create a path
+    	// to the jar file and extend that to the manifest inside the jar. Remember
+    	// a jar is just a zip file. With the path we can create a Java Manifest
+    	// object and retrieve the information stored in the manifest.
+    	
         Class<SendableVersion> clazz = SendableVersion.class;
         
         String className = clazz.getSimpleName() + ".class";
         String classPath = clazz.getResource(className).toString();
         
-        manifestPath = classPath;
+        //manifestPath = classPath;
         
         if(!classPath.startsWith("jar")) { return; }
         
-        manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";
+        manifestPath = classPath.substring(0, classPath.lastIndexOf("!") + 1) + "/META-INF/MANIFEST.MF";       
         
         Manifest manifest;
         
