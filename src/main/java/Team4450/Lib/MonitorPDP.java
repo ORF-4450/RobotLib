@@ -152,7 +152,7 @@ public class MonitorPDP extends Thread
 			  
 			  if (pdp.getVoltage() < LOW_BATTERY)
 			  {
-				  Util.consoleLog("battery voltage warning: %.1fv", pdp.getVoltage());
+				  Util.consoleLog("battery voltage warning: %.2fv", pdp.getVoltage());
 			  
 				  alarmInProgress = true;
 				  lowBatteryAlarm = true;
