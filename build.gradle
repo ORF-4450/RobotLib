@@ -1,14 +1,17 @@
 plugins {
     id "java-library"
     id "eclipse"
-    //id "idea"
-    id "edu.wpi.first.GradleRIO" version "2022.1.1" 
+    id "edu.wpi.first.GradleRIO" version "2022.2.1" 
     id "org.ajoberstar.grgit" version "3.0.0"
     id "maven-publish"
     id "io.github.mosadie.vendorJSON" version "1.0"
 }
 
 group = archivesGroup
+
+// Sets JDK compatibility to JDK 11
+sourceCompatibility = JavaVersion.VERSION_11
+targetCompatibility = JavaVersion.VERSION_11
 
 // Configuration for build task which compiles RobotLib, generates the javadoc and does the install 
 // of RobotLib in local maven cache.
@@ -106,22 +109,9 @@ eclipse {
 
 // Defining dependencies. In this case, WPILib (+ friends), and some vendor libraries (NavX, CTRE)
 dependencies {
-    //compile wpi.deps.wpilib()
-    //compile wpi.deps.vendor.java()
-    //nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    //nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
-    
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
         
-	//implementation wpi.deps.wpilib()
-    //nativeZip wpi.deps.wpilibJni(wpi.platforms.roborio)
-    //nativeDesktopZip wpi.deps.wpilibJni(wpi.platforms.desktop)
-
-    //implementation wpi.deps.vendor.java()
-    //nativeZip wpi.deps.vendor.jni(wpi.platforms.roborio)
-    //nativeDesktopZip wpi.deps.vendor.jni(wpi.platforms.desktop)
-
     // For reference, here are a few more of the easy to add libraries not currently used:
    	//implementation pathfinder() (Jaci's)
    	//implementation openrioMatchData()
@@ -137,7 +127,7 @@ dependencies {
 // These next definitions (branch and hash) attempt to find extra information to add to the the manifest of
 // the robot program jar file.
 
-// Either the name of the current branch, or an empty string if no git repo is found.
+// Returns either the name of the current branch, or an empty string if no git repo is found.
 def branch = { ->
     if (grgit == null) { // If there's no git repo.
         return ""
@@ -146,7 +136,7 @@ def branch = { ->
     return grgit.branch.current().getName()
 }
 
-// Either the short hash of the last commit or an empty string if no git repo is found.
+// Returns either the short hash of the last commit or an empty string if no git repo is found.
 def hash = { ->
     if (grgit == null) { // If there's no git repo.
         return ""
@@ -193,12 +183,12 @@ artifacts {
     archives javadocJar
 }
 
-// Required with gradle 7.1.1. Configures PublishToMavenLocal task. This task is noq required to get our
+// Required with gradle 7.1.1. Configures PublishToMavenLocal task. This task is required to get our
 // jars published to the local maven repository on this PC for consumption by robot projects on this PC.
 // The PubishToMavenLocal task is executed in the eclipse .launch files that run this build.
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        robotLib(MavenPublication) {
 	    	artifactId = 'RobotLib'
             from components.java
         }
