@@ -178,7 +178,7 @@ public class RevColorSensor
      */
     public static Color getMatchColor(double red, double green, double blue)
     {
-    	return ColorMatch.makeColor(red, green, blue);
+    	return new Color(red, green, blue);
     }
     
     /**
