@@ -37,8 +37,9 @@ Version 3.10.0
 *	Updated for 2022 WPILib:
 	Update Gradle to 7.1.1.
 	Update build.gradle for 2022 following VSCode project build.gradle.
+	Update to 2022 REVLib.
 
-R. Corn, January 2022
+R. Corn, January 22, 2022
 
 Version 3.9.0
 
