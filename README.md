@@ -38,7 +38,7 @@ Version 3.10.0
 	Update Gradle to 7.1.1.
 	Update build.gradle for 2022 following VSCode project build.gradle.
 
-R. Corn, October 2021
+R. Corn, January 2022
 
 Version 3.9.0
 

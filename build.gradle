@@ -43,7 +43,7 @@ else {
 					// When ready to release, make sure the version number and dates are 
 					// correct in the files named above then update README.md. Final push all of your
                     // changes to GitHub. Also check on github Actions tab if the latest commit has a
-                    // checkmark, indicating if GitHub was able to build the code successfully.
+                    // checkmark, indicating GitHub was able to build the code successfully.
 					//
 					// Then on GitHub, create a new release. This will create the release
 					// and then GitHub Actions will be triggered to compile the project and
@@ -51,13 +51,13 @@ else {
 					// will become available from the Jitpack.io repository. Note that
 					// the IF statement above detects when gradle is running on GitHub Actions
 					// and sets the version varible to the actual version number (instead
-					// of "local") when compiling for release. The release action with update
+					// of "local") when compiling for release. The release action will update
 					// robolib.json to the new version on github. After release action is complete
 					// you can fetch from github with tags to get the updated robotlib.json and
-					// release tag.
+					// release tag back into the local git repo.
 					//
 					// When all this is done, other user's robot projects that want the updated
-					// RobotLib edit their local RobotLib.json to reflect the new version number 
+					// RobotLib, edit their local RobotLib.json to reflect the new version number 
 					// and on next compile, gradle will pull the new library to their PC.
 					//
 					// If using VSCode, run the Manage Vendor Libraries (online) and it will detect
@@ -85,6 +85,12 @@ deploy {
         if (task == "deploy")
             throw new GradleException("This is a library project! You can't deploy it to a robot!")
     }
+}
+
+// Generates Source and Javadoc jars when building.
+java {
+    withJavadocJar();
+    withSourcesJar();
 }
 
 // Look in local maven cache first, then maven central for dependent libraries.
@@ -157,10 +163,10 @@ jar {
 }
 
 // Create Sources Jar
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//    classifier = 'sources'
+//    from sourceSets.main.allSource
+//}
 
 // When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project folder.
 javadoc {
@@ -172,10 +178,10 @@ javadoc {
 }
 
 // Create Javadoc Jar
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
+//task javadocJar(type: Jar, dependsOn: javadoc) {
+//    classifier = 'javadoc'
+//    from javadoc.destinationDir
+//}
 
 // Additional artifacts to publish for JitPack
 artifacts {

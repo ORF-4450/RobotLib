@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Properties;
+import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
@@ -665,5 +666,33 @@ public class Util
 	public static String getDelpoyDirectory()
 	{
 		return Filesystem.getDeployDirectory().getAbsolutePath();
+	}
+	
+	/**
+	 * Print a list of all threads in the runtime environment with thread state
+	 * and stack trace if available.
+	 * @param out PrintStream to receive the list.
+	 */
+	public static void printThreadList(PrintStream out) 
+	{
+		// Get all threads in Java.
+		Set<Thread> threads = Thread.getAllStackTraces().keySet();
+
+		for (Thread thread : threads) 
+		{
+			// Print the thread name and current state of thread.
+			out.println("Thread Name:" + thread.getName());
+			out.println("Thread State:" + thread.getState());
+
+			// Get the stack trace for the thread and print it.
+			StackTraceElement[] stackTraceElements = thread.getStackTrace();
+			
+			for (StackTraceElement stackTraceElement : stackTraceElements) 
+			{
+				out.println("\t" + stackTraceElement);
+			}
+			
+			out.println("\n");
+		}
 	}
 }
