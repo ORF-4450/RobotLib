@@ -50,7 +50,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	private final Notifier 		eventNotifier = new Notifier(runnable);
 	
 	private AnalogGyro			simGyro;
-	private double				simGyroResetAngle;
+	private double				simGyroResetAngle, simGyroStartingAngle;
 	
 	private SimDouble 			simAngle;
 	
@@ -213,7 +213,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		if (simGyro == null)
 			return ahrs.getAngle() + totalAngle;
 		else
-			return simGyro.getAngle();
+			return simGyro.getAngle() + simGyroStartingAngle;
 	}
 	
 	public Rotation2d getTotalAngle2d()
@@ -372,6 +372,8 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		totalAngle = heading;
 		
 		simGyroResetAngle = 0;
+		
+		simGyroStartingAngle = heading;
 	}
 
 	/**

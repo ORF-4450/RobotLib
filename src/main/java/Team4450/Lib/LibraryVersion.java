@@ -18,7 +18,7 @@ public class LibraryVersion
 	/*
 	 * When you start a new version of the library, you can change the version here
 	 * so that it is reflected by the robot programs that use the library. After a
-	 * library compile, you go the robot program project's external references and do a
+	 * library compile, you go to the robot program project's external references and do a
 	 * refresh to pull in the changes. You can push to github along the way to save
 	 * your work. You can also change src/main/resources/overview.html and gradle.properties
 	 * now or just before release. You can push as needed as you work.
@@ -29,6 +29,7 @@ public class LibraryVersion
 	 * pulled from the local cache. However, a side effect of this scheme is that
 	 * since the version, "local", never changes, you have to refresh the programs
 	 * external references to have the updated local version pulled into the project.
+	 * With VSCode, you may have to restart VSC to get it to load the updated library.
 	 * Robot projects on other PCs use a RobotLib.json with an actual version number
 	 * to pull that version from the online artifact library Jitpack.io where our
 	 * releases are stored.
@@ -43,7 +44,7 @@ public class LibraryVersion
 	 * of the Jitpack compile when requested and will be automatically made available via JitPack 
 	 */
 	
-	public static final String version = "3.10.0 (01.22.2022)";	
+	public static final String version = "3.11.0 (02.15.2022)";	
 	
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
