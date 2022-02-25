@@ -96,10 +96,10 @@ java {
 // Look in local maven cache first, then maven central for dependent libraries.
 repositories {
 	// This is needed to fix problem with the url below redirecting to an http (insecure) url.
-	maven {
-        url "https://www.revrobotics.com/content/sw/color-sensor-v3/sdk/maven/"
-        allowInsecureProtocol = true
-    }
+	//maven {
+    //    url "https://www.revrobotics.com/content/sw/color-sensor-v3/sdk/maven/"
+    //    allowInsecureProtocol = true
+    //}
 
 	mavenLocal()
 	mavenCentral()

@@ -32,6 +32,13 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 3.11.0
+
+*	Fix design error in NavX class sim support. Sim was not tracking non-zero starting heading. Still working the
+	problem with rerunning auto without code download. Sim support works after download but not correctly on rerun.
+
+R. Corn, February 25, 2022
+
 Version 3.10.0
 
 *	Updated for 2022 WPILib:
