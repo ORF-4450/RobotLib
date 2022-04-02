@@ -194,7 +194,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		if (simGyro == null)
 			return ahrs.getAngle();
 		else
-			return simGyro.getAngle();
+			return simGyro.getAngle() - simGyroResetAngle;
 	}
 	
 	/**
@@ -367,7 +367,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		Util.consoleLog("%.2f", heading);
 		
-		Util.checkRange(heading, 0, 359, "heading");
+		Util.checkRange(heading, 0, 359, "heading 0-359");
 
 		totalAngle = heading;
 		
@@ -385,7 +385,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		//double	gap;
 		
-		Util.checkRange(heading, 0, 359.9999, "target heading");
+		Util.checkRange(heading, 0, 359.9999, "target heading 0-359.9999");
 		
 //		gap = getHeading() - heading;
 //		
@@ -458,12 +458,12 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		else
 		{
 			// We track the current angle as representing zero yaw because even though
-			// we reset the simGyro here, the AnalogGyroSim class in the robot code
+			// we want to reset the simGyro here, the AnalogGyroSim class in the robot code
 			// will stuff its idea of the accumulated gyro angle right back into the
 			// simGryo. This is a quirk of the simulation design. 
 			simGyroResetAngle = simGyro.getAngle();			
 			
-			simGyro.reset();
+			//simGyro.reset();
 		}
 
 		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
@@ -959,12 +959,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	
 	/**
 	 * Initializes simulation by the NavX object using the built in sim support added to the
-	 * NavX by Kauai Labs. This was added in the hope we could drop the more complex original
-	 * sim solution using an AnalogGyro. However, the NavX sim has some bugs that make it 
-	 * unreliable so we continue to use the original solution but retain this code for the
-	 * Navx direct support in case the problems are fixed in a future release.
+	 * NavX by Kauai Labs.
 	 */
-	public void initSimV2()
+	public void initializeSim()
 	{
 		int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
 		
@@ -974,13 +971,12 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * When using the direct sim support in the NavX, this method sets the current angle the
 	 * NavX should be pointing. The angle is calculated by the DifferentialDriveTrainsim object
-	 * in the calling program. Note that direct sim support is not reliable at the time of this
-	 * release. This method is retained for use if the problems in direct sim support are fixed.
+	 * in the calling program.
 	 * @param angle Direction robot is pointing in degrees 0-360. This value is supplied by the
 	 * DifferentialDriveTrainsim object.
 	 */
 	public void setSimAngle(double angle)
 	{	
-		simAngle.set(angle);
+		simAngle.set(angle + simGyroStartingAngle);
 	}
 }
