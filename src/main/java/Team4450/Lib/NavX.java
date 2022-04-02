@@ -11,7 +11,6 @@ import Team4450.Lib.Wpilib.PIDSourceType;
 import Team4450.Lib.Wpilib.Sendable;
 
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.AnalogGyro;
 //import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
@@ -49,9 +48,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	private final eventMonitor	runnable = new eventMonitor();
 	private final Notifier 		eventNotifier = new Notifier(runnable);
 	
-	private AnalogGyro			simGyro;
-	private double				simGyroResetAngle, simGyroStartingAngle;
-	
+	private double				simStartingAngle;	
 	private SimDouble 			simAngle;
 	
 	/**
@@ -170,10 +167,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public float getYaw()
 	{
-		if  (simGyro == null)
-			return ahrs.getYaw();
-		else
-			return (float) (simGyro.getAngle() - simGyroResetAngle);
+		return ahrs.getYaw();
 	}
 	
 	/**
@@ -191,10 +185,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public double getTotalYaw()
 	{
-		if (simGyro == null)
-			return ahrs.getAngle();
-		else
-			return simGyro.getAngle() - simGyroResetAngle;
+		return ahrs.getAngle();
 	}
 	
 	/**
@@ -210,10 +201,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	
 	public double getTotalAngle()
 	{
-		if (simGyro == null)
-			return ahrs.getAngle() + totalAngle;
-		else
-			return simGyro.getAngle() + simGyroStartingAngle;
+		return ahrs.getAngle() + totalAngle;
 	}
 	
 	public Rotation2d getTotalAngle2d()
@@ -258,10 +246,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public double getYawRate()
 	{
-		if (simGyro == null)
-			return ahrs.getRate();
-		else
-			return simGyro.getRate();
+		return ahrs.getRate();
 	}
 	
 	/**
@@ -371,9 +356,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 
 		totalAngle = heading;
 		
-		simGyroResetAngle = 0;
-		
-		simGyroStartingAngle = heading;
+		simStartingAngle = heading;
 	}
 
 	/**
@@ -446,33 +429,12 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void resetYaw()
 	{
-		//Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
-		//				ahrs.getAngle(), totalAngle);
-
-		if (simGyro == null)
-		{
-			totalAngle += ahrs.getAngle();
+		totalAngle += ahrs.getAngle();
 			
-			ahrs.zeroYaw();
-		}
-		else
-		{
-			// We track the current angle as representing zero yaw because even though
-			// we want to reset the simGyro here, the AnalogGyroSim class in the robot code
-			// will stuff its idea of the accumulated gyro angle right back into the
-			// simGryo. This is a quirk of the simulation design. 
-			simGyroResetAngle = simGyro.getAngle();			
-			
-			//simGyro.reset();
-		}
+		ahrs.zeroYaw();
 
 		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
 						ahrs.getAngle(), totalAngle);
-		
-		//Timer.delay(.040);
-		
-		//Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
-		//		ahrs.getAngle(), totalAngle);		
 	}	
 	
 	/**
@@ -945,19 +907,6 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Sets the AnalogGyro object that is being used for simulation. The calling program must
-	 * create that AnalogGyro object and attach it to a GyroSim object that is used to feed
-	 * the AnalogGyro during simulation. Our initial implementation was done before sim was
-	 * added to the NavX by Kauai Labs so we use an AnalogGyro to simulate the NavX. Setting
-	 * this object puts this wrapper into simulation mode.
-	 * @param gyro The AnalogGyro attached to a GyroSim object by the calling program.
-	 */
-	public void setSimGyro(AnalogGyro gyro)
-	{
-		simGyro = gyro;
-	}
-	
-	/**
 	 * Initializes simulation by the NavX object using the built in sim support added to the
 	 * NavX by Kauai Labs.
 	 */
@@ -977,6 +926,6 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void setSimAngle(double angle)
 	{	
-		simAngle.set(angle + simGyroStartingAngle);
+		simAngle.set(angle + simStartingAngle);
 	}
 }

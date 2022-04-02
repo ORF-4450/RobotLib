@@ -32,6 +32,13 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 3.12.0
+
+*	Got built-in sim support in NavX to work. Dropped our home brew sim support based on dummy gyros.
+*	Fixed issue with NavX sim support not working when start heading not zero.
+
+R. Corn, April 2, 2022
+
 Version 3.11.0
 
 *	Fix design error in NavX class sim support. Sim was not tracking non-zero starting heading. Still working the
