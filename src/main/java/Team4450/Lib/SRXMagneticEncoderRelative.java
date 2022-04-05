@@ -319,9 +319,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public void reset()
 	{
 		if (simEncoder == null)
+		{
 //			talon.getSensorCollection().setQuadraturePosition(0, 0);
 			talon.setSelectedSensorPosition(0);
-		else
+		} else
 			simEncoder.reset();
 	}
 
@@ -417,7 +418,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public double getRotations()
 	{
-		return getRaw() / 4096.0;
+		return getRaw() / (double) TICKS_PER_REVOLUTION;
 	}
 
 	/**
@@ -494,7 +495,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 
 	/**
-	 * Get the current gear ratio factor.
+	 * Get the current gear ratio.
 	 * @return The gear ratio factor.
 	 */
 	public double getGearRatio()
@@ -503,9 +504,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 
 	/**
-	 * Set the gear ratio factor. This is a factor that the encoder rotation
-	 * is multiplied by to yield the wheel rotation. Defaults to 1 meaning a
-	 * 1:1 ratio between encoder shaft revolutions and wheel revolutions.
+	 * Set the gear ratio. This the number of encoder rotations per
+	 * one wheel rotation. Defaults to 1 meaning a 1:1 ratio between encoder
+	 * shaft revolutions and wheel revolutions. A value of 2 would be 2:1 or
+	 * 2 encoder rotations per 1 wheel rotations. Used when the encoder is not
+	 * mounted to the wheel axle.
 	 * @param gearRatio The gear ratio factor to set
 	 */
 	public void setGearRatio( double gearRatio )
@@ -644,6 +647,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	
 	/**
 	 * Get the number of ticks (encoder counts) equal to the target distance.
+	 * Assumes 1:1 wheel/encoder gear ratio.
 	 * @param distance Target distance in feet.
 	 * @param wheelDiameter In inches.
 	 * @return Ticks to equal to the target distance.
@@ -651,7 +655,20 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public static int getTicksForDistance(double distance, double wheelDiameter)
 	{
 		double distancePerTickFeet = (Math.PI * wheelDiameter / TICKS_PER_REVOLUTION) / 12;
-
+		return (int) (distance / distancePerTickFeet);
+	}
+	
+	/**
+	 * Get the number of ticks (encoder counts) equal to the target distance.
+	 * @param distance Target distance in feet.
+	 * @param wheelDiameter In inches.
+	 * @param gearRatio The number of encoder rotations to 1 wheel rotation.
+	 * @return Ticks to equal to the target distance.
+	 */
+	public static int getTicksForDistance(double distance, double wheelDiameter, double gearRatio)
+	{
+		double distancePerTickFeet = (Math.PI * wheelDiameter / TICKS_PER_REVOLUTION) / 12;
+		distancePerTickFeet *= gearRatio;
 		return (int) (distance / distancePerTickFeet);
 	}
 	
@@ -663,11 +680,13 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 * get fixed. The main issue is spurious values being returned and encoder resets not being
 	 * obeyed. It mostly works...
 	 */
-	public void initSimV2()
+	public void initializeSim()
 	{
 		simCollection = talon.getSimCollection();
 	}
 	
+	// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20General/DifferentialDrive_Simulation/src/main/java/frc/robot/Robot.java
+
 	/**
 	 * During simulation built-in sim support, sets the current value for the encoder. Note that
 	 * the built-in sim support is not reliable at this time. This function is retained for future
@@ -678,8 +697,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public void setSimValues(double position, double velocity)
 	{
 		Util.consoleLog("%.3f, %.3f", position, velocity);
+		
 		simCollection.setQuadratureRawPosition((int) metersToTicks(position));
-		simCollection.setQuadratureVelocity((int) (metersToTicks(velocity) / 10d));
+		simCollection.setQuadratureVelocity((int) velocityToTicks(velocity));
 	}
 	
 	/**
@@ -689,7 +709,22 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public double metersToTicks(double meters) 
 	{
-	    double rotations = meters / Util.inchesToMeters(wheelDiameter);
+	    double rotations = meters / (Math.PI * Util.inchesToMeters(wheelDiameter));
+	    rotations *= gearRatio;
 	    return (double) TICKS_PER_REVOLUTION * rotations;
+	}
+	
+	/**
+	 * Convert velocity into encoder ticks.
+	 * @param velocityMetersPerSecond Velocity in meters/second.
+	 * @return Encoder ticks per 100ms.
+	 */
+	private int velocityToTicks(double velocityMetersPerSecond)
+	{
+	    double rotationsPerSecond = velocityMetersPerSecond / (Math.PI * Util.inchesToMeters(wheelDiameter));
+	    rotationsPerSecond *= gearRatio;
+	    double rotationsPer100ms = rotationsPerSecond / 10d;
+	    int ticksPer100ms = (int)(rotationsPer100ms * (double) TICKS_PER_REVOLUTION);
+	    return ticksPer100ms;
 	}
 }

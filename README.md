@@ -34,7 +34,7 @@ library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
 Version 3.12.0
 
-*	Got built-in sim support in NavX to work. Dropped our home brew sim support based on dummy gyros.
+*	Built-in sim support in NavX now working. Dropped our home brew sim support based on dummy gyros.
 *	Fixed issue with NavX sim support not working when start heading not zero.
 
 R. Corn, April 2, 2022
