@@ -48,7 +48,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		
 		this.talon = talon;
 		
-		// Select Talon CTRE Magnetic encoder as feedback device.
+		// Select Talon CTRE Magnetic encoder relative mode as feedback device.
 		this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
 		reset();
@@ -66,7 +66,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		
 		this.talon = talon;
 		
-		// Select Talon CTRE Magnetic encoder as feedback device.
+		// Select Talon CTRE Magnetic encoder relative mode as feedback device.
 		this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 		
 		setWheelDiameter(wheelDiameter);
@@ -447,7 +447,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 * Set the period that the Talon updates the RR with encoder count value.
 	 * Defaults to 20ms per CTRE doc. An update is called a frame. This method
 	 * will take 10ms to complete.
-	 * @param period Frame period in milliseconds.
+	 * @param period Frame update period in milliseconds.
 	 */
 	public void setStatusFramePeriod(int period)
 	{
@@ -623,6 +623,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		return get();
 	}
 	
+	public double getAbsolute()
+	{
+		return talon.getSensorCollection().getPulseWidthPosition();
+	}
+	
 	/**
 	 * Sets the dummy encoder used during simulation to drive the SRX encoder.
 	 * The dummy encoder is a regular Encoder which is passed to the EncoderSim
@@ -726,5 +731,17 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	    double rotationsPer100ms = rotationsPerSecond / 10d;
 	    int ticksPer100ms = (int)(rotationsPer100ms * (double) TICKS_PER_REVOLUTION);
 	    return ticksPer100ms;
+	}
+	
+	public static double ticksToDegrees(double ticks) 
+	{
+		double deg = ticks * 360.0 / (double) TICKS_PER_REVOLUTION;
+
+		/* truncate to 0.1 res */
+		deg *= 10;
+		deg = (int) deg;
+		deg /= 10;
+
+		return deg;
 	}
 }
