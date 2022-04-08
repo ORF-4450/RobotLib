@@ -32,6 +32,13 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 3.13.0
+
+*	Built-in sim support in SRXMagneticEncoderRelative now working. Dropped our home brew sim support
+	based on dummy encoders.
+	
+R. Corn, April 8, 2022
+
 Version 3.12.0
 
 *	Built-in sim support in NavX now working. Dropped our home brew sim support based on dummy gyros.

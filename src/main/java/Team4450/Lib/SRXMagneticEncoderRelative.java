@@ -27,7 +27,6 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
 	private boolean			inverted = false, direction = false;
-	private Encoder			simEncoder;
 	
 	private TalonSRXSimCollection	simCollection;
 	
@@ -168,13 +167,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	private int getRaw()
 	{
-		if (simEncoder == null)
 //			return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
 //				talon.getSensorCollection().getQuadraturePosition();
-			return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
-				(int) talon.getSelectedSensorPosition();
-		else
-			return isInverted() ? simEncoder.get() * -1 : simEncoder.get();
+		return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
+			(int) talon.getSelectedSensorPosition();
 	}
 	
 	/**
@@ -318,12 +314,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	@Override
 	public void reset()
 	{
-		if (simEncoder == null)
-		{
 //			talon.getSensorCollection().setQuadraturePosition(0, 0);
-			talon.setSelectedSensorPosition(0);
-		} else
-			simEncoder.reset();
+		talon.setSelectedSensorPosition(0);
 	}
 
 	/**
@@ -340,18 +332,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
-		if (simEncoder == null)
 //			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
-			errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
-		else
-		{
-			simEncoder.reset();
-			errorCode = ErrorCode.OK;
-		}
+		errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
-		// the reset command. It may take up to 160 additional ms for the zeroing to be reflected
-		// in a call to getQuadraturePosition() (our get()) as that is the default update period for the
+		// the reset command. It may take up to 20 additional ms for the zeroing to be reflected
+		// in a call to getSelectedPosition() (our get()) as that is the default update period for the
 		// encoder counts from SRXEnc to the API. We go ahead and delay the requested amount to guarantee
 		// we wait long enough that next get() call returns zero counts.
 		
@@ -621,33 +607,6 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public double getAsDouble()
 	{ 
 		return get();
-	}
-	
-	public double getAbsolute()
-	{
-		return talon.getSensorCollection().getPulseWidthPosition();
-	}
-	
-	/**
-	 * Sets the dummy encoder used during simulation to drive the SRX encoder.
-	 * The dummy encoder is a regular Encoder which is passed to the EncoderSim
-	 * Wpilib class and to this SRX encoder. The regular Encoder links this SRX 
-	 * encoder to the simulation as exposed by EncoderSim. So when this simulated
-	 * encoder is set, the SRXMagneticEncoderRelative class is driven by the simulated
-	 * encoder NOT the actual encoders on the robot. We use a regular encoder because
-	 * native support for Talon simulation was not available when we started working
-	 * with simulation. So we did our own thing by using a regular encoder inside our
-	 * SRX encoder wrapper class. Hopefully we will switch to using the built in Talon
-	 * sim support at some point. The calling program must create the regular encoder
-	 * and link it to an EncoderSim instance and drive the EncoderSim instance with
-	 * values returned by the DifferntialDriveTrainsim object used by robot programs
-	 * to do simulation. Setting this object put the SRX encoder instance into simulation
-	 * mode.
-	 * @param encoder Encoder object used in simulation.
-	 */
-	public void setSimEncoder(Encoder encoder)
-	{
-		simEncoder = encoder;
 	}
 	
 	/**
