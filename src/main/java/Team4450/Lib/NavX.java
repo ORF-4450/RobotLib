@@ -187,7 +187,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		return ahrs.getAngle();
 	}
-	
+
 	/**
 	 * Return total yaw angle accumulated since last call to resetYaw().
 	 * Note: Rotation2d angle is + for left of zero, - for right. This is
@@ -199,6 +199,32 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		return Rotation2d.fromDegrees(-getTotalYaw());
 	}
 	
+    /**
+     * Return total yaw angle accumulated since last call to resetYaw() constrained
+     * to +-180 degrees no matter how many degrees we have rotated.
+	 * @return Total yaw angle in degrees.
+     */
+	public double getTotalYaw180() 
+    {
+        return Math.IEEEremainder(getTotalYaw(), 360);
+    }
+	
+	/**
+     * Return total yaw angle accumulated since last call to resetYaw() constrained
+     * to +-180 degrees no matter how many degrees we have rotated, as a Rotation2d object. 
+     * The angle in the rotation2d will be in radians. 
+	 * @return Total yaw angle as a Rotation2d object.
+	 */
+	public Rotation2d getTotalYaw1802d()
+	{
+		return Rotation2d.fromDegrees(-getTotalYaw180());		
+	}
+    
+	/**
+	 * Return total yaw angle accumulated since start up or last call to
+	 * setHeading(). Will go past 360. resetYaw() does not reset this.
+	 * @return total accumulated angle.
+	 */
 	public double getTotalAngle()
 	{
 		return ahrs.getAngle() + totalAngle;
