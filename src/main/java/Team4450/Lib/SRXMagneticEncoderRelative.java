@@ -432,7 +432,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	/**
 	 * Set the period that the Talon updates the RR with encoder count value.
 	 * Defaults to 20ms per CTRE doc. An update is called a frame. This method
-	 * will take 10ms to complete.
+	 * will take 10ms to complete. It sets the status frame 2.
 	 * @param period Frame update period in milliseconds.
 	 */
 	public void setStatusFramePeriod(int period)
@@ -443,7 +443,23 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		
 		Timer.delay(.010);
 	}
+	
+	/**
+	 * Set the period that the Talon updates the RR with the pulse width value.
+	 * Pulse width value is used for reading absolute position.
+	 * Defaults to 150ms per CTRE doc. An update is called a frame. This method
+	 * will take 10ms to complete. It sets the status frame 8.
+	 * @param period Frame update period in milliseconds.
+	 */
+	public void setStatusFrame8Period(int period)
+	{
+		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
+		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+		
+		Timer.delay(.010);
+	}
+	
 	/**
 	 * @return True if inverted.
 	 */
@@ -702,5 +718,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		deg /= 10;
 
 		return deg;
+	}
+	
+	public int getAbsolutePosition()
+	{
+		return talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 	}
 }

@@ -289,7 +289,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		heading = heading - ((int) (heading / 360) * 360);
 		
 		if (heading < 0) heading += 360;
-
+		
 		//LCD.printLine(9, "angle=%.2f  totangle=%.2f  hdg=%.2f", ahrs.getAngle(), totalAngle, heading);
 		
 		return heading;
@@ -314,8 +314,6 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public double getRadians(double degrees)
 	{
-		// Don't remember why the 360- here...does not seem to make sense.
-		//return Math.toRadians(360 - degrees);
 		return Math.toRadians(degrees);
 	}
 	
@@ -450,6 +448,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		resetYaw();
 		
         Timer.delay(yawResetDelaySec);
+
+		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+						ahrs.getAngle(), totalAngle);
 	}	
 	
 	/**
@@ -466,6 +467,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		resetYaw();
 		
         Timer.delay(wait / 1000.0);
+
+		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+						ahrs.getAngle(), totalAngle);
 	}
 	
 	/**
