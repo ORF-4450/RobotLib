@@ -12,7 +12,8 @@ package Team4450.Lib.Wpilib;
  *
  * Copied from Wpilib so we can keep using it if WPI removes it.
  */
-public interface PIDSource {
+public interface PIDSource 
+{
   /**
    * Set which parameter of the device you are using as a process control variable.
    *

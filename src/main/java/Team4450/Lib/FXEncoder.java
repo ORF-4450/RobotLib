@@ -5,13 +5,13 @@ import java.util.function.DoubleSupplier;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
+import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 
 import edu.wpi.first.wpilibj.CounterBase;
-import edu.wpi.first.wpilibj.Encoder;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
@@ -27,9 +27,11 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
 	private boolean			inverted = false, direction = false;
-	private Encoder			simEncoder;
+
+	private TalonFXSimCollection	simCollection;
 	
-	public static final int	TICKS_PER_REVOLUTION = 2048;
+	public static final int		TICKS_PER_REVOLUTION = 2048;
+	private static final double	TICKS_PER_REVOLUTION_D = 2048.0;
 
 	public FXEncoder()
 	{	
@@ -116,6 +118,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 				case RPM:
 					return getRPM();
 					
+				case velocityRPM:
+					return getVelocity(PIDRateType.velocityRPM);
+					
 				case velocityFPS:
 					return getVelocity(PIDRateType.velocityFPS);
 					
@@ -166,13 +171,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	 */
 	private int getRaw()
 	{
-		if (simEncoder == null)
 //			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
 //				(int) talon.getSensorCollection().getIntegratedSensorPosition();
 			return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
 				(int) talon.getSelectedSensorPosition();
-		else
-			return isInverted() ? simEncoder.get() * -1 : simEncoder.get();
 	}
 	
 	/**
@@ -197,8 +199,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return the rate of rotation in RPM.
-	 * @return Rotation in revolutions per minute.
+	 * Return the rate of encoder rotation in RPM.
+	 * @return Rotation rate in revolutions per minute.
 	 */
 	public int getRPM()
 	{
@@ -206,8 +208,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return the current velocity (distance unit per second).
-	 * @param rateType MPS/FPS/IPS.
+	 * Return the current wheel velocity (distance unit per second).
+	 * @param rateType RPM/MPS/FPS/IPS.
 	 * @return Current velocity based on RPM and gear ratio in units requested.
 	 */
 	public double getVelocity( PIDRateType rateType )
@@ -218,6 +220,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 			return ((getRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
 			return ((getRPM() * gearRatio) * (wheelDiameter * Math.PI) / 60.0);
+		else if (rateType == PIDRateType.velocityRPM)
+			return getRPM() * gearRatio;
 		
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
@@ -261,9 +265,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Return the max velocity recorded since start up (distance unit per second).
+	 * Return the max wheel velocity recorded since start up (distance unit per second).
 	 * Relies on regular calls to getRate(), getRPM() or getVelocity().
-	 * @param rateType MPS/FPS/IPS.
+	 * @param rateType RPM/MPS/FPS/IPS.
 	 * @return Max velocity recorded based on RPM and gear ratio in units requested.
 	 */
 	public double getMaxVelocity( PIDRateType rateType )
@@ -274,7 +278,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * Math.PI) / 60.0);
-		
+		else if (rateType == PIDRateType.velocityRPM)
+			return getMaxRPM() * gearRatio;
+				
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
 
@@ -316,11 +322,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	@Override
 	public void reset()
 	{
-		if (simEncoder == null)
 			//talon.getSensorCollection().setIntegratedSensorPosition(0, 0);
 			talon.setSelectedSensorPosition(0);
-		else
-			simEncoder.reset();
 	}
 
 	/**
@@ -337,14 +340,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
-		if (simEncoder == null)
-			//errorCode = talon.getSensorCollection().setIntegratedSensorPosition(0, timeout);
-			errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
-		else
-		{
-			simEncoder.reset();
-			errorCode = ErrorCode.OK;
-		}
+		//errorCode = talon.getSensorCollection().setIntegratedSensorPosition(0, timeout);
+		errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
 		// the reset command. It may take up to 20 additional ms for the zeroing to be reflected
@@ -454,7 +451,22 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		
 		Timer.delay(.010);
 	}
+	
+	/**
+	 * Set the period that the Talon updates the RR with the absolute encoder value.
+	 * Defaults to ~240ms per CTRE doc. An update is called a frame. This method
+	 * will take 10ms to complete. It sets the status frame 21.
+	 * @param period Frame update period in milliseconds.
+	 */
+	public void setStatusFrame8Period(int period)
+	{
+		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
+		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+		
+		Timer.delay(.010);
+	}
+	
 	/**
 	 * @return True if inverted.
 	 */
@@ -565,19 +577,24 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	public enum PIDRateType
 	{
 		/**
-		 * Rate of rotation in ticks per 100ms.
+		 * Rate of encoder rotation in ticks per 100ms.
 		 */
 		ticksPer100ms,
 		
 		/**
-		 * Rate of rotation in ticks per second.
+		 * Rate of encoder rotation in ticks per second.
 		 */
 		ticksPerSec,
 		
 		/**
-		 * Rate of rotation in revolutions per minute.
+		 * Rate of encoder rotation in revolutions per minute.
 		 */
 		RPM,
+		
+		/**
+		 * Speed in RPM based on wheel size and gear ratio.
+		 */
+		velocityRPM,
 		
 		/**
 		 * Speed in feet per second based on wheel size and
@@ -619,20 +636,6 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Sets the dummy encoder used during simulation to drive the SRX encoder.
-	 * The dummy encoder is a regular Encoder which is passed to the EncoderSim
-	 * Wpilib class and to this SRX encoder. The regular Encoder links this SRX 
-	 * encoder to the simulation as exposed by EncoderSim. So when this simulated
-	 * encoder is set, the SRXMagneticEncoderRelative class is driven by the simulated
-	 * encoder NOT the actual encoders on the robot.
-	 * @param encoder Encoder object used in simulation.
-	 */
-	public void setSimEncoder(Encoder encoder)
-	{
-		simEncoder = encoder;
-	}
-	
-	/**
 	 * Get the number of ticks (encoder counts) equal to the target distance.
 	 * @param distance Target distance in feet.
 	 * @param wheelDiameter In inches.
@@ -643,5 +646,86 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		double distancePerTickFeet = (Math.PI * wheelDiameter / TICKS_PER_REVOLUTION) / 12;
 
 		return (int) (distance / distancePerTickFeet);
+	}
+	
+	/**
+	 * Initialize the built-in simulation support in the SRX encoder. Must be called before sim
+	 * run starts. Note that the built-in sim support is not reliable as of this time so we will
+	 * retain our original solution with dummy encoders. This code is retained in the event that
+	 * the built-in support is fixed. We will have to test after CTRE updates to see if the problems
+	 * get fixed. The main issue is spurious values being returned and encoder resets not being
+	 * obeyed. It mostly works...
+	 */
+	public void initializeSim()
+	{
+		simCollection = talon.getSimCollection();
+	}
+	
+	// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20General/DifferentialDrive_Simulation/src/main/java/frc/robot/Robot.java
+
+	/**
+	 * During simulation sets the current values for the encoder.
+	 * @param position Current position in meters (from DifferentialDrivesim).
+	 * @param velocity Current velocity in meters/sec (from DifferentialDrivesim).
+	 */
+	public void setSimValues(double position, double velocity)
+	{
+		//Util.consoleLog("%.3f, %.3f", position, velocity);
+		
+		simCollection.setIntegratedSensorRawPosition((int) metersToTicks(position));
+		simCollection.setIntegratedSensorVelocity(velocityToTicks(velocity));
+	}
+	
+	/**
+	 * Convert meters into encoder ticks. Gear ration applied.
+	 * @param meters Meters value.
+	 * @return Encoder ticks.
+	 */
+	public int metersToTicks(double meters) 
+	{
+	    double rotations = meters / (Math.PI * Util.inchesToMeters(wheelDiameter));
+	    rotations *= gearRatio;
+	    return (int) (TICKS_PER_REVOLUTION_D * rotations);
+	}
+	
+	/**
+	 * Convert velocity into encoder ticks. Gear ratio applied.
+	 * @param velocityMetersPerSecond Velocity in meters/second.
+	 * @return Encoder ticks per 100ms.
+	 */
+	private int velocityToTicks(double velocityMetersPerSecond)
+	{
+	    double rotationsPerSecond = velocityMetersPerSecond / (Math.PI * Util.inchesToMeters(wheelDiameter));
+	    rotationsPerSecond *= gearRatio;
+	    double rotationsPer100ms = rotationsPerSecond / 10d;
+	    int ticksPer100ms = (int) (rotationsPer100ms * TICKS_PER_REVOLUTION_D);
+	    return ticksPer100ms;
+	}
+	
+	/**
+	 * Convert ticks to degrees.
+	 * @param ticks Ticks.
+	 * @return Degrees 0-360. Truncated to .1 degree.
+	 */
+	public static double ticksToDegrees(double ticks) 
+	{
+		double deg = ticks * 360.0 / TICKS_PER_REVOLUTION_D;
+
+		/* truncate to 0.1 res */
+		deg *= 10;
+		deg = (int) deg;
+		deg /= 10;
+
+		return deg;
+	}
+	
+	/**
+	 * Return the absolute position of encoder in ticks. Default update period is
+	 * ~240ms. Change with setStatusFrame21Period().
+	 * @return The encoder position, as 0-2048.
+	 */
+	public int getAbsolutePosition()
+	{
+		return (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
 	}
 }

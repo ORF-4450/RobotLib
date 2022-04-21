@@ -11,7 +11,6 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 import edu.wpi.first.wpilibj.CounterBase;
-import edu.wpi.first.wpilibj.Encoder;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
@@ -31,7 +30,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private TalonSRXSimCollection	simCollection;
 	
 	public static final int			TICKS_PER_REVOLUTION = 4096;
-
+	private static final double		TICKS_PER_REVOLUTION_D = 4096.0;
+	
 	public SRXMagneticEncoderRelative()
 	{	
 	}
@@ -117,6 +117,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 				case RPM:
 					return getRPM();
 					
+				case velocityRPM:
+					return getVelocity(PIDRateType.velocityRPM);
+					
 				case velocityFPS:
 					return getVelocity(PIDRateType.velocityFPS);
 					
@@ -174,7 +177,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
-	 * Return rate of rotation.
+	 * Return rate of rotation in ticks.
 	 * @param rateType Ticks unit: per 100ms or per Second.
 	 * @return The rotation rate in ticks per selected time unit.
 	 */
@@ -195,8 +198,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
-	 * Return the rate of rotation in RPM.
-	 * @return Rotation in revolutions per minute.
+	 * Return the rate of rotation in RPM. This is encoder RPM, gear ratio not applied.
+	 * @return Rotation rate in revolutions per minute.
 	 */
 	public int getRPM()
 	{
@@ -204,8 +207,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
-	 * Return the current velocity (distance unit per second).
-	 * @param rateType MPS/FPS/IPS.
+	 * Return the current wheel velocity (distance unit per second).
+	 * @param rateType RPM/MPS/FPS/IPS.
 	 * @return Current velocity based on RPM and gear ratio in units requested.
 	 */
 	public double getVelocity( PIDRateType rateType )
@@ -216,7 +219,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 			return ((getRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
 			return ((getRPM() * gearRatio) * (wheelDiameter * Math.PI) / 60.0);
-		
+		else if (rateType == PIDRateType.velocityRPM)
+			return getRPM() * gearRatio;
+
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
 	
@@ -237,7 +242,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
-	 * Return the max RPM recorded since start up.
+	 * Return the max RPM recorded since start up. This is encoder RPM, gear ratio not applied.
 	 * Relies on regular calls to getRate(), getRPM() or getVelocity().
 	 * @return The highest RPM seen.
 	 */
@@ -259,9 +264,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
-	 * Return the max velocity recorded since start up (distance unit per second).
+	 * Return the max wheel velocity recorded since start up (distance unit per second).
 	 * Relies on regular calls to getRate(), getRPM() or getVelocity().
-	 * @param rateType MPS/FPS/IPS.
+	 * @param rateType RPM/MPS/FPS/IPS.
 	 * @return Max velocity recorded based on RPM and gear ratio in units requested.
 	 */
 	public double getMaxVelocity( PIDRateType rateType )
@@ -272,6 +277,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * Math.PI) / 12.0 / 60.0);
 		else if (rateType == PIDRateType.velocityIPS)
 			return ((getMaxRPM() * gearRatio) * (wheelDiameter * Math.PI) / 60.0);
+		else if (rateType == PIDRateType.velocityRPM)
+			return getMaxRPM() * gearRatio;
 		
 		throw new IllegalArgumentException("Invalid PIDRateType");
 	}
@@ -404,7 +411,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public double getRotations()
 	{
-		return getRaw() / (double) TICKS_PER_REVOLUTION;
+		return getRaw() / TICKS_PER_REVOLUTION_D;
 	}
 
 	/**
@@ -447,7 +454,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	/**
 	 * Set the period that the Talon updates the RR with the pulse width value.
 	 * Pulse width value is used for reading absolute position.
-	 * Defaults to 150ms per CTRE doc. An update is called a frame. This method
+	 * Defaults to ~150ms per CTRE doc. An update is called a frame. This method
 	 * will take 10ms to complete. It sets the status frame 8.
 	 * @param period Frame update period in milliseconds.
 	 */
@@ -572,20 +579,25 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	public enum PIDRateType
 	{
 		/**
-		 * Rate of rotation in ticks per 100ms.
+		 * Rate of encoder rotation in ticks per 100ms.
 		 */
 		ticksPer100ms,
 		
 		/**
-		 * Rate of rotation in ticks per second.
+		 * Rate of encoder rotation in ticks per second.
 		 */
 		ticksPerSec,
 		
 		/**
-		 * Rate of rotation in revolutions per minute.
+		 * Rate of encoder rotation in revolutions per minute.
 		 */
 		RPM,
 		
+		/**
+		 * Speed in RPM based on wheel size and gear ratio.
+		 */
+		velocityRPM,
+
 		/**
 		 * Speed in feet per second based on wheel size and
 		 * gear ratio.
@@ -668,34 +680,35 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20General/DifferentialDrive_Simulation/src/main/java/frc/robot/Robot.java
 
 	/**
-	 * During simulation built-in sim support, sets the current value for the encoder. Note that
-	 * the built-in sim support is not reliable at this time. This function is retained for future
-	 * testing to see of the built-in support gets fixed. 
+	 * During simulation sets the current values for the encoder.
 	 * @param position Current position in meters (from DifferentialDrivesim).
 	 * @param velocity Current velocity in meters/sec (from DifferentialDrivesim).
 	 */
 	public void setSimValues(double position, double velocity)
 	{
-		Util.consoleLog("%.3f, %.3f", position, velocity);
+		//Util.consoleLog("%.3f, %.3f", position, velocity);
 		
-		simCollection.setQuadratureRawPosition((int) metersToTicks(position));
-		simCollection.setQuadratureVelocity((int) velocityToTicks(velocity));
+		simCollection.setQuadratureRawPosition(metersToTicks(position));
+		simCollection.setQuadratureVelocity(velocityToTicks(velocity));
+		
+		simCollection.setPulseWidthPosition(metersToTicks(position) % TICKS_PER_REVOLUTION);
+		simCollection.setPulseWidthVelocity(velocityToTicks(velocity));
 	}
 	
 	/**
-	 * Convert meters into encoder ticks.
+	 * Convert meters into encoder ticks. Gear ratio applied.
 	 * @param meters Meters value.
 	 * @return Encoder ticks.
 	 */
-	public double metersToTicks(double meters) 
+	public int metersToTicks(double meters) 
 	{
 	    double rotations = meters / (Math.PI * Util.inchesToMeters(wheelDiameter));
 	    rotations *= gearRatio;
-	    return (double) TICKS_PER_REVOLUTION * rotations;
+	    return (int) (TICKS_PER_REVOLUTION_D * rotations);
 	}
 	
 	/**
-	 * Convert velocity into encoder ticks.
+	 * Convert velocity into encoder ticks. Gear ratio applied.
 	 * @param velocityMetersPerSecond Velocity in meters/second.
 	 * @return Encoder ticks per 100ms.
 	 */
@@ -704,13 +717,18 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	    double rotationsPerSecond = velocityMetersPerSecond / (Math.PI * Util.inchesToMeters(wheelDiameter));
 	    rotationsPerSecond *= gearRatio;
 	    double rotationsPer100ms = rotationsPerSecond / 10d;
-	    int ticksPer100ms = (int)(rotationsPer100ms * (double) TICKS_PER_REVOLUTION);
+	    int ticksPer100ms = (int) (rotationsPer100ms * TICKS_PER_REVOLUTION_D);
 	    return ticksPer100ms;
 	}
 	
+	/**
+	 * Convert ticks to degrees.
+	 * @param ticks Ticks.
+	 * @return Degrees 0-360. Truncated to .1 degree.
+	 */
 	public static double ticksToDegrees(double ticks) 
 	{
-		double deg = ticks * 360.0 / (double) TICKS_PER_REVOLUTION;
+		double deg = ticks * 360.0 / TICKS_PER_REVOLUTION_D;
 
 		/* truncate to 0.1 res */
 		deg *= 10;
@@ -720,6 +738,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		return deg;
 	}
 	
+	/**
+	 * Return the absolute position of encoder in ticks. Default update period is
+	 * ~150ms. Change with setStatusFrame8Period().
+	 * @return The encoder position, as 0-4096.
+	 */
 	public int getAbsolutePosition()
 	{
 		return talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
