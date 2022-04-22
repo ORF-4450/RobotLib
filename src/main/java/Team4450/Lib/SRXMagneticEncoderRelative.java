@@ -726,9 +726,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 * @param ticks Ticks.
 	 * @return Degrees 0-360. Truncated to .1 degree.
 	 */
-	public static double ticksToDegrees(double ticks) 
+	public static double ticksToDegrees(int ticks) 
 	{
-		double deg = ticks * 360.0 / TICKS_PER_REVOLUTION_D;
+		double deg = (int) ticks * 360.0 / TICKS_PER_REVOLUTION_D;
 
 		/* truncate to 0.1 res */
 		deg *= 10;
