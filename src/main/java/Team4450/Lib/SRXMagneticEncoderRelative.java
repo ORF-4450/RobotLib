@@ -24,6 +24,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
+	private int				totalTicks;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
 	private boolean			inverted = false, direction = false;
 	
@@ -321,6 +322,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	@Override
 	public void reset()
 	{
+		totalTicks += getRaw();
+		
 //			talon.getSensorCollection().setQuadraturePosition(0, 0);
 		talon.setSelectedSensorPosition(0);
 	}
@@ -339,6 +342,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
+		totalTicks += getRaw();
+		
 //			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
 		errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
 		
@@ -691,8 +696,13 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		simCollection.setQuadratureRawPosition(metersToTicks(position));
 		simCollection.setQuadratureVelocity(velocityToTicks(velocity));
 		
-		simCollection.setPulseWidthPosition(metersToTicks(position) % TICKS_PER_REVOLUTION);
+		simCollection.setPulseWidthPosition((getRaw() + totalTicks) % TICKS_PER_REVOLUTION);
 		simCollection.setPulseWidthVelocity(velocityToTicks(velocity));
+	}
+	
+	public int getTotalTicks()
+	{
+		return totalTicks;
 	}
 	
 	/**
