@@ -24,7 +24,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
-	private int				totalTicks;
+	private int				totalTicks, absoluteOffset;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
 	private boolean			inverted = false, direction = false;
 	
@@ -751,10 +751,31 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	/**
 	 * Return the absolute position of encoder in ticks. Default update period is
 	 * ~150ms. Change with setStatusFrame8Period().
-	 * @return The encoder position, as 0-4096.
+	 * @return The encoder position, as 0-4096 over one clockwise rotation.
 	 */
 	public int getAbsolutePosition()
 	{
-		return talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+		//return talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+		
+		int ticks =  talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+		
+		ticks -= absoluteOffset;
+		
+		if (ticks < 0) ticks += TICKS_PER_REVOLUTION;
+	
+		return ticks;
+	}
+	
+	/**
+	 * Set an offset to be applied to the absolute position to move the internal
+	 * zero direction to the desired zero direction. Offset is applied to calls
+	 * to getAbsolutePosition().
+	 * @param offset In ticks, 0-4096 representing 0-360 degrees, going clockwise.
+	 */
+	public void setAbsoluteOffset(int offset)
+	{
+		Util.checkRange(offset, 0, TICKS_PER_REVOLUTION);
+		
+		absoluteOffset = offset;
 	}
 }

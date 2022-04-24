@@ -25,7 +25,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
-	private int				scaleFactor = 1, lastCount = 0, maxRate = 0;
+	private int				scaleFactor = 1, lastCount = 0, maxRate = 0, absoluteOffset;
 	private boolean			inverted = false, direction = false;
 
 	private TalonFXSimCollection	simCollection;
@@ -726,6 +726,27 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	 */
 	public int getAbsolutePosition()
 	{
-		return (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
+		//return (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
+		
+		int ticks =  (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
+		
+		ticks -= absoluteOffset;
+		
+		if (ticks < 0) ticks += TICKS_PER_REVOLUTION;
+	
+		return ticks;
+	}
+	
+	/**
+	 * Set an offset to be applied to the absolute position to move the internal
+	 * zero direction to the desired zero direction. Offset is applied to calls
+	 * to getAbsolutePosition().
+	 * @param offset In ticks, 0-2048 representing 0-360 degrees, going clockwise.
+	 */
+	public void setAbsoluteOffset(int offset)
+	{
+		Util.checkRange(offset, 0, TICKS_PER_REVOLUTION);
+		
+		absoluteOffset = offset;
 	}
 }
