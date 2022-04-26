@@ -10,6 +10,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
@@ -188,7 +189,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		
 		int rate = getRawRate();
 		
-		if (Math.abs(rate) > maxRate) maxRate = rate;
+		if (Math.abs(rate) > maxRate) maxRate = Math.abs(rate);
 		
 		if (rateType == PIDRateType.ticksPerSec)
 			return rate * 10;
@@ -325,8 +326,10 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		totalTicks += getRaw();
 		
 //			talon.getSensorCollection().setQuadraturePosition(0, 0);
-		talon.setSelectedSensorPosition(0);
-	}
+		ErrorCode errorCode= talon.setSelectedSensorPosition(0);
+		
+		if (errorCode != ErrorCode.OK) 
+			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());	}
 
 	/**
 	 * Reset the encoder count. Will wait the specified milliseconds for the
@@ -356,7 +359,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		if (errorCode == ErrorCode.OK) 
 			Timer.delay(timeout / 1000.0);
 		else
-			Util.consoleLog("encoder reset failed (%d)", errorCode.value);
+			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());
 	
 		return errorCode.value;
 	}
@@ -451,9 +454,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
+		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
 		
-		Timer.delay(.010);
+		if (errorCode == ErrorCode.OK) 
+			Timer.delay(.010);
+		else
+			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
 	}
 	
 	/**
@@ -467,9 +473,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
 		
-		Timer.delay(.010);
+		if (errorCode == ErrorCode.OK) 
+			Timer.delay(.010);
+		else
+			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
 	}
 	
 	/**
@@ -671,11 +680,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	
 	/**
 	 * Initialize the built-in simulation support in the SRX encoder. Must be called before sim
-	 * run starts. Note that the built-in sim support is not reliable as of this time so we will
-	 * retain our original solution with dummy encoders. This code is retained in the event that
-	 * the built-in support is fixed. We will have to test after CTRE updates to see if the problems
-	 * get fixed. The main issue is spurious values being returned and encoder resets not being
-	 * obeyed. It mostly works...
+	 * run starts.
 	 */
 	public void initializeSim()
 	{
@@ -718,7 +723,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
-	 * Convert velocity into encoder ticks. Gear ratio applied.
+	 * Convert velocity into encoder ticks. Gear ratio applied. Requires
+	 * a non-zero wheel diameter set for the encoder.
 	 * @param velocityMetersPerSecond Velocity in meters/second.
 	 * @return Encoder ticks per 100ms.
 	 */
@@ -764,6 +770,26 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		if (ticks < 0) ticks += TICKS_PER_REVOLUTION;
 	
 		return ticks;
+	}
+	
+	/**
+	 * Return the absolute position of encoder in degrees. Default update period is
+	 * ~240ms. Change with setStatusFrame21Period().
+	 * @return The encoder position, as 0-360.0 clockwise.
+	 */
+	public double getAbsolutePositionDeg()
+	{
+		return ticksToDegrees(getAbsolutePosition());
+	}
+	
+	/**
+	 * Return the absolute position of encoder as a Rotation2d object. Default update period is
+	 * ~240ms. Change with setStatusFrame21Period().
+	 * @return The encoder position in radians as a Rotation2d.
+	 */
+	public Rotation2d getAbsolutePosition2D()
+	{
+		return Rotation2d.fromDegrees(-ticksToDegrees(getAbsolutePosition()));
 	}
 	
 	/**

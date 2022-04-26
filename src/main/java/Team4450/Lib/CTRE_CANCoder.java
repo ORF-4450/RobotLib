@@ -3,10 +3,15 @@ package Team4450.Lib;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.WPI_CANCoder;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderFaults;
+import com.ctre.phoenix.sensors.CANCoderSimCollection;
+import com.ctre.phoenix.sensors.CANCoderStickyFaults;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.ctre.phoenix.sensors.SensorTimeBase;
+import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
@@ -17,61 +22,65 @@ import edu.wpi.first.wpilibj.CounterBase;
 import edu.wpi.first.wpilibj.Timer;
 
 /**
- * Wrapper for Talon FX Encoder in relative (quadrature) mode.
+ * Wrapper for CTRE CANCoder.
  */
-public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
+public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
 {
-	private WPI_TalonFX		talon;
+	private WPI_CANCoder		encoder;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0, absoluteOffset;
 	private boolean			inverted = false, direction = false;
 
-	private TalonFXSimCollection	simCollection;
+	private CANCoderSimCollection	simCollection;
 	
-	public static final int		TICKS_PER_REVOLUTION = 2048;
-	private static final double	TICKS_PER_REVOLUTION_D = 2048.0;
-
-	public FXEncoder()
-	{	
-	}
+	public static final int		TICKS_PER_REVOLUTION = 4096;
+	private static final double	TICKS_PER_REVOLUTION_D = 4096.0;
 	
 	/**
-	 * Create FXEncoder and set the Talon the encoder is
-	 * connected to.
-	 * @param talon Talon FX object encoder is connected to.
+	 * Create CTRE_CANCoder.
+	 * @param id Device id of the CANCoder.
 	 */
-	public FXEncoder( WPI_TalonFX talon )
+	public CTRE_CANCoder( int id )
 	{
-		Util.consoleLog("%s", talon.getDescription());
+		Util.consoleLog("%d", id);
 		
-		this.talon = talon;
-
-		// Select Talon FX integrated encoder as feedback device.
-		this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
+		encoder = new WPI_CANCoder(id);
+		
+		CANCoderConfiguration config = new CANCoderConfiguration();
+		
+		config.sensorCoefficient = 1;
+		config.unitString = "count";
+		config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
+		config.initializationStrategy = SensorInitializationStrategy.BootToZero;
+		config.sensorTimeBase = SensorTimeBase.Per100Ms_Legacy;
+		encoder.configAllSettings(config);
+		 
 		reset();
 	}
 	
 	/**
-	 * Create FXEncoder setting the Talon the encoder is
-	 * connected to and the wheel diameter of the wheel being monitored.
-	 * @param talon Talon FX object encoder is connected to.
+	 * Create CTRE_CANCoder and set the wheel diameter of the wheel being monitored.
+	 * @param id Device id of the CANCoder.
  	 * @param wheelDiameter Wheel diameter in inches.
 	 */
-	public FXEncoder( WPI_TalonFX talon, double wheelDiameter )
+	public CTRE_CANCoder( int id, double wheelDiameter )
 	{
-		Util.consoleLog("%s", talon.getDescription());
-		
-		this.talon = talon;
-		
-		// Select Talon FX integrated encoder as feedback device.
-		this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-		
+		this(id);
+
+		Util.consoleLog("%.2f", wheelDiameter);
+				
 		setWheelDiameter(wheelDiameter);
-		
-		reset();
+	}
+	
+	/**
+	 * Returns the wrapped CTRE CANCoder object instance.
+	 * @return WPI CANCoder instance.
+	 */
+	public WPI_CANCoder getEncoder()
+	{
+		return encoder;
 	}
 	
 	/**
@@ -171,10 +180,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	 */
 	private int getRaw()
 	{
-//			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
-//				(int) talon.getSensorCollection().getIntegratedSensorPosition();
-			return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
-				(int) talon.getSelectedSensorPosition();
+//			return isInverted() ? (int) encoder.getSensorCollection().getIntegratedSensorPosition() * -1 :
+//				(int) encoder.getSensorCollection().getIntegratedSensorPosition();
+			return isInverted() ? (int) encoder.getPosition() * -1 :
+				(int) encoder.getPosition();
 	}
 	
 	/**
@@ -258,10 +267,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	 */
 	private int getRawRate()
 	{
-//		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
-//			(int) talon.getSensorCollection().getIntegratedSensorVelocity();
-		return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
-			(int) talon.getSelectedSensorVelocity();
+//		return isInverted() ? (int) encoder.getSensorCollection().getIntegratedSensorVelocity() * -1 :
+//			(int) encoder.getSensorCollection().getIntegratedSensorVelocity();
+		return isInverted() ? (int) encoder.getVelocity() * -1 :
+			(int) encoder.getVelocity();
 	}
 	
 	/**
@@ -323,9 +332,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	public void reset()
 	{
 		ErrorCode	errorCode;
-		
-		errorCode = talon.setSelectedSensorPosition(0);
 
+		errorCode = encoder.setPosition(0);
+		
 		if (errorCode != ErrorCode.OK) 
 			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());
 	}
@@ -344,8 +353,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
-		//errorCode = talon.getSensorCollection().setIntegratedSensorPosition(0, timeout);
-		errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
+		errorCode = encoder.setPosition(0, timeout);
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
 		// the reset command. It may take up to 20 additional ms for the zeroing to be reflected
@@ -418,31 +426,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	{
 		return getRaw() / TICKS_PER_REVOLUTION_D;
 	}
-
-	/**
-	 * Returns the Talon the encoder is connected to.
-	 * @return The Talon instance the encoder is connected to.
-	 */
-	public WPI_TalonFX getTalon()
-	{
-		return talon;
-	}
-
-	/**
-	 * Sets the Talon the encoder is connected to.
-	 * @param talon The Talon the encoder is connected to.
-	 */
-	public void setTalon( WPI_TalonFX talon )
-	{
-		Util.consoleLog("%s", talon.getDescription());
-		
-		this.talon = talon;
-		
-		reset();
-	}
 	
 	/**
-	 * Set the period that the Talon FX updates the RR with encoder count value.
+	 * Set the period that the encoder updates the RR with encoder count value.
 	 * Defaults to ~20ms per CTRE doc. An update is called a frame. This method
 	 * will take up to 10ms to complete.
 	 * @param period Frame period in milliseconds.
@@ -451,28 +437,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
-
-		if (errorCode == ErrorCode.OK) 
-			Timer.delay(.010);
-		else
-			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
-	}
-	
-	/**
-	 * Set the period that the Talon updates the RR with the absolute encoder value.
-	 * Defaults to ~240ms per CTRE doc. An update is called a frame. This method
-	 * will take 10ms to complete. It sets the status frame 21.
-	 * @param period Frame update period in milliseconds.
-	 */
-	public void setStatusFrame8Period(int period)
-	{
-		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
-
-		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+		ErrorCode errorCode = this.encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, period);
 		
 		if (errorCode == ErrorCode.OK) 
-			Timer.delay(.010);
+			Timer.delay(.010);	
 		else
 			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
 	}
@@ -660,15 +628,13 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Initialize the built-in simulation support in the FX encoder. Must be called before sim
+	 * Initialize the built-in simulation support in the CANCoder. Must be called before sim
 	 * run starts.
 	 */
 	public void initializeSim()
 	{
-		simCollection = talon.getSimCollection();
+		simCollection = encoder.getSimCollection();
 	}
-	
-	// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20General/DifferentialDrive_Simulation/src/main/java/frc/robot/Robot.java
 
 	/**
 	 * During simulation sets the current values for the encoder. Requires
@@ -680,9 +646,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	{
 		//Util.consoleLog("%.3f, %.3f", position, velocity);
 		
-		simCollection.setIntegratedSensorRawPosition(metersToTicks(position));
-		
-		simCollection.setIntegratedSensorVelocity(velocityToTicks(velocity));
+		simCollection.setRawPosition(metersToTicks(position));
+
+		simCollection.setVelocity(velocityToTicks(velocity));
 	}
 	
 	/**
@@ -731,14 +697,12 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Return the absolute position of encoder in ticks. Default update period is
-	 * ~240ms. Change with setStatusFrame21Period().
-	 * @return The encoder position, as 0-2048 clockwise.
+	 * ~20ms. Change with setStatusFramePeriod().
+	 * @return The encoder position, as 0-4096 clockwise.
 	 */
 	public int getAbsolutePosition()
 	{
-		//return (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
-		
-		int ticks =  (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
+		int ticks =  (int) encoder.getAbsolutePosition();
 		
 		ticks -= absoluteOffset;
 		
@@ -779,4 +743,13 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier
 		
 		absoluteOffset = offset;
 	}
+	
+	/**
+	 * Set the encoder position to the current absolute position.
+	 */
+	public void setPositionToAbosolute()
+	{
+		encoder.setPositionToAbsolute();
+	}
 }
+
