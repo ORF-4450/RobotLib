@@ -86,6 +86,8 @@ public class ValveDA
 
 	/**
 	 * Open the valve (pressurize port. This is A side).
+	 * This function delays calling thread for the valve
+	 * slide time (default 50ms).
 	 */
 	public void Open()
 	{
@@ -102,6 +104,8 @@ public class ValveDA
 	
 	/**
 	 * Pressurize the A side of the valve.
+	 * This function delays calling thread for the valve
+	 * slide time (default 50ms).
 	 */
 	public void SetA()
 	{
@@ -112,6 +116,8 @@ public class ValveDA
 
 	/**
 	 * Close the valve (pressurize port+1. This is B side).
+	 * This function delays calling thread for the valve
+	 * slide time (default 50ms).
 	 */
 	public void Close()
 	{
@@ -128,6 +134,8 @@ public class ValveDA
 	
 	/**
 	 * Pressurize the B side of the valve.
+	 * This function delays calling thread for the valve
+	 * slide time (default 50ms).
 	 */
 	public void SetB()
 	{

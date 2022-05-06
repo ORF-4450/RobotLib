@@ -53,7 +53,6 @@ public class Util
 	 */
 	public final static Logger logger = Logger.getGlobal();
 	
-	private static MemoryHandler	logBuffer;
 	private static double timeMarker = 0;
 	
 	// Private constructor means this class cannot be instantiated. All access is static.
@@ -165,36 +164,12 @@ public class Util
             if (new File(path + "Logging.txt.99").exists() == true)
             	new File(path + "Logging.txt.99").delete();
 
-            fileTxt = new FileHandler(path + "Logging.txt", 0, 99);
+            fileTxt = new AsyncFileHandler(path + "Logging.txt", 0, 99);
             
             fileTxt.setFormatter(logFormatter);
             
-            // Set up memory buffering of log records. Writes them out to the
-            // file on each record but allows the code logging messages to be
-            // disconnected from the process of formatting and writing records
-            // to the disk file. Writing the records out every record ensures
-            // we don't lose log records if the robot program crashes and we
-            // don't have to have flush calls in the robot program to periodically
-            // flush records to the file...because:
-            // the MemoryHandler class does NOT auto write to the file
-            // when the buffer is full, it just deletes the oldest record. Seems 
-            // a bad design decision. So you have to trigger writes to the file
-            // with the level trigger or by an explicit push() call.
-            
-            logBuffer = new MemoryHandler(fileTxt, 64, Level.ALL);
-            
-            logger.addHandler(logBuffer);
-
-            //logger.addHandler(fileTxt);
+            logger.addHandler(fileTxt);
         }
-	}
-	
-	/**
-	 * Flush the logging memory buffer to the log file. Typically not needed.
-	 */
-	public static void flushLog()
-	{
-		logBuffer.push();
 	}
 	
 	// Our custom formatter for logging output.

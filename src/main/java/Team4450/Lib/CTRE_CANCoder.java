@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
 {
-	private WPI_CANCoder		encoder;
+	private WPI_CANCoder	encoder;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
@@ -55,9 +55,8 @@ public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
 		config.absoluteSensorRange = AbsoluteSensorRange.Unsigned_0_to_360;
 		config.initializationStrategy = SensorInitializationStrategy.BootToZero;
 		config.sensorTimeBase = SensorTimeBase.Per100Ms_Legacy;
+
 		encoder.configAllSettings(config);
-		 
-		reset();
 	}
 	
 	/**
@@ -633,6 +632,8 @@ public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	 */
 	public void initializeSim()
 	{
+		Util.consoleLog();
+		
 		simCollection = encoder.getSimCollection();
 	}
 
@@ -652,7 +653,7 @@ public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Convert meters into encoder ticks. Gear ration applied. Requires
+	 * Convert meters into encoder ticks. Gear ratio applied. Requires
 	 * a non-zero wheel diameter set for the encoder.
 	 * @param meters Meters value.
 	 * @return Encoder ticks.
