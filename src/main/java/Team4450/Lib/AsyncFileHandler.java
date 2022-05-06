@@ -12,9 +12,9 @@ import java.util.logging.LogRecord;
 //  This class was found on the net.
 
 /**
- * Implements a threaded FileHandler class for logging. Queues log records
+ * Wraps FileHandler class to Implement multi-threaded logging. Queues log records
  * submitted by calling thread and writes them to disk file on a separate
- * thread.
+ * thread. Frees calling thread from the I/O overhead.
  */
 public class AsyncFileHandler extends FileHandler implements Runnable 
 {
@@ -22,21 +22,36 @@ public class AsyncFileHandler extends FileHandler implements Runnable
     private final				BlockingQueue<LogRecord> queue = new ArrayBlockingQueue<>(1024);
     private volatile Thread		worker;
 
+    /**
+     * See Java FileHandler class for parameter documentation.
+     */
     public AsyncFileHandler() throws IOException 
     {
         super();
     }
 
+    /**
+     * See Java FileHandler class for parameter documentation.
+     */
     public AsyncFileHandler(String pattern, int limit, int count) throws IOException 
     {
         super(pattern, limit, count);
     }
 
+    /**
+     * See Java FileHandler class for parameter documentation.
+     */
     public AsyncFileHandler(String pattern, int limit, int count, boolean append) throws IOException 
     {
         super(pattern, limit, count, append);
     }
 
+    /**
+     * Intercepts a log record written to the FileHandler and writes it
+     * to a memory queue instead of the parent FileHandler. Separate
+     * thread will write queued records to disk.
+     * @param record The log record to queue.
+     */
     @Override
     public void publish(LogRecord record) 
     {
@@ -69,12 +84,18 @@ public class AsyncFileHandler extends FileHandler implements Runnable
         } finally { if (interrupted) Thread.currentThread().interrupt(); }
     }
 
+    // If we can't queue a log record, forwards the record to the underlying
+    // FileHandler object.
     private boolean handleFullQueue(LogRecord r) 
     {
         super.publish(r);
         return true; //true if handled.
     }
 
+    /**
+     * Shutdown the logging thread and release resources.
+     * Will flush the queue to disk.
+     */
     @Override
     public void close() 
     {
@@ -93,11 +114,15 @@ public class AsyncFileHandler extends FileHandler implements Runnable
         } catch (InterruptedException reAssert) { Thread.currentThread().interrupt(); }
     }
 
+    // Dumps queue to disk.
     private void shutdownQueue() 
     {
         for (LogRecord r; (r = queue.poll()) != null;) super.publish(r);
     }
 
+    /**
+     * Runs the thread that writes queued log records to disk.
+     */
     @Override
     public void run() 
     {
@@ -111,6 +136,7 @@ public class AsyncFileHandler extends FileHandler implements Runnable
         }
     }
     
+    // See if we have started the worker thread and if not, start it.
     private Thread checkWorker() 
     {
         Thread t = worker;
@@ -120,6 +146,7 @@ public class AsyncFileHandler extends FileHandler implements Runnable
         return t;
     }
 
+    // Create and start a thread from the Java thread pool system.
     private synchronized Thread startWorker() 
     {
         if (worker == null) 
