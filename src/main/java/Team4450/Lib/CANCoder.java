@@ -24,7 +24,7 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * Wrapper for CTRE CANCoder.
  */
-public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
+public class CANCoder implements CounterBase, PIDSource, DoubleSupplier
 {
 	private WPI_CANCoder	encoder;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
@@ -39,10 +39,10 @@ public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	private static final double	TICKS_PER_REVOLUTION_D = 4096.0;
 	
 	/**
-	 * Create CTRE_CANCoder.
+	 * Create CANCoder.
 	 * @param id Device id of the CANCoder.
 	 */
-	public CTRE_CANCoder( int id )
+	public CANCoder( int id )
 	{
 		Util.consoleLog("%d", id);
 		
@@ -60,11 +60,11 @@ public class CTRE_CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
-	 * Create CTRE_CANCoder and set the wheel diameter of the wheel being monitored.
+	 * Create CANCoder and set the wheel diameter of the wheel being monitored.
 	 * @param id Device id of the CANCoder.
  	 * @param wheelDiameter Wheel diameter in inches.
 	 */
-	public CTRE_CANCoder( int id, double wheelDiameter )
+	public CANCoder( int id, double wheelDiameter )
 	{
 		this(id);
 
