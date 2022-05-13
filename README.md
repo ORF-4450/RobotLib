@@ -35,10 +35,12 @@ library and then generate a release on Github and Jitpack.
 Version 3.14.0
 
 *	Updated the logging system to queue log records in memory and write them to disk on a separate thread.
+*	Updated the logging system to log output to the RoboRio console.
 *	Added absolute position support to SRX/FX encoder classes.
-*	Added new wrapper class CTRE_CANCoder to support the CTRE CANCoder encoder.
+*	Added new wrapper class CANCoder to support the CTRE CANCoder encoder.
+*	Fixed problems with encoder sim support when rerunning auto programs without code reboot.
 
-R. Corn, May 6, 2022
+R. Corn, May 13, 2022
 
 Version 3.13.0
 

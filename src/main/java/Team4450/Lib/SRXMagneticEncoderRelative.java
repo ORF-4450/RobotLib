@@ -711,6 +711,30 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	}
 	
 	/**
+	 * Resets the encoder by calling reset() or reset(waitTime) but also resets
+	 * the internal simulation position of the encoder to zero. Used to rerun a
+	 * auto program under sim, restarting the sim position tracking at zero.
+	 * @param timeout Number of milliseconds to wait for reset completion, zero for no wait.
+	 * @return Zero if reset completes, non-zero if times out before reset complete.
+	 */
+	public int resetSim(int timeout)
+	{
+		Util.consoleLog();
+		
+		totalTicks = 0;
+		
+		setSimValues(0, 0);
+		
+		if (timeout == 0)
+		{
+			reset();
+			return 0;
+		}
+		else
+			return reset(timeout);
+	}
+	
+	/**
 	 * Convert meters into encoder ticks. Gear ratio applied.
 	 * @param meters Meters value.
 	 * @return Encoder ticks.

@@ -40,6 +40,8 @@ public class CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Create CANCoder.
+	 * Note: some functions will not work correctly if the wheel diameter
+	 * is not set.
 	 * @param id Device id of the CANCoder.
 	 */
 	public CANCoder( int id )
@@ -428,7 +430,7 @@ public class CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Set the period that the encoder updates the RR with encoder count value.
-	 * Defaults to ~20ms per CTRE doc. An update is called a frame. This method
+	 * Defaults to ~10ms per CTRE doc. An update is called a frame. This method
 	 * will take up to 10ms to complete.
 	 * @param period Frame period in milliseconds.
 	 */
@@ -653,6 +655,27 @@ public class CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	}
 	
 	/**
+	 * Resets the encoder by calling reset() or reset(waitTime) but also resets
+	 * the internal simulation position of the encoder to zero. Used to rerun a
+	 * auto program under sim, restarting the sim position tracking at zero.
+	 * @param timeout Number of milliseconds to wait for reset completion, zero for no wait.
+	 * @return Zero if reset completes, non-zero if times out before reset complete.
+	 */
+	public int resetSim(int timeout)
+	{
+		Util.consoleLog();
+		
+		setSimValues(0, 0);
+		
+		if (timeout == 0)
+		{
+			reset();
+			return 0;
+		}
+		else
+			return reset(timeout);
+	}
+	/**
 	 * Convert meters into encoder ticks. Gear ratio applied. Requires
 	 * a non-zero wheel diameter set for the encoder.
 	 * @param meters Meters value.
@@ -698,7 +721,7 @@ public class CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Return the absolute position of encoder in ticks. Default update period is
-	 * ~20ms. Change with setStatusFramePeriod().
+	 * ~10ms. Change with setStatusFramePeriod().
 	 * @return The encoder position, as 0-4096 clockwise.
 	 */
 	public int getAbsolutePosition()
@@ -714,7 +737,7 @@ public class CANCoder implements CounterBase, PIDSource, DoubleSupplier
 	
 	/**
 	 * Return the absolute position of encoder in degrees. Default update period is
-	 * ~240ms. Change with setStatusFrame21Period().
+	 * ~10ms. Change with setStatusFrame21Period().
 	 * @return The encoder position, as 0-360.0 clockwise.
 	 */
 	public double getAbsolutePositionDeg()

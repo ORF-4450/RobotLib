@@ -51,9 +51,11 @@ public class Util
 	 * logging should be done by calls to methods on this class (logger) instance or with the 
 	 * convenience methods elsewhere in this class (Util).
 	 */
-	public final static Logger logger = Logger.getGlobal();
+	public final static Logger 	logger = Logger.getGlobal();
 	
-	private static double timeMarker = 0;
+	private static double 		timeMarker = 0;
+	
+	private static boolean		captureConsole;
 	
 	// Private constructor means this class cannot be instantiated. All access is static.
 	
@@ -119,24 +121,33 @@ public class Util
             logger.setLevel(Level.ALL);
 
             // Note: console in this discussion is the RioLog.
-            // If we decide to redirect system.out to our log file, then following
-            // code will delete the default log handler for the console to prevent
-            // a recursive loop. We would only redirect system.out if we only want to
-            // log to the file (no Riolog). If we delete the console handler we can skip 
-            // setting the formatter...otherwise we set our formatter on the console logger.
+            // Our logging goes to a disk file and the console. By default it
+            // does not include messages written to System.out or System.err
+            // as we don't use those streams in our code. Those streams are
+            // how Java programs normally write to the console. Other software
+            // may write messages to those streams. You can include output
+            // written to System.out & err with the second constructor.
+            // Note: WPILib writes most of its messages using functions on the
+            // DriverStation object, which end up on the console, but they do
+            // not use System.out so that output is not captured by our logging.
+            // They write their messages through some other scheme that sends
+            // their messages to the console and the driver station. We can't
+            // capture those messages at this time.
             
             Logger rootLogger = Logger.getLogger("");
 
             Handler[] handlers = rootLogger.getHandlers();
             
-//            System.setErr(logPrintStream);
-//            System.setOut(logPrintStream);
+            if (captureConsole)
+            {
+            	System.setErr(logPrintStream);
+            	System.setOut(logPrintStream);
             
-//            if (handlers[0] instanceof ConsoleHandler) 
-//            {
-//                rootLogger.removeHandler(handlers[0]);
-//            }
-
+            	// Seemed we needed this when this code first written but not now. Works fine
+            	// without this delete of console handler. Keeping this for now...
+            	//if (handlers[0] instanceof ConsoleHandler) rootLogger.removeHandler(handlers[0]);
+            }
+            
             logFormatter = new LogFormatter();
 
             // Set our formatter on the console log handler.
@@ -170,8 +181,25 @@ public class Util
             
             logger.addHandler(fileTxt);
         }
-	}
-	
+        
+    	/**
+         *  Initializes our logging system.
+         *  Call before using any logging methods. Allows the robot
+         *  console (Riolog) to be captured into our trace file. If 
+         *  this is enabled, Riolog will show nothing.
+         *  @param logConsole True to capture the robot console to our
+         *  log file.
+         *  @throws IOException
+         */
+        static public void setup(boolean logConsole) throws IOException 
+        {
+        	captureConsole = logConsole;
+        	
+        	setup();
+        }
+    }
+ 
+    
 	// Our custom formatter for logging output.
 	
 	private static class LogFormatter extends Formatter 
