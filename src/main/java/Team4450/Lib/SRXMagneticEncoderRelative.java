@@ -10,7 +10,10 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
+//import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
@@ -19,7 +22,7 @@ import edu.wpi.first.wpilibj.Timer;
 /**
  * Wrapper for Talon SRX Magnetic Encoder used in relative (quadrature) mode.
  */
-public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier
+public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier, Sendable
 {
 	private WPI_TalonSRX	talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
@@ -827,5 +830,14 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		Util.checkRange(offset, 0, TICKS_PER_REVOLUTION);
 		
 		absoluteOffset = offset;
+	}
+
+	@Override
+	public void initSendable( SendableBuilder builder )
+	{
+		builder.setSmartDashboardType("SRXEncoder");
+    	builder.addBooleanProperty(".controllable", () -> false, null);
+	    builder.addDoubleProperty("Position", this::get, null);
+	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
 	}
 }

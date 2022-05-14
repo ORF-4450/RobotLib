@@ -8,10 +8,10 @@ import com.kauailabs.navx.frc.AHRS;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
-import Team4450.Lib.Wpilib.Sendable;
+//import Team4450.Lib.Wpilib.Sendable;
 
 import edu.wpi.first.wpilibj.SPI;
-//import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
 //import edu.wpi.first.wpilibj.PIDSource;
@@ -101,7 +101,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		
 		//ahrs.enableBoardlevelYawReset(true);
 		
-		registerSendable("NavX");
+		//registerSendable("NavX");
 	}
 	
 	/**
@@ -691,6 +691,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	public void initSendable( SendableBuilder builder )
 	{
 		builder.setSmartDashboardType("Gyro");
+    	builder.addBooleanProperty(".controllable", () -> false, null);
 	    builder.addDoubleProperty("Value", this::getHeadingInt, null);
 	}
 

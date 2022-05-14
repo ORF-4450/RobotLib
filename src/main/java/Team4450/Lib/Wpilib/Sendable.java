@@ -7,6 +7,7 @@ import edu.wpi.first.util.sendable.SendableRegistry;
  * if you used the default methods of Sendable. Uses SendableRegistry as
  * directed by Wpilib authors to implement the default methods of Sendable.
  */
+@Deprecated(since = "3.14.0", forRemoval = true)
 public interface Sendable extends edu.wpi.first.util.sendable.Sendable
 {
 	/**

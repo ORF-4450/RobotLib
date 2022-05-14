@@ -1,8 +1,10 @@
 package Team4450.Lib;
 
+import edu.wpi.first.util.sendable.Sendable;
 //import edu.wpi.first.wpilibj.Sendable;
-import Team4450.Lib.Wpilib.Sendable;
+//import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.hal.util.BoundaryException;
 
 /**
@@ -37,7 +39,7 @@ public class SynchronousPID implements Sendable
 
     public SynchronousPID() 
     {
-    	registerSendable("SynchronousPID");
+    	//registerSendable("SynchronousPID");
     }
 
     /**
@@ -59,7 +61,8 @@ public class SynchronousPID implements Sendable
 
         instances++;
         
-    	registerSendable("SynchronousPID", instances);
+    	//registerSendable("SynchronousPID", instances);
+        SendableRegistry.add(this, "SynchronousPID", instances);
     }
 
     /**
@@ -83,7 +86,8 @@ public class SynchronousPID implements Sendable
 
         instances++;
         
-    	registerSendable("SynchronousPID", instances);
+    	//registerSendable("SynchronousPID", instances);
+        SendableRegistry.add(this, "SynchronousPID", instances);
     }
     
     /**
@@ -91,7 +95,8 @@ public class SynchronousPID implements Sendable
      */
     public void close()
     {
-    	removeSendable();
+    	//removeSendable();
+    	SendableRegistry.remove(this);
     }
 
     /**

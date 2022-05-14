@@ -2,6 +2,8 @@
 package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -21,7 +23,7 @@ import edu.wpi.first.wpilibj.Solenoid;
  * and the wiring to the corresponding sides of the valve to the PCM ports.
  */
 
-public class ValveDA
+public class ValveDA implements Sendable
 {
 	private final Solenoid	valveOpenSide, valveCloseSide;
 	private boolean			valveOpen = false;
@@ -165,5 +167,13 @@ public class ValveDA
 	public boolean isA()
 	{
 		return valveOpen;
+	}
+	
+	@Override
+	public void initSendable( SendableBuilder builder )
+	{
+		builder.setSmartDashboardType("ValveDA");
+    	builder.addBooleanProperty(".controllable", () -> false, null);
+	    builder.addBooleanProperty("Open(A)", this::isOpen, null);
 	}
 }

@@ -1,9 +1,11 @@
 
 package Team4450.Lib;
 
-//import edu.wpi.first.wpilibj.Sendable;
-import Team4450.Lib.Wpilib.Sendable;
+
+import edu.wpi.first.util.sendable.Sendable;
+//import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 
 import java.net.URL;
@@ -23,7 +25,6 @@ public class SendableVersion implements Sendable
 	// Singleton class single instance.
     public static final SendableVersion INSTANCE = new SendableVersion();
 
-    private String name;
     private String branch;
     private String commit;
     private String programVersion;
@@ -44,7 +45,7 @@ public class SendableVersion implements Sendable
         time = "unknown";
         user = "unknown";
 		
-		registerSendable("SendableVersion");
+		//registerSendable("SendableVersion");
     }
 
     /**
@@ -104,6 +105,7 @@ public class SendableVersion implements Sendable
     @Override
     public void initSendable(SendableBuilder builder)
     {
+    	builder.addBooleanProperty(".controllable", () -> false, null);
         builder.addStringProperty("Branch: ", () -> branch, null);
         builder.addStringProperty("Commit: ", () -> commit, null);
         builder.addStringProperty("Program: ", () -> programVersion, null);
@@ -113,7 +115,15 @@ public class SendableVersion implements Sendable
         builder.addStringProperty("User: ", () -> user, null);
         builder.addDoubleProperty("UpdateCount", this::getUpdateCount, null);
     }
-    
+
+	/**
+	 * Remove this Sendable from the SendableRegistry.
+	 */
+	public void removeSendable()
+	{
+		SendableRegistry.remove(this);
+	}
+	
     /**
      * Returns program version.
      * @return The program version.
