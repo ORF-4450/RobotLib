@@ -32,13 +32,15 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
-Version 3.14.0
+Version 4.0.0
 
 *	Updated the logging system to queue log records in memory and write them to disk on a separate thread.
 *	Updated the logging system to log output to the RoboRio console.
 *	Added absolute position support to SRX/FX encoder classes.
 *	Added new wrapper class CANCoder to support the CTRE CANCoder encoder.
 *	Fixed problems with encoder sim support when rerunning auto programs without code reboot.
+*	Add Sendable support to Encoder and Valve classes.
+*	Remove use of our wrapper for WPILib Sendable.
 
 R. Corn, May 13, 2022
 
