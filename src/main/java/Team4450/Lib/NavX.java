@@ -31,7 +31,12 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class NavX implements Sendable, PIDSource, DoubleSupplier
 {
-	private static NavX		navx;
+	/**
+	 * Static reference to the internal Navx instance created by
+	 * getInstance() calls on this class. Must call a getInstance() before using.
+	 */ 
+	public static NavX		INSTANCE;
+	
 	private AHRS			ahrs;
 	private byte			navxUpdateRate = 50;		// 50hz or 20ms.
 	private double 			totalAngle = 0, targetHeading = 0;
@@ -114,9 +119,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		Util.consoleLog();
 		
-		if (navx == null) navx = new NavX(PortType.SPI);
+		if (INSTANCE == null) INSTANCE = new NavX(PortType.SPI);
 		
-		return navx;
+		return INSTANCE;
 	}
 	
 	/**
@@ -129,9 +134,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		Util.consoleLog();
 		
-		if (navx == null) navx = new NavX(portType);
+		if (INSTANCE == null) INSTANCE = new NavX(portType);
 		
-		return navx;
+		return INSTANCE;
 	}
 	
 	/**
@@ -285,13 +290,13 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		switch (axis)
 		{
 			case X:
-				return navx.getAHRS().getRawGyroX();
+				return INSTANCE.getAHRS().getRawGyroX();
 				
 			case Y:
-				return navx.getAHRS().getRawGyroY();
+				return INSTANCE.getAHRS().getRawGyroY();
 				
 			case Z:
-				return navx.getAHRS().getRawGyroZ();
+				return INSTANCE.getAHRS().getRawGyroZ();
 		}
 		
 		return 0;
@@ -692,7 +697,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		builder.setSmartDashboardType("Gyro");
     	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addDoubleProperty("Value", this::getHeadingInt, null);
+	    builder.addDoubleProperty("Heading", this::getHeadingInt, null);
 	}
 
 	/**

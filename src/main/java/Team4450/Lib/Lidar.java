@@ -1,5 +1,9 @@
 package Team4450.Lib;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
+
 // Thanks to Barlow Robotics and GirlsOfSteel Robotics for this code
 
 import edu.wpi.first.wpilibj.Counter;
@@ -9,7 +13,7 @@ import edu.wpi.first.wpilibj.DigitalSource;
  * Wrapper class for LIDAR V3 distance measuring unit. Connected to RoboRio
  * DIO port wired for PWM.
  */
-public class Lidar
+public class Lidar implements Sendable
 {
 	private Counter	counter;
 	private int 	printedWarningCount = 5;
@@ -26,6 +30,8 @@ public class Lidar
         // Configure for measuring rising to falling pulses
         counter.setSemiPeriodMode(true);
         counter.reset();
+        
+        SendableRegistry.addLW(this, "Lidar", source.getChannel());
 	}
 
     /**
@@ -41,10 +47,12 @@ public class Lidar
     	 * This happens when there is no LIDAR plugged in.
     	 */
     	
-    	if (counter.get() < 1) 
+    	if (counter.get() < 1 & printedWarningCount > 0) 
     	{
    			Util.consoleLog("Lidar: waiting for distance measurement");
     		
+   			printedWarningCount--;
+   			
     		return 0;
     	}
     	
@@ -75,7 +83,7 @@ public class Lidar
     	{
     		return in;
     	} else {
-    		return Math.floor(in*10)/10;
+    		return Math.floor(in * 10) / 10;
     	}
     }
    
@@ -87,5 +95,13 @@ public class Lidar
     public void setOffset(int offset)
     {
     	this.offset = offset;
+    }
+	
+    @Override
+    public void initSendable( SendableBuilder builder )
+    {
+    	builder.setSmartDashboardType("Lidar");
+    	builder.addBooleanProperty(".controllable", () -> false, null);
+    	builder.addDoubleProperty("Distance(in)", () -> getDistanceIn(false), null);
     }
 }

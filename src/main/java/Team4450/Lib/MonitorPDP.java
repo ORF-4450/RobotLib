@@ -1,6 +1,9 @@
 
 package Team4450.Lib;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -12,14 +15,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * program is terminated from the RoboRio.
  */
 
-public class MonitorPDP extends Thread
+public class MonitorPDP extends Thread implements Sendable
 {
   private final double		  		LOW_BATTERY = 11, MAX_CURRENT = 180;
-  private static MonitorPDP			monitorPDP;
   private PowerDistribution			pdp;
   private double					sampleInterval = 1.0;	// Seconds
   private boolean					alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
   private boolean					ports[] = new boolean[16];
+  
+  /**
+   * Static reference to the internal MonitorPDP instance created by
+   * getInstance() calls on this class. Must call a getInstance() before using.
+   */
+  public static MonitorPDP	 		INSTANCE;
   
   // Create single instance of this class and return that single instance to any callers.
   // This is the singleton class model. You don't use new, you use getInstance.
@@ -33,9 +41,9 @@ public class MonitorPDP extends Thread
   {
 	  Util.consoleLog();
     	
-  	  if (monitorPDP == null) monitorPDP = new MonitorPDP();
+  	  if (INSTANCE == null) INSTANCE = new MonitorPDP();
         
-  	  return monitorPDP;
+  	  return INSTANCE;
   }
   
   /**
@@ -48,9 +56,9 @@ public class MonitorPDP extends Thread
   {
   	  Util.consoleLog();
       	
-   	  if (monitorPDP == null) monitorPDP = new MonitorPDP(pdp);
+   	  if (INSTANCE == null) INSTANCE = new MonitorPDP(pdp);
           
-   	  return monitorPDP;
+   	  return INSTANCE;
   }
 
   // Private constructors means callers must use getInstance.
@@ -60,6 +68,8 @@ public class MonitorPDP extends Thread
 	  Util.consoleLog();
 	  pdp = new PowerDistribution();
 	  this.setName("MonitorPDP");
+      
+	  SendableRegistry.addLW(this, "MonitorPDP");
   }
 
   private MonitorPDP(PowerDistribution pdp)
@@ -67,6 +77,8 @@ public class MonitorPDP extends Thread
 	  Util.consoleLog();
 	  this.pdp = pdp;
 	  this.setName("MonitorPDP");
+      
+	  SendableRegistry.addLW(this, "MonitorPDP");
   }
  
   /**
@@ -135,7 +147,7 @@ public class MonitorPDP extends Thread
    */
   public void run()
   {        
-	  boolean alarmFlash = false, alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
+	  boolean alarmFlash = false, alarmInProgress = false;
 	  boolean alarmFlash2 = false;
 
 	  try
@@ -146,7 +158,7 @@ public class MonitorPDP extends Thread
         
 		  while (true)
           {
-			  alarmInProgress = lowBatteryAlarm = overloadAlarm = false;
+			  alarmInProgress = false;
 			  
 			  // Check PDP input voltage.
 			  
@@ -156,7 +168,8 @@ public class MonitorPDP extends Thread
 			  
 				  alarmInProgress = true;
 				  lowBatteryAlarm = true;
-			  }
+			  } else
+				  lowBatteryAlarm = false;
 			  
 			  // Check PDP total current flow.
 			  
@@ -166,7 +179,8 @@ public class MonitorPDP extends Thread
 			  
 				  alarmInProgress = true;
 				  overloadAlarm = true;
-			  }
+			  } else
+				  overloadAlarm = false;
 			  
 			  // check the PDP output port current levels for enabled ports.
 			  
@@ -185,7 +199,8 @@ public class MonitorPDP extends Thread
 			  
 				  alarmInProgress = true;
 				  overloadAlarm = true;
-			  }
+			  } else
+				  overloadAlarm = false;
 				  
 			  // flash DS leds for alarms.
 			  
@@ -221,5 +236,17 @@ public class MonitorPDP extends Thread
           }
 	  }
 	  catch (Throwable e) {Util.logException(e);}
+  }
+  
+	
+  @Override
+  public void initSendable( SendableBuilder builder )
+  {
+	  builder.setSmartDashboardType("MonitorDistancePDP");
+  	  builder.addBooleanProperty(".controllable", () -> false, null);
+  	  builder.addDoubleProperty("Voltage", () -> pdp.getVoltage(), null);
+  	  builder.addDoubleProperty("TotalCurrent", () -> pdp.getTotalCurrent(), null);
+  	  builder.addBooleanProperty("LowBatteryAlarm", () -> lowBatteryAlarm, null);
+  	  builder.addBooleanProperty("BrownOutAlarm", () -> overloadAlarm, null);
   }
 }

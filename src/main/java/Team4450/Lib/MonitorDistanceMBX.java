@@ -1,6 +1,9 @@
 
 package Team4450.Lib;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -13,15 +16,20 @@ import edu.wpi.first.wpilibj.Timer;
  * Uses MaxBotix ultrasonic sensor.
  */
 
-public class MonitorDistanceMBX extends Thread
+public class MonitorDistanceMBX extends Thread implements Sendable
 {
     RobotBase				robot;
-    private static 			MonitorDistanceMBX	monitorDistance;
     private int				port = 1;
     private AnalogInput 	ultra;
 	private double			rangeInches;
 	private double			rangeFeet;
 	private double			delay = 1.0;	// Seconds.
+	  
+	/**
+	 * Static reference to the internal MonitorDistanceMBX instance created by
+	 * getInstance() calls on this class. Must call a getInstance() before using.
+	 */ 
+	public static MonitorDistanceMBX	INSTANCE;
 
     // Create single instance of this class and return that single instance to any callers.
     // This is the singleton class model. You don't use new, you use getInstance.
@@ -37,9 +45,9 @@ public class MonitorDistanceMBX extends Thread
     {
     	Util.consoleLog();
       	
-    	if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot);
+    	if (INSTANCE == null) INSTANCE = new MonitorDistanceMBX(robot);
           
-    	return monitorDistance;
+    	return INSTANCE;
     }
     
     /**
@@ -53,9 +61,9 @@ public class MonitorDistanceMBX extends Thread
     {
     	Util.consoleLog();
         	
-        if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot, port);
+        if (INSTANCE == null) INSTANCE = new MonitorDistanceMBX(robot, port);
             
-        return monitorDistance;
+        return INSTANCE;
     }
     
     /**
@@ -69,9 +77,9 @@ public class MonitorDistanceMBX extends Thread
     {
     	Util.consoleLog();
         	
-        if (monitorDistance == null) monitorDistance = new MonitorDistanceMBX(robot, ultraSonic);
+        if (INSTANCE == null) INSTANCE = new MonitorDistanceMBX(robot, ultraSonic);
             
-        return monitorDistance;
+        return INSTANCE;
     }
 
     private MonitorDistanceMBX(RobotBase robot)
@@ -81,6 +89,8 @@ public class MonitorDistanceMBX extends Thread
         this.setName("MonitorDistanceMBX");
 
         ultra = new AnalogInput(port);
+        
+  	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
     }
 
     private MonitorDistanceMBX(RobotBase robot, int port)
@@ -89,8 +99,10 @@ public class MonitorDistanceMBX extends Thread
         this.robot = robot;
         this.port = port;
         this.setName("MonitorDistanceMBX");
-    
+        
         ultra = new AnalogInput(port);
+        
+  	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
 	}
 
     private MonitorDistanceMBX(RobotBase robot, AnalogInput ultraSonic)
@@ -98,8 +110,10 @@ public class MonitorDistanceMBX extends Thread
 		Util.consoleLog("port=%d", ultraSonic.getChannel());
         this.robot = robot;
         this.setName("MonitorDistanceMBX");
-    
+        
         ultra = ultraSonic;
+        
+  	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
 	}
     
     /**
@@ -164,4 +178,12 @@ public class MonitorDistanceMBX extends Thread
 		}
 		catch (Throwable e) {Util.logException(e);}
 	}
+	
+    @Override
+    public void initSendable( SendableBuilder builder )
+    {
+    	builder.setSmartDashboardType("MonitorDistanceMBX");
+    	builder.addBooleanProperty(".controllable", () -> false, null);
+    	builder.addDoubleProperty("Range(in)", this::getRangeInches, null);
+    }
 }

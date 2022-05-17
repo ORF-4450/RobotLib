@@ -1,5 +1,8 @@
 package Team4450.Lib;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.util.Color;
 
@@ -11,9 +14,15 @@ import com.revrobotics.ColorSensorV3.RawColor;
 /**
  * Wrapper class for REV Color Sensor V3.
  */
-public class RevColorSensor
+public class RevColorSensor implements Sendable
 {
 	/**
+	 * Static reference to the internal RevColorSensor instance created by
+	 * getInstance() calls on this class. Must call a getInstance() before using.
+	 */ 
+	public static RevColorSensor INSTANCE;
+
+    /**
 	 * Change the I2C port below to match the connection of your color sensor
 	 */
 	private I2C.Port	i2cPort = I2C.Port.kOnboard;
@@ -33,11 +42,6 @@ public class RevColorSensor
 	{
 	}
     
-	private static class SingletonHolder 
-	{
-        public static final RevColorSensor INSTANCE = new RevColorSensor();
-    }
-
 	/**
 	 * Returns reference to global single instance of this class. You can also
 	 * reference the global instance with: RevColorSensor.INSTANCE
@@ -45,7 +49,11 @@ public class RevColorSensor
 	*/
     public static RevColorSensor getInstance()
     {
-        return SingletonHolder.INSTANCE;
+    	if (INSTANCE == null) INSTANCE = new RevColorSensor();
+        
+  	  	SendableRegistry.addLW(INSTANCE, "RevColorSensor");
+    	
+        return INSTANCE;
     }
     
     /**
@@ -59,7 +67,7 @@ public class RevColorSensor
     }
     
     /**
-     * The method GetColor() returns a normalized color value from the sensor and can be
+     * The method getColor() returns a normalized color value from the sensor and can be
      * useful if outputting the color to an RGB LED or similar. To
      * read the raw color, use GetRawColor().
      * 
@@ -196,5 +204,83 @@ public class RevColorSensor
     public void resetColorMatcher()
     {
     	colorMatcher = new ColorMatch();
+    }
+    
+    /**
+     * Return a string with the RGB values for the specified Color.
+     * @param color The Color to format.
+     * @return The R,G,B values as a string.
+     */
+    public String getRGB(Color color)
+    {
+    	return String.format("%.0f,%.0f,%.0f", color.red * 255.0, color.green * 255.0, color.blue * 255.0);
+    }
+    
+    /**
+     * Return a string with the specified RGB values.
+     * @param r Red value 0-255.
+     * @param g Green value 0-255.
+     * @param b Blue value 0-255.
+     * @return RGB values as a string.
+     */
+    public String getRGB(int r, int g, int b)
+    {
+    	return String.format("%d,%d,%d", r, g, b);
+    }
+        
+    /**
+     * Same as getRGB() using the current sensor Color.
+     */
+    public String getRGB()
+    {
+    	Color color = getColor();
+    	return getRGB(color);
+    }
+    
+    /**
+     * Get the name of the color specified by the Color object.
+     * @param color Color object to name.
+     * @return The name of the color.
+     */
+    public String getColorName(Color color)
+    {
+    	return ColorUtil.getColorNameFromRgb((int)(color.red * 255.0), (int)(color.green * 255.0), (int)(color.blue * 255.0));
+    }
+    
+    /**
+     * Get the name of the color specified by the RGB values.
+     * @param r Red value 0-255.
+     * @param g Green value 0-255.
+     * @param b Blue value 0-255.
+     * @return The name of the color.
+     */
+    public String getColorName(int r, int g, int b)
+    {
+    	return ColorUtil.getColorNameFromRgb(r, g, b);    	
+    }
+    
+    /**
+     * Get the name of the current sensor color. 
+     * @return The name of the color.
+     */
+    public String getColorName()
+    {
+    	Color color = getColor();
+    	return getColorName(color);
+    	//return getColorName(255, 255, 5);
+    }
+	
+    @Override
+    public void initSendable( SendableBuilder builder )
+    {
+    	builder.setSmartDashboardType("RevColorSensor");
+    	builder.addBooleanProperty(".controllable", () -> false, null);
+    	builder.addBooleanProperty("Connected", () -> colorSensor.isConnected(), null);
+    	builder.addStringProperty("RGB", () -> getRGB(), null);
+    	builder.addStringProperty("Color", () -> getColorName(), null);
+    	builder.addDoubleProperty("Proximity", () -> getProximity(), null);
+    	builder.addDoubleProperty("R", this::getRed, null);
+    	builder.addDoubleProperty("G", this::getGreen, null);
+    	builder.addDoubleProperty("B", this::getBlue, null);
     }
 }

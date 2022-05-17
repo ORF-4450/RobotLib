@@ -3,6 +3,9 @@ package Team4450.Lib;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.Ultrasonic;
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.RobotBase;
 
 /**
@@ -13,16 +16,21 @@ import edu.wpi.first.wpilibj.RobotBase;
  * Uses old style ultrasonic sensor.
  */
 
-public class MonitorDistance extends Thread
+public class MonitorDistance extends Thread implements Sendable
 {
-    RobotBase 		robot;
+    RobotBase 			robot;
     private int			port;
     private Ultrasonic	ultra;
     private double		delay = 1.0;	// seconds.
-    private static 		MonitorDistance	monitorDistance;
 
 	private double	rangeInches;
 	private double	rangeFeet;
+	  
+	/**
+	 * Static reference to the internal MonitorDistance instance created by
+	 * getInstance() calls on this class. Must call a getInstance() before using.
+	 */
+	public static MonitorDistance	INSTANCE;
 
     // Create single instance of this class and return that single instance to any callers.
     // This is the singleton class model. You don't use new, you use getInstance.
@@ -39,9 +47,9 @@ public class MonitorDistance extends Thread
     {
     	 Util.consoleLog();
         	
-         if (monitorDistance == null) monitorDistance = new MonitorDistance(robot, 0);
+         if (INSTANCE == null) INSTANCE = new MonitorDistance(robot, 0);
             
-         return monitorDistance;
+         return INSTANCE;
     }
       
     /**
@@ -56,9 +64,9 @@ public class MonitorDistance extends Thread
     {
     	Util.consoleLog();
       	
-    	if (monitorDistance == null) monitorDistance = new MonitorDistance(robot, port);
+    	if (INSTANCE == null) INSTANCE = new MonitorDistance(robot, port);
           
-    	return monitorDistance;
+    	return INSTANCE;
     }
     
     /**
@@ -72,9 +80,9 @@ public class MonitorDistance extends Thread
     {
     	Util.consoleLog();
     	
-    	if (monitorDistance == null) monitorDistance = new MonitorDistance(robot, ultraSonic);
+    	if (INSTANCE == null) INSTANCE = new MonitorDistance(robot, ultraSonic);
         
-    	return monitorDistance;
+    	return INSTANCE;
     }
     
 	private MonitorDistance(RobotBase robot, int port)
@@ -86,6 +94,8 @@ public class MonitorDistance extends Thread
         this.setName("MonitorDistance");
 
         ultra = new Ultrasonic(port, port + 1);
+        
+  	  	SendableRegistry.addLW(this, "MonitorDistance", port);
     }
     
 	private MonitorDistance(RobotBase robot, Ultrasonic ultraSonic)
@@ -94,8 +104,10 @@ public class MonitorDistance extends Thread
 		
         this.robot = robot;
         this.setName("MonitorDistance");
-
+        
         ultra = ultraSonic;
+        
+  	  	SendableRegistry.addLW(this, "MonitorDistance", ultra.getEchoChannel());
     }
     
     /**
@@ -159,4 +171,12 @@ public class MonitorDistance extends Thread
 		}
 		catch (Throwable e) {Util.logException(e);}
 	}
+	
+    @Override
+    public void initSendable( SendableBuilder builder )
+    {
+    	builder.setSmartDashboardType("MonitorDistance");
+    	builder.addBooleanProperty(".controllable", () -> false, null);
+    	builder.addDoubleProperty("Range(in)", this::getRangeInches, null);
+    }
 }

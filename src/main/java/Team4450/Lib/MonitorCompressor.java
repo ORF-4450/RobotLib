@@ -1,6 +1,9 @@
 
 package Team4450.Lib;
 
+import edu.wpi.first.util.sendable.Sendable;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -19,20 +22,25 @@ import edu.wpi.first.wpilibj.Compressor;
  * Hub will be added later.
  */
 
-public class MonitorCompressor extends Thread
+public class MonitorCompressor extends Thread implements Sendable
 {
   private final Compressor			compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-  private static MonitorCompressor	monitorCompressor;
   private AnalogInput				pressureSensor;
   private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
-  private boolean					lowPressureAlarm = false, ledState = false;
+  private boolean					lowPressureAlarm = false, ledState = false, compressorState;
   
+  /**
+   * Static reference to the internal MonitorCompressor instance created by
+   * getInstance() calls on this class. Must call a getInstance() before using.
+   */
+  public static MonitorCompressor	INSTANCE;
+
   // Create single instance of this class and return that single instance to any callers.
   // This is the singleton class model. You don't use new, you use getInstance.
     
   /**
    * Get a reference to global MonitorCompressor Thread object. Only monitors compressor on/off
-   * and sets DS LED named Compressor accordingly.
+   * and sets DS LED named Compressor accordingly. Assumes sensor plugged into analog port 0.
    * @return Reference to global MonitorCompressor object.
    */
   
@@ -40,9 +48,9 @@ public class MonitorCompressor extends Thread
   {
 	 Util.consoleLog();
     	
-     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(-1);
+     if (INSTANCE == null) INSTANCE = new MonitorCompressor(0);
         
-     return monitorCompressor;
+     return INSTANCE;
   }
   
   /**
@@ -58,9 +66,9 @@ public class MonitorCompressor extends Thread
   {
   	 Util.consoleLog();
       	
-     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(pressureSensorPort);
-          
-     return monitorCompressor;
+     if (INSTANCE == null) INSTANCE = new MonitorCompressor(pressureSensorPort);
+
+     return INSTANCE;
   }
   
   /**
@@ -76,19 +84,22 @@ public class MonitorCompressor extends Thread
   {
   	 Util.consoleLog();
       	
-     if (monitorCompressor == null) monitorCompressor = new MonitorCompressor(pressureSensor);
+     if (INSTANCE == null) INSTANCE = new MonitorCompressor(pressureSensor);
           
-     return monitorCompressor;
+     return INSTANCE;
   }
 
   private MonitorCompressor(int pressureSensorPort)
   {
 	  Util.consoleLog("port=%d", pressureSensorPort);
+	  
 	  this.setName("MonitorCompressor");
 
 	  SmartDashboard.putBoolean("LowPressure", false);
 	  
 	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
+	  
+	  SendableRegistry.addLW(this, "MonitorCompressor", pressureSensorPort);
   }
 
   private MonitorCompressor(AnalogInput pressureSensor)
@@ -100,6 +111,8 @@ public class MonitorCompressor extends Thread
 	  SmartDashboard.putBoolean("LowPressure", false);
 	  
 	  this.pressureSensor = pressureSensor;	  
+      
+	  SendableRegistry.addLW(this, "MonitorCompressor", pressureSensor.getChannel());
   }
     
   /**
@@ -173,7 +186,7 @@ public class MonitorCompressor extends Thread
    */
   public void run()
   {      
-	boolean	saveState = false, compressorState;
+	boolean	saveState = false;
 	double	pressure;
 	
 	try
@@ -225,5 +238,15 @@ public class MonitorCompressor extends Thread
 		}
 	}
 	catch (Throwable e) {Util.logException(e);}
+  }
+	
+  @Override
+  public void initSendable( SendableBuilder builder )
+  {
+	builder.setSmartDashboardType("MonitorCompressor");
+  	builder.addBooleanProperty(".controllable", () -> false, null);
+    builder.addDoubleProperty("PSI", this::getPressure, null);
+    builder.addBooleanProperty("On", () -> compressorState, null);
+    builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
   }
 }

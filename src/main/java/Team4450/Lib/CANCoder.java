@@ -13,6 +13,7 @@ import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 
+import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 //import Team4450.Lib.Wpilib.Sendable;
@@ -782,10 +783,13 @@ public class CANCoder implements CounterBase, PIDSource, DoubleSupplier, Sendabl
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
-		builder.setSmartDashboardType("CANCoder");
+		builder.setSmartDashboardType("Encoder");
     	builder.addBooleanProperty(".controllable", () -> false, null);
 	    builder.addDoubleProperty("Position", this::get, null);
 	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
+	    builder.addDoubleProperty("RPM", this::getRPM, null);
+	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
+	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
+	    builder.addDoubleProperty("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
 	}
 }
-

@@ -835,9 +835,13 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
-		builder.setSmartDashboardType("SRXEncoder");
+		builder.setSmartDashboardType("Encoder");
     	builder.addBooleanProperty(".controllable", () -> false, null);
 	    builder.addDoubleProperty("Position", this::get, null);
 	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
+	    builder.addDoubleProperty("RPM", this::getRPM, null);
+	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
+	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
+	    builder.addDoubleProperty("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
 	}
 }
