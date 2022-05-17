@@ -39,8 +39,10 @@ Version 4.0.0
 *	Added absolute position support to SRX/FX encoder classes.
 *	Added new wrapper class CANCoder to support the CTRE CANCoder encoder.
 *	Fixed problems with encoder sim support when rerunning auto programs without code reboot.
-*	Add Sendable support to Encoder and Valve classes.
+*	Add Sendable support to all appropriate classes.
 *	Remove use of our wrapper for WPILib Sendable.
+*	Clean up how the singleton classes are implemented adding the INSTANCE reference variable.
+*	Add ColorUtil class.
 
 R. Corn, May 13, 2022
 

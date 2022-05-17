@@ -30,7 +30,10 @@ public class MonitorPDP extends Thread implements Sendable
   public static MonitorPDP	 		INSTANCE;
   
   // Create single instance of this class and return that single instance to any callers.
-  // This is the singleton class model. You don't use new, you use getInstance.
+  // This is the singleton class model. You don't use new, you use getInstance. After that
+  // you can use the returned instance reference in a variable in your code or use the
+  // INSTANCE variable above to access the members of this class. Assumes robot will have
+  // only one PDP.
     
   /**
    * Get a reference to global MonitorPDP Thread object.
@@ -242,7 +245,7 @@ public class MonitorPDP extends Thread implements Sendable
   @Override
   public void initSendable( SendableBuilder builder )
   {
-	  builder.setSmartDashboardType("MonitorDistancePDP");
+	  builder.setSmartDashboardType("MonitorPDP");
   	  builder.addBooleanProperty(".controllable", () -> false, null);
   	  builder.addDoubleProperty("Voltage", () -> pdp.getVoltage(), null);
   	  builder.addDoubleProperty("TotalCurrent", () -> pdp.getTotalCurrent(), null);

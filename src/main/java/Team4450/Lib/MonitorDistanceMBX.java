@@ -32,8 +32,16 @@ public class MonitorDistanceMBX extends Thread implements Sendable
 	public static MonitorDistanceMBX	INSTANCE;
 
     // Create single instance of this class and return that single instance to any callers.
-    // This is the singleton class model. You don't use new, you use getInstance.
+    // This is the singleton class model. You don't use new, you use getInstance. After that
+	// you can use the returned instance reference in a variable in your code or use the
+	// INSTANCE variable above to access the members of this class.
       
+	// note: Creating this class with the singleton style means there can only be one
+	// instance of this class and so one distance sensor. This technically is incorrect
+	// as you could have more than one sensor. In our world, we have only ever used one
+	// distance sensor, but, that may not be the case in the future requiring this class
+	// be converted back to multi-instance class constructors. (05.17.22)
+	
     /**
      * Get a reference to global MonitorDistanceMBX Thread object. Defaults to
      * Analog port 1 for ultrasonic sensor.
@@ -81,6 +89,9 @@ public class MonitorDistanceMBX extends Thread implements Sendable
             
         return INSTANCE;
     }
+    
+
+    // Private constructor forces use of getInstance().
 
     private MonitorDistanceMBX(RobotBase robot)
 	{
@@ -91,6 +102,7 @@ public class MonitorDistanceMBX extends Thread implements Sendable
         ultra = new AnalogInput(port);
         
   	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
+  	  	SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
     }
 
     private MonitorDistanceMBX(RobotBase robot, int port)
@@ -103,6 +115,7 @@ public class MonitorDistanceMBX extends Thread implements Sendable
         ultra = new AnalogInput(port);
         
   	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
+  	  	SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
 	}
 
     private MonitorDistanceMBX(RobotBase robot, AnalogInput ultraSonic)

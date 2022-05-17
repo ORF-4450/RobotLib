@@ -23,8 +23,8 @@ public class MonitorDistance extends Thread implements Sendable
     private Ultrasonic	ultra;
     private double		delay = 1.0;	// seconds.
 
-	private double	rangeInches;
-	private double	rangeFeet;
+	private double		rangeInches;
+	private double		rangeFeet;
 	  
 	/**
 	 * Static reference to the internal MonitorDistance instance created by
@@ -33,8 +33,16 @@ public class MonitorDistance extends Thread implements Sendable
 	public static MonitorDistance	INSTANCE;
 
     // Create single instance of this class and return that single instance to any callers.
-    // This is the singleton class model. You don't use new, you use getInstance.
+    // This is the singleton class model. You don't use new, you use getInstance. After that
+	// you can use the returned instance reference in a variable in your code or use the
+	// INSTANCE variable above to access the members of this class.
     
+	// note: Creating this class with the singleton style means there can only be one
+	// instance of this class and so one distance sensor. This technically is incorrect
+	// as you could have more than one sensor. In our world, we have only ever used one
+	// distance sensor, but, that may not be the case in the future requiring this class
+	// be converted back to multi-instance class constructors. (05.17.22)
+	
     /**
      * Get a reference to global MonitorDistance Thread object.
      * @param robot RobotBase instance calling this function (use 'this').
@@ -85,6 +93,8 @@ public class MonitorDistance extends Thread implements Sendable
     	return INSTANCE;
     }
     
+    // Private constructors force use of getInstance().
+    
 	private MonitorDistance(RobotBase robot, int port)
 	{
 		Util.consoleLog("ports=%d,%d", port, port + 1);
@@ -96,6 +106,7 @@ public class MonitorDistance extends Thread implements Sendable
         ultra = new Ultrasonic(port, port + 1);
         
   	  	SendableRegistry.addLW(this, "MonitorDistance", port);
+  	  	SendableRegistry.setName(ultra, "MonitorDistanceUltraSonic", port);
     }
     
 	private MonitorDistance(RobotBase robot, Ultrasonic ultraSonic)
@@ -108,6 +119,7 @@ public class MonitorDistance extends Thread implements Sendable
         ultra = ultraSonic;
         
   	  	SendableRegistry.addLW(this, "MonitorDistance", ultra.getEchoChannel());
+  	  	SendableRegistry.setName(ultra, "MonitorDistanceUltraSonic", ultra.getEchoChannel() - 1);
     }
     
     /**

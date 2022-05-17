@@ -36,7 +36,10 @@ public class MonitorCompressor extends Thread implements Sendable
   public static MonitorCompressor	INSTANCE;
 
   // Create single instance of this class and return that single instance to any callers.
-  // This is the singleton class model. You don't use new, you use getInstance.
+  // This is the singleton class model. You don't use new, you use getInstance. After that
+  // you can use the returned instance reference in a variable in your code or use the
+  // INSTANCE variable above to access the members of this class. Assumes robot will have
+  // only one compressor.
     
   /**
    * Get a reference to global MonitorCompressor Thread object. Only monitors compressor on/off
@@ -100,6 +103,7 @@ public class MonitorCompressor extends Thread implements Sendable
 	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
 	  
 	  SendableRegistry.addLW(this, "MonitorCompressor", pressureSensorPort);
+	  SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
   }
 
   private MonitorCompressor(AnalogInput pressureSensor)
@@ -113,6 +117,7 @@ public class MonitorCompressor extends Thread implements Sendable
 	  this.pressureSensor = pressureSensor;	  
       
 	  SendableRegistry.addLW(this, "MonitorCompressor", pressureSensor.getChannel());
+	  SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
   }
     
   /**

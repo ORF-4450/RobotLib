@@ -32,6 +32,8 @@ public class Lidar implements Sendable
         counter.reset();
         
         SendableRegistry.addLW(this, "Lidar", source.getChannel());
+        SendableRegistry.setName((Sendable) source, "LidarDIO", source.getChannel());
+        SendableRegistry.setName((Sendable) counter, "LidarCounter");
 	}
 
     /**
@@ -65,7 +67,7 @@ public class Lidar implements Sendable
     	if(!rounded) 
     	{
     		return cm;
-    	}else {
+    	} else {
     		return Math.floor( cm * 10 ) / 10;
     	}
     }

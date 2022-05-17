@@ -31,6 +31,13 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 
 public class NavX implements Sendable, PIDSource, DoubleSupplier
 {
+
+    // Create single instance of this class and return that single instance to any callers.
+    // This is the singleton class model. You don't use new, you use getInstance. After that
+	// you can use the returned instance reference in a variable in your code or use the
+	// INSTANCE variable above to access the members of this class. Assumes robot will have
+	// only one Navx.
+	
 	/**
 	 * Static reference to the internal Navx instance created by
 	 * getInstance() calls on this class. Must call a getInstance() before using.
@@ -73,9 +80,11 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	private final int NUM_ROBORIO_ONBOARD_PWM_PINS       = 10;
 	private final int NUM_ROBORIO_ONBOARD_ANALOGIN_PINS  = 4;
 	    
+	// Private constructor forces use of getInstance().
+	
 	private NavX(PortType portType)
 	{
-		Util.consoleLog();
+		Util.consoleLog("portType=%d", portType.ordinal());
 		
 		// NavX is plugged into the RoboRio MXP port.
 		
@@ -105,8 +114,6 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 		}
 		
 		//ahrs.enableBoardlevelYawReset(true);
-		
-		//registerSendable("NavX");
 	}
 	
 	/**
