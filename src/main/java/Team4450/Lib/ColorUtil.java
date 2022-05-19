@@ -70,7 +70,6 @@ public class ColorUtil
         colorList.add(new ColorName("FireBrick", 0xB2, 0x22, 0x22));
         colorList.add(new ColorName("FloralWhite", 0xFF, 0xFA, 0xF0));
         colorList.add(new ColorName("ForestGreen", 0x22, 0x8B, 0x22));
-        colorList.add(new ColorName("Fuchsia", 0xFF, 0x00, 0xFF));
         colorList.add(new ColorName("Gainsboro", 0xDC, 0xDC, 0xDC));
         colorList.add(new ColorName("GhostWhite", 0xF8, 0xF8, 0xFF));
         colorList.add(new ColorName("Gold", 0xFF, 0xD7, 0x00));

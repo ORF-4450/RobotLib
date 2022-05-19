@@ -32,9 +32,9 @@ public class RevColorSensor implements Sendable
 	 * parameter. The device will be automatically initialized with default 
 	 * parameters.
 	 */
-	private final ColorSensorV3	colorSensor = new ColorSensorV3(i2cPort);	
+	private ColorSensorV3	colorSensor = new ColorSensorV3(i2cPort);	
 	
-	private ColorMatch 			colorMatcher = new ColorMatch();
+	private ColorMatch 		colorMatcher = new ColorMatch();
 	
 	// Private constructor prevents instantiation.
 
@@ -64,6 +64,8 @@ public class RevColorSensor implements Sendable
     public void setPort(I2C.Port port)
     {
     	i2cPort = port;
+    	
+    	colorSensor = new ColorSensorV3(i2cPort);
     }
     
     /**
@@ -114,7 +116,7 @@ public class RevColorSensor implements Sendable
      * Get raw value of red sensor.
      * @return Red value.
      */
-    public int getRed()
+    public int getRawRed()
     {
     	return colorSensor.getRed();
     }
@@ -123,7 +125,7 @@ public class RevColorSensor implements Sendable
      * Get raw value of blue sensor.
      * @return Blue value.
      */
-    public int getBlue()
+    public int getRawBlue()
     {
     	return colorSensor.getBlue();
     }
@@ -132,9 +134,39 @@ public class RevColorSensor implements Sendable
      * Get raw value of green sensor.
      * @return Green value.
      */
-    public int getGreen()
+    public int getRawGreen()
     {
     	return colorSensor.getGreen();
+    }
+    
+    /**
+     * Return the RGB red value for a Color object.
+     * @param color Color object instance.
+     * @return Red value 0-255.
+     */
+    public int getRed(Color color)
+    {
+    	return (int) (color.red * 255);
+    }
+    
+    /**
+     * Return the RGB green value for a Color object.
+     * @param color Color object instance.
+     * @return Green value 0-255.
+     */
+    public int getGreen(Color color)
+    {
+    	return (int) (color.green * 255);
+    }
+    
+    /**
+     * Return the RGB blue value for a Color object.
+     * @param color Color object instance.
+     * @return Blue value 0-255.
+     */
+    public int getBlue(Color color)
+    {
+    	return (int) (color.blue * 255);
     }
     
     /**
@@ -213,7 +245,8 @@ public class RevColorSensor implements Sendable
      */
     public String getRGB(Color color)
     {
-    	return String.format("%.0f,%.0f,%.0f", color.red * 255.0, color.green * 255.0, color.blue * 255.0);
+    	return String.format("%d,%d,%d #%2x%2x%2x", getRed(color), getGreen(color), getBlue(color), 
+    						getRed(color), getGreen(color), getBlue(color));
     }
     
     /**
@@ -225,7 +258,7 @@ public class RevColorSensor implements Sendable
      */
     public String getRGB(int r, int g, int b)
     {
-    	return String.format("%d,%d,%d", r, g, b);
+    	return String.format("%d,%d,%d #%2x%2x%2x", r, g, b, r, g, b);
     }
         
     /**
@@ -244,7 +277,7 @@ public class RevColorSensor implements Sendable
      */
     public String getColorName(Color color)
     {
-    	return ColorUtil.getColorNameFromRgb((int)(color.red * 255.0), (int)(color.green * 255.0), (int)(color.blue * 255.0));
+    	return ColorUtil.getColorNameFromRgb(getRed(color), getGreen(color), getBlue(color));
     }
     
     /**
@@ -267,7 +300,7 @@ public class RevColorSensor implements Sendable
     {
     	Color color = getColor();
     	return getColorName(color);
-    	//return getColorName(255, 255, 5);
+    	//return getColorName(48, 153, 53);
     }
 	
     @Override
@@ -279,8 +312,5 @@ public class RevColorSensor implements Sendable
     	builder.addStringProperty("RGB", () -> getRGB(), null);
     	builder.addStringProperty("Color", () -> getColorName(), null);
     	builder.addDoubleProperty("Proximity", () -> getProximity(), null);
-    	builder.addDoubleProperty("R", this::getRed, null);
-    	builder.addDoubleProperty("G", this::getGreen, null);
-    	builder.addDoubleProperty("B", this::getBlue, null);
     }
 }

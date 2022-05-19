@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Wrapper for Talon SRX Magnetic Encoder used in relative (quadrature) mode.
+ * Absolute position is also available.
  */
 public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier, Sendable
 {
