@@ -43,8 +43,10 @@ Version 4.0.0
 *	Remove use of our wrapper for WPILib Sendable.
 *	Clean up how the singleton classes are implemented adding the INSTANCE reference variable.
 *	Add ColorUtil class.
+*	Finally got the Lidar sensor hooked up and tested the wrapper class. It is working.
+*	Added the RollingAverage utility class.
 
-R. Corn, May 13, 2022
+R. Corn, May 26, 2022
 
 Version 3.13.0
 
