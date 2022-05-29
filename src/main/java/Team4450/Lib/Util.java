@@ -11,6 +11,7 @@ import java.math.RoundingMode;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.function.Consumer;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Handler;
 import java.util.logging.FileHandler;
@@ -41,7 +42,7 @@ import edu.wpi.first.hal.util.BoundaryException;
 public class Util
 {
 	/**
-	 * Open a print stream that writes to the log file. Example of use:
+	 * A print stream that writes to the log file. Example of use:
 	 * exception.printStackTrace(Util.logPrintStream);
 	 */
 	public static final PrintStream	logPrintStream = new PrintStream(new LoggingOutputStream());

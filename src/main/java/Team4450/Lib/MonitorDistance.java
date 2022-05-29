@@ -19,7 +19,6 @@ import edu.wpi.first.wpilibj.RobotBase;
 public class MonitorDistance extends Thread implements Sendable
 {
     RobotBase 			robot;
-    private int			port;
     private Ultrasonic	ultra;
     private double		delay = 1.0;	// seconds.
 
@@ -28,7 +27,8 @@ public class MonitorDistance extends Thread implements Sendable
 	  
 	/**
 	 * Static reference to the internal MonitorDistance instance created by
-	 * getInstance() calls on this class. Must call a getInstance() before using.
+	 * getInstance() calls on this class. Must call one of the getInstance()
+	 * functions before using.
 	 */
 	public static MonitorDistance	INSTANCE;
 
@@ -100,7 +100,6 @@ public class MonitorDistance extends Thread implements Sendable
 		Util.consoleLog("ports=%d,%d", port, port + 1);
 		
         this.robot = robot;
-        this.port = port;
         this.setName("MonitorDistance");
 
         ultra = new Ultrasonic(port, port + 1);
@@ -166,7 +165,7 @@ public class MonitorDistance extends Thread implements Sendable
     {
 		try
 		{
-			ultra.setAutomaticMode(true);
+			Ultrasonic.setAutomaticMode(true);
 
 			while (true)
 			{
