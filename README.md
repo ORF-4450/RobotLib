@@ -45,7 +45,7 @@ Version 4.0.0
 *	Add ColorUtil class.
 *	Finally got the Lidar sensor hooked up and tested the wrapper class. It is working.
 *	Added the RollingAverage utility class.
-*	Added the Tracer class to help find long running functions that trigger the WPILib watchdog.
+*	Added the FunctionTracer class to help find long running functions that trigger the WPILib watchdog.
 
 R. Corn, May 28, 2022
 

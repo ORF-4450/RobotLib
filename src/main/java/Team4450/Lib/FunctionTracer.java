@@ -1,6 +1,7 @@
 package Team4450.Lib;
 
 import java.io.PrintStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,31 +12,37 @@ import edu.wpi.first.wpilibj.RobotController;
  * functions. Call enterFunction() at start of a function and exitFunction()
  * at the end of the function. Will track total time spent in all the functions
  * where these calls are made until the list of functions is printed and reset
- * by printFunctions().
+ * by printFunctions(). Use the INSTANCE member instead of getting a reference
+ * variable: FunctionTimer.INSTANCE.enterFunction()
  */
-public class Tracer 
+public class FunctionTracer 
 {
     // Singleton class pattern single instance.
-    public static final Tracer INSTANCE = new Tracer();
+    public static final FunctionTracer INSTANCE = new FunctionTracer();
 
-    private final Map<String, FunctionMarker> functions = new HashMap<>();
+    //private final Map<String, FunctionMarker> functions = new HashMap<>();
+
+    private final Map<String, FunctionMarker> functions = Collections.synchronizedMap(new HashMap<>());
     
-    private Tracer() {}
+    private FunctionTracer() {}
 
     /**
      * Returns a reference pointer to the global instance of Tracer.
      * @return Instance pointer.
      */
-    public Tracer getInstance() { return INSTANCE; }
+    public FunctionTracer getInstance() { return INSTANCE; }
 
     private class FunctionMarker
     {
-        public long    cumulative, start;
+        public long		cumulative, start;
+        public long		threadId;
 
         public FunctionMarker(long startTime, long cumulativeTime)
         {
             start = startTime;
             cumulative = cumulativeTime;
+            
+            threadId = Thread.currentThread().getId();
         }
     }
 
@@ -46,11 +53,9 @@ public class Tracer
      */
     public void enterFunction(String name)
     {
-        FunctionMarker  marker;
-
         long now = RobotController.getFPGATime();
 
-        marker = functions.get(name);
+        FunctionMarker marker = functions.get(name);
 
         if  (marker == null)
             marker = new FunctionMarker(now, 0);
@@ -72,7 +77,7 @@ public class Tracer
         FunctionMarker marker = functions.get(name);
 
         if  (marker == null)
-            return;
+        	return;
         else
             marker.cumulative += now - marker.start;
         
@@ -98,7 +103,7 @@ public class Tracer
 
         functions.forEach(
             (key, marker) -> {
-                sb.append(String.format("\t%s: %.4fs\n", key, marker.cumulative / 1.0e6));
+                sb.append(String.format("\t%s<%d>: %.4fs\n", key, marker.threadId, marker.cumulative / 1.0e6));
             });
         
         if (sb.length() > 0) out.print(sb.toString());
