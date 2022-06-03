@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * Power Distribution Panel monitoring task.
+ * CTRE Power Distribution Panel monitoring task. Monitors battery
+ * voltage, current draw (overload) and brownout. Logs warnings to
+ * console and shuffleboard LEDs.
  * Runs as a separate thread from the Robot class. Runs until robot
- * program is terminated from the RoboRio.
+ * program is terminated.
  */
 
 public class MonitorPDP extends Thread implements Sendable

@@ -10,8 +10,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Runs as a separate thread from the Robot class. Runs until our
  * program is terminated from the RoboRio.
  * Displays warning LED on DS on low voltage.
+ * @deprecated
+ * Use {@link MonitorPDP} instead.
  */
-
+@Deprecated(since="4.0.0")
 public class MonitorBattery extends Thread
 {
   private final double		  	LOW_BATTERY = 11.7;
@@ -24,7 +26,7 @@ public class MonitorBattery extends Thread
    * Get a reference to global MonitorBattery Thread object.
    * @return Reference to global MonitorBattery object.
    */
-      
+  
   public static MonitorBattery getInstance() 
   {
 	  Util.consoleLog();
