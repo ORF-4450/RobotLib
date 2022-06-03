@@ -46,8 +46,9 @@ Version 4.0.0
 *	Finally got the Lidar sensor hooked up and tested the wrapper class. It is working.
 *	Added the RollingAverage utility class.
 *	Added the FunctionTracer class to help find long running functions that trigger the WPILib watchdog.
+*	Re-tested solenoid slide time used in ValveDA and determined 20ms is enough, down from 50.
 
-R. Corn, May 28, 2022
+R. Corn, June 2, 2022
 
 Version 3.13.0
 

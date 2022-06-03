@@ -32,9 +32,10 @@ public class ValveDA implements Sendable
 	/**
 	 * Sets the time to apply power to make sure valve slide moves correctly.
 	 * The movement takes time so power has to be applied until slide has
-	 * moved from one side to the other. In seconds, defaults to .05 sec.
+	 * moved from one side to the other. In seconds, defaults to .02 sec.
+	 * This default determined using Test mode.
 	 */
-	public double           solenoidSlideTime;
+	public double           solenoidSlideTime = .02;
 
 	/**
 	 * @param port PCM port wired to open/A side of valve. Close/B side is wired to PCM next port.
@@ -49,10 +50,6 @@ public class ValveDA implements Sendable
 		valveCloseSide = new Solenoid(PneumaticsModuleType.CTREPCM, port + 1);
     
 		this.port = port;
-		
-		solenoidSlideTime = .05;
-    
-		//Close();
 	}
 
 	/**
@@ -69,10 +66,6 @@ public class ValveDA implements Sendable
     
 		this.port = port;
 		this.pcmCanId = pcmCanId;
-		
-		solenoidSlideTime = .05;
-    
-		//Close();
 	}
 
 	/**
@@ -89,7 +82,7 @@ public class ValveDA implements Sendable
 	/**
 	 * Open the valve (pressurize port. This is A side).
 	 * This function delays calling thread for the valve
-	 * slide time (default 50ms).
+	 * slide time (default 20ms).
 	 */
 	public void Open()
 	{
@@ -107,7 +100,7 @@ public class ValveDA implements Sendable
 	/**
 	 * Pressurize the A side of the valve.
 	 * This function delays calling thread for the valve
-	 * slide time (default 50ms).
+	 * slide time (default 20ms).
 	 */
 	public void SetA()
 	{
@@ -119,7 +112,7 @@ public class ValveDA implements Sendable
 	/**
 	 * Close the valve (pressurize port+1. This is B side).
 	 * This function delays calling thread for the valve
-	 * slide time (default 50ms).
+	 * slide time (default 20ms).
 	 */
 	public void Close()
 	{
@@ -137,7 +130,7 @@ public class ValveDA implements Sendable
 	/**
 	 * Pressurize the B side of the valve.
 	 * This function delays calling thread for the valve
-	 * slide time (default 50ms).
+	 * slide time (default 20ms).
 	 */
 	public void SetB()
 	{
@@ -169,11 +162,23 @@ public class ValveDA implements Sendable
 		return valveOpen;
 	}
 	
+	/**
+	 * Sets the time to apply power to make sure valve slide moves correctly.
+	 * The movement takes time so power has to be applied until slide has
+	 * moved from one side to the other. In seconds, defaults to .02 sec.
+	 * @param slideTime Time power is applied in seconds.
+	 */	
+	public void setSlideTime(double slideTime)
+	{
+		solenoidSlideTime = slideTime;
+	}
+	
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
 		builder.setSmartDashboardType("ValveDA");
     	builder.addBooleanProperty(".controllable", () -> false, null);
 	    builder.addBooleanProperty("Open(A)", this::isOpen, null);
+    	builder.addDoubleProperty("SlideTime", () -> solenoidSlideTime, this::setSlideTime);
 	}
-}
+} 

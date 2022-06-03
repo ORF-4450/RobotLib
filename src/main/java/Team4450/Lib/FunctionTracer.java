@@ -115,7 +115,7 @@ public class FunctionTracer
             (key, marker) -> {
                 if (marker.exitFlag) 
                 {
-                	sb.append(String.format("\t%s<%d>: %.4fs\n", key, marker.threadId, marker.cumulative / 1.0e6));
+                	sb.append(String.format("    %s<%d>: %.4fs\n", key, marker.threadId, marker.cumulative / 1.0e6));
                 	
                 	functions.remove(key);
                 }
