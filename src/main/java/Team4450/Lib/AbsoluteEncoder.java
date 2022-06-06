@@ -72,7 +72,7 @@ public class AbsoluteEncoder implements PIDSource
 	}
 	
 	/**
-	 * Set the offset angle that represents zero. This value is added to
+	 * Set the offset angle that represents zero. This value is subtracted from
 	 * the angle returned by the encoder so that the encoder reads zero
 	 * when the wheel is pointed straight ahead.
 	 * @param offset Offset angle 0-360.
