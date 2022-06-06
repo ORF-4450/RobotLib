@@ -4,6 +4,7 @@ package Team4450.Lib;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -169,7 +170,7 @@ public class MonitorPDP extends Thread implements Sendable
 			  
 			  if (pdp.getVoltage() < LOW_BATTERY)
 			  {
-				  Util.consoleLog("battery voltage warning: %.2fv", pdp.getVoltage());
+				  DriverStation.reportError(String.format("battery voltage warning: %.2fv", pdp.getVoltage()), false);
 			  
 				  alarmInProgress = true;
 				  lowBatteryAlarm = true;
@@ -180,7 +181,7 @@ public class MonitorPDP extends Thread implements Sendable
 			  
 			  if (pdp.getTotalCurrent() > MAX_CURRENT)
 			  {
-				  Util.consoleLog("battery total current warning: %.1famps", pdp.getTotalCurrent());
+				  DriverStation.reportError(String.format("battery total current warning: %.1famps", pdp.getTotalCurrent()), false);
 			  
 				  alarmInProgress = true;
 				  overloadAlarm = true;
@@ -193,14 +194,14 @@ public class MonitorPDP extends Thread implements Sendable
 			  {
 				  if (ports[i])
     				  if (((i < 4 && i > 11) && pdp.getCurrent(i) > 40) | ((i > 3 && i < 12) && pdp.getCurrent(i) > 30))
-    					  Util.consoleLog("pdp port %d current warning: %.1famps", i,  pdp.getCurrent(i));
+    					  DriverStation.reportError(String.format("pdp port %d current warning: %.1famps", i,  pdp.getCurrent(i)), false);
 			  }
 			  
 			  // Check driver station brownout flag.
 			  
 			  if (RobotController.isBrownedOut())
 			  {
-				  Util.consoleLog("brownout warning: %.1fv", pdp.getVoltage());
+				  DriverStation.reportError(String.format("brownout warning: %.1fv", pdp.getVoltage()), false);
 			  
 				  alarmInProgress = true;
 				  overloadAlarm = true;

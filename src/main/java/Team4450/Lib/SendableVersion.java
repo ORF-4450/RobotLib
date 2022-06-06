@@ -110,7 +110,7 @@ public class SendableVersion implements Sendable
         builder.addStringProperty("Commit: ", () -> commit, null);
         builder.addStringProperty("Program: ", () -> programVersion, null);
         builder.addStringProperty("RobotLib: ", () -> robotlibVersion, null);
-        builder.addStringProperty("WPILib: ", () -> WPILibVersion.Version, null);
+        //builder.addStringProperty("WPILib: ", () -> WPILibVersion.Version, null);
         builder.addStringProperty("Time: ", () -> time, null);
         builder.addStringProperty("User: ", () -> user, null);
         builder.addDoubleProperty("UpdateCount", this::getUpdateCount, null);
