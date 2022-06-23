@@ -8,7 +8,8 @@ package Team4450.Lib;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
 
 /**
- * Provides static access to current version of the library.
+ * Provides static access to current version of this library and the
+ * version of WPILib this library was compiled with.
  */
 
 public class LibraryVersion
@@ -46,7 +47,7 @@ public class LibraryVersion
 	 * of the Jitpack compile when requested and will be automatically made available via JitPack 
 	 */
 	
-	public static final String version = "4.0.0 (06.03.2022) WPILib=" + WPILibVersion.Version;	
+	public static final String version = "4.0.0 (06.23.2022) WPILib=" + WPILibVersion.Version;	
 	
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()

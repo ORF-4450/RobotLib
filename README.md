@@ -35,7 +35,7 @@ library and then generate a release on Github and Jitpack.
 Version 4.0.0
 
 *	Updated the logging system to queue log records in memory and write them to disk on a separate thread.
-*	Updated the logging system to log output to the RoboRio console.
+*	Updated the logging system to include output to the RoboRio console.
 *	Added absolute position support to SRX/FX encoder classes.
 *	Added new wrapper class CANCoder to support the CTRE CANCoder encoder.
 *	Fixed problems with encoder sim support when rerunning auto programs without code reboot.
@@ -48,7 +48,7 @@ Version 4.0.0
 *	Added the FunctionTracer class to help find long running functions that trigger the WPILib watchdog.
 *	Re-tested solenoid slide time used in ValveDA and determined 20ms is enough, down from 50.
 
-R. Corn, June 2, 2022
+R. Corn, June 23, 2022
 
 Version 3.13.0
 
