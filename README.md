@@ -32,6 +32,14 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 4.1.0
+
+*	Added DeadZone wrapper class for use with WPILib Joystick and XBoxController X and Y axis get functions
+	to provide dead zone and inversion support. This will allow us to more easily use the WPILib classes 
+	instead of our own. We had have been using our own classes just for dz and inversion.
+	
+R. Corn, November 11 ,2022
+
 Version 4.0.0
 
 *	Updated the logging system to queue log records in memory and write them to disk on a separate thread.
