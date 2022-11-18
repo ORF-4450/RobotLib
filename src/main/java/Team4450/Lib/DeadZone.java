@@ -3,9 +3,8 @@ package Team4450.Lib;
 import java.util.function.DoubleSupplier;
 
 /**
- * Provides a wrapper for WpiLib JoyStick and XboxController classes that will
- * apply a dead zone and or inversion for the values returned by the X and Y axis
- * functions.
+ * Applies dead zone and inversion to any double input. Returns a double
+ * or double supplier (if input is a double supplier).
  */
 public class DeadZone implements DoubleSupplier
 {

@@ -37,8 +37,10 @@ Version 4.1.0
 *	Added DeadZone wrapper class for use with WPILib Joystick and XBoxController X and Y axis get functions
 	to provide dead zone and inversion support. This will allow us to more easily use the WPILib classes 
 	instead of our own. We had have been using our own classes just for dz and inversion.
+*	Decided it was cleaner to extend WPILib Joystick and XBoxController classes to add functions to set
+	and apply dead zone and inversion. New WpiJoyStick and XBoxController classes. Will retain DeadZone class.
 	
-R. Corn, November 11 ,2022
+R. Corn, November 17,2022
 
 Version 4.0.0
 
