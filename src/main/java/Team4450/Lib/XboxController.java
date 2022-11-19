@@ -58,40 +58,44 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController
 	@Override
 	public double getLeftX()
 	{
-		double x;
-		
-		x = super.getLeftX();
+		double x = super.getLeftX();
 		if (Math.abs(x) < deadZone) x = 0.0;
 		return x * invertX;
 	}
 	
 	/**
 	 * Get left joystick X value with dead zone and invert applied.
+	 * This is a convenience function returning getLeftX() as a DoubleSupplier.
 	 * @return X axis deflection value.
 	 */
 	public DoubleSupplier getLeftXDS()
 	{
+		// () -> is a lamba expression that wraps the getLeftX() function in a
+		// double supplier instance.
 		return () -> getLeftX();
 	}	
 	
 	/**
 	 * Get left joystick Y value with dead zone and invert applied.
+	 * Y axis normally returns - for foward + for backward. It makes more sense
+	 * to have + be forward and - be backward hence the invert capability.
 	 * @return Y axis deflection value.
 	 */
 	@Override
 	public double getLeftY()
 	{
-		double y;
 		
-		y = super.getLeftY();
+		double y = super.getLeftY();
 		if (Math.abs(y) < deadZone) y = 0.0;
 		return y * invertY;
 	}
 	
 	/**
 	 * Get left joystick Y value with dead zone and invert applied.
+	 * This is a convenience function returning getLeftY() as a DoubleSupplier.
 	 * @return Y axis deflection value.
-	 */	public DoubleSupplier getLeftYDS()
+	 */	
+	public DoubleSupplier getLeftYDS()
 	{
 		return () -> getLeftY();
 	}
@@ -103,17 +107,17 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController
 	@Override
 	public double getRightX()
 	{
-		double x;
-		
-		x = super.getRightX();
+		double x = super.getRightX();
 		if (Math.abs(x) < deadZone) x = 0.0;
 		return x * invertX;
 	}
 	
 	/**
 	 * Get right joystick X value with dead zone and invert applied.
+	 * This is a convenience function returning getRightX() as a DoubleSupplier.
 	 * @return X axis deflection value.
-	 */	public DoubleSupplier getRightXDS()
+	 */	
+	public DoubleSupplier getRightXDS()
 	{
 		return () -> getRightX();
 	}	
@@ -125,17 +129,17 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController
 	@Override
 	public double getRightY()
 	{
-		double y;
-		
-		y = super.getRightY();
+		double y = super.getRightY();
 		if (Math.abs(y) < deadZone) y = 0.0;
 		return y * invertY;
 	}
 	
 	/**
 	 * Get right joystick Y value with dead zone and invert applied.
+	 * This is a convenience function returning getRightY() as a DoubleSupplier.
 	 * @return Y axis deflection value.
-	 */	public DoubleSupplier getRightYDS()
+	 */	
+	public DoubleSupplier getRightYDS()
 	{
 		return () -> getRightY();
 	}

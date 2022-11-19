@@ -99,15 +99,20 @@ public class WpiJoyStick extends Joystick
 	
 	/**
 	 * Get Joy Stick X axis deflection value with dead zone and invert applied.
+	 * This is a convenience function returning GetX() as a DoubleSupplier.
 	 * @return X axis deflection.
 	 */
 	public DoubleSupplier GetXDS()
 	{
+		// () -> is a lamba expression that wraps the getLeftX() function in a
+		// double supplier instance.
 		return () -> GetX();
 	}		
 	
 	/**
 	 * Get Joy Stick Y axis deflection value with dead zone and invert applied.
+	 * Y axis normally returns - for foward + for backward. It makes more sense
+	 * to have + be forward and - be backward hence the invert capability.
 	 * @return Y axis deflection.
 	 */
 	public double GetY()
@@ -124,11 +129,12 @@ public class WpiJoyStick extends Joystick
 	
 	/**
 	 * Get Joy Stick Y axis deflection value with dead zone and invert applied.
+	 * This is a convenience function returning GetY() as a DoubleSupplier.
 	 * @return Y axis deflection.
 	 */
 	public DoubleSupplier GetYDS()
 	{
-		return () -> GetX();
+		return () -> GetY();
 	}	
 	
     /**
