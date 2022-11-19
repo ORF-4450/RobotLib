@@ -40,7 +40,7 @@ Version 4.1.0
 *	Decided it was cleaner to extend WPILib Joystick and XBoxController classes to add functions to set
 	and apply dead zone and inversion. New WpiJoyStick and XBoxController classes. Will retain DeadZone class.
 	
-R. Corn, November 17,2022
+R. Corn, November 19,2022
 
 Version 4.0.0
 
