@@ -16,7 +16,7 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController
 	}
 	
 	/**
-	 * Set global joystick axis dead zone. Applied if no axis specific dead zone is set.
+	 * Set global joystick axis dead zone.
 	 * @param dz Dead zone value, 0.0 to 1.0.
 	 * @throws Exception
 	 */
@@ -77,7 +77,7 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController
 	
 	/**
 	 * Get left joystick Y value with dead zone and invert applied.
-	 * Y axis normally returns - for foward + for backward. It makes more sense
+	 * Y axis normally returns - for forward + for backward. It makes more sense
 	 * to have + be forward and - be backward hence the invert capability.
 	 * @return Y axis deflection value.
 	 */
@@ -142,6 +142,43 @@ public class XboxController extends edu.wpi.first.wpilibj.XboxController
 	public DoubleSupplier getRightYDS()
 	{
 		return () -> getRightY();
+	}
+	
+	/**
+	 * Get left trigger as a boolean.
+	 * @return True if trigger axis is not zero.
+	 */
+	public boolean getLeftTrigger()
+	{
+		if (super.getLeftTriggerAxis() != 0)
+		    return true;
+		else
+			return false;
+	}
+
+	/**
+	 * Get right trigger as a boolean.
+	 * @return True if trigger axis is not zero.
+	 */
+	public boolean getRightTrigger()
+	{
+		if (super.getRightTriggerAxis() != 0)
+		    return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * Compare POV value to target.
+	 * @param angle Target angle.
+	 * @return True if POV angle matches target, false if not.
+	 */
+	public boolean getPOVAngle(int angle)
+	{
+		if (super.getPOV() == angle)
+			return true;
+		else
+			return false;
 	}
 	 
 	/**
