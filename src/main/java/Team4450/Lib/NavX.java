@@ -704,7 +704,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		builder.setSmartDashboardType("Gyro");
     	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addDoubleProperty("Heading", this::getHeadingInt, null);
+	    builder.addDoubleProperty("Value", this::getHeadingInt, null);
 	}
 
 	/**
