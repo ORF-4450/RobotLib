@@ -32,6 +32,12 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 4.2.0
+
+*	Update for 2023 WPILib.
+
+R. Corn, November 22, 2022
+
 Version 4.1.0
 
 *	Added DeadZone wrapper class for use with WPILib Joystick and XboxController X and Y axis get functions
@@ -41,7 +47,7 @@ Version 4.1.0
 	classes to add functions to set and apply dead zone and inversion and any other customization we might want to 
 	add, without all the code for our original interrupt based joystick handler. Will retain DeadZone class.
 	
-R. Corn, November 22,2022
+R. Corn, November 22, 2022
 
 Version 4.0.0
 
