@@ -12,8 +12,12 @@ import edu.wpi.first.wpilibj.Joystick;
  * This class provides an interface to the Joystick buttons. It monitors
  * the state of the JS buttons and raises events when button state changes.
  * Also provides stick axis information with dead zone applied.
+ * 
+ * @deprecated
+ * This class should not be used with Command based robot programs. Use
+ * WpiJoyStick instead.
  */
-
+@Deprecated(since="4.1.0")
 public class JoyStick
 {
 	private final Joystick	joyStick;

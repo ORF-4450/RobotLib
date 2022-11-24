@@ -9,10 +9,14 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.Joystick;
 
 /**
-* This class provides an interface to the GamePad buttons. It monitors
-* the state of the GP buttons and raises events when button state changes.
-*/
-
+ * This class provides an interface to the GamePad buttons. It monitors
+ * the state of the GP buttons and raises events when button state changes.
+ * 
+ * @deprecated
+ * This class should not be used with Command based robot programs. Use
+ * XboxController instead.
+ */
+@Deprecated(since="4.1.0")
 public class GamePad
 {
 	private final Joystick	joyStick;
