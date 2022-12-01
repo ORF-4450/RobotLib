@@ -162,7 +162,7 @@ public class MonitorPDP extends Thread implements Sendable
         
           // Check battery voltage and brownout every second.
         
-		  while (true)
+		  while (!isInterrupted())
           {
 			  alarmInProgress = false;
 			  

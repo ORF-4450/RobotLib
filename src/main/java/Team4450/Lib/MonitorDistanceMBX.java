@@ -175,7 +175,7 @@ public class MonitorDistanceMBX extends Thread implements Sendable
 		{
 			Util.consoleLog();
 
-			while (true)
+			while (!isInterrupted())
 			{
 				if (robot.isEnabled())
 				{

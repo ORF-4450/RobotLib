@@ -167,7 +167,7 @@ public class MonitorDistance extends Thread implements Sendable
 		{
 			Ultrasonic.setAutomaticMode(true);
 
-			while (true)
+			while (!isInterrupted())
 			{
 				if (robot.isEnabled())
 				{

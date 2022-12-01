@@ -198,7 +198,7 @@ public class MonitorCompressor extends Thread implements Sendable
 	{
 		Util.consoleLog();
 
-		while (true)
+		while (!isInterrupted())
 		{
 			compressorState = compressor.enabled();
 			

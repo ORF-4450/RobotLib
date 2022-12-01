@@ -60,7 +60,7 @@ public class MonitorBattery extends Thread
           // sag below threshold under load and then come back up so this code 
           // will turn off the led warning if voltage goes back above threshold.
         
-		  while (true)
+		  while (!isInterrupted())
           {
 			  if (RobotController.getBatteryVoltage() < LOW_BATTERY)
 			  {
