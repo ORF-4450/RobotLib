@@ -35,8 +35,9 @@ library and then generate a release on Github and Jitpack.
 Version 4.2.0
 
 *	Update for 2023 WPILib.
+*	Add Util.saveProperties method to save the Properties object back to disk.
 
-R. Corn, November 22, 2022
+R. Corn, December 15, 2022
 
 Version 4.1.0
 

@@ -3,6 +3,7 @@ package Team4450.Lib;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -96,6 +97,34 @@ public class Util
 		return props;
 	}
 	
+	/**
+	 * Writes a Properties object to a disk file on the RoboRio.
+	 * @param props The Properties object to save.
+	 */
+	public static void saveProperties(Properties props)
+	{
+		String	path;
+		
+		consoleLog();
+        
+        // Determine directory path on robot or local disk under simulation.
+        
+        if (RobotBase.isSimulation())
+        	path = Paths.get("").toAbsolutePath().toString() + "\\robot-properties\\";
+        else
+        	path = "/home/lvuser/";
+
+        try {
+        	FileOutputStream os = new FileOutputStream(path + "Robot.properties");
+		
+        	props.store(os, null);
+		
+        	os.close();
+        } catch (Exception e) { logException(e); }
+        
+		props.list(logPrintStream);
+	}	
+
 	/**
 	 * Configures and holds (static) classes for our custom logging system. 
 	 * Call setup() method to initialize logging. Logging is then done via
