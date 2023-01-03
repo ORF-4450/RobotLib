@@ -59,6 +59,8 @@ public class Util
 	
 	private static boolean		captureConsole;
 	
+	private static String		packageStripMarker = "4450.";
+	
 	// Private constructor means this class cannot be instantiated. All access is static.
 	
 	private Util()
@@ -227,8 +229,39 @@ public class Util
         	
         	setup();
         }
+        
+        /**
+         * Initializes our logging system. Call before using any logging methods.
+         * Allows custom marker string to identify where to end stripping off the
+         * class package path from method names in the log. The strip marker defaults
+         * to "4450.". Specifying the marker allows logging to be used with any package
+         * path.
+         * @param stripMarker Everything left (inclusive) of this string will be
+         * removed from the method names in the log.
+         * @throws IOException
+         */
+        static public void setup(String stripMarker) throws IOException
+        {
+        	packageStripMarker = stripMarker;
+        	
+        	setup();
+        }
+        
+        /**
+         * Same as setup(stripMarker) but also allows console logging to be enabled.
+         * @param stripMarker Everything left (inclusive) of this string will be
+         * removed from the method names in the log.
+         * @param logConsole True to capture the robot console to our
+         * log file.
+         * @throws IOException
+         */
+        static public void setup(String stripMarker, boolean logConsole) throws IOException
+        {
+        	packageStripMarker = stripMarker;
+        	
+        	setup(logConsole);
+        }
     }
- 
     
 	// Our custom formatter for logging output.
 	
@@ -247,7 +280,7 @@ public class Util
             
             buf.append(String.format("<%d>", rec.getThreadID()));
             buf.append(dateFormat.format(new Date(rec.getMillis())));
-            buf.append(" ");
+            buf.append(": ");
             buf.append(formatMessage(rec));
             buf.append("\n");
         
@@ -314,7 +347,7 @@ public class Util
 	        String str = new String(bytes);
 	        
 	        //LCD.consoleLogNoFormat(str);
-			logger.log(Level.INFO, String.format("robot: %s\r", str));
+			logger.log(Level.INFO, String.format("%s\r", str));
 	        
 	        count = 0;
 	    }
@@ -347,11 +380,12 @@ public class Util
         
         try
         {
-            String method = stackTrace[level].toString().split("4450.")[1];
+            String method = stackTrace[level].toString().split(packageStripMarker)[1];
             
-            int startPos = method.indexOf(".") + 1;
+            //int startPos = method.indexOf(".") + 1;
             
-            return method.substring(startPos);
+            //return method.substring(startPos);
+            return method;
         }
         catch (Throwable e)
         {
@@ -379,7 +413,7 @@ public class Util
 	public static void consoleLog(String message, Object... parms)
 	{
 		// logs to the console as well as our log file on RR disk.
-		logger.log(Level.INFO, String.format("robot: %s: %s\r", currentMethod(2), String.format(message, parms)));
+		logger.log(Level.INFO, String.format("%s: %s\r", currentMethod(2), String.format(message, parms)));
 	}
     
 	/**
@@ -388,7 +422,7 @@ public class Util
 	public static void consoleLog()
 	{
 		// logs to the console as well as our log file on RR disk.
-		logger.log(Level.INFO, String.format("robot: %s\r", currentMethod(2)));
+		logger.log(Level.INFO, String.format("%s\r", currentMethod(2)));
 	}
     
 	/**

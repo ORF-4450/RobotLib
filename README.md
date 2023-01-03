@@ -36,8 +36,10 @@ Version 4.2.0
 
 *	Update for 2023 WPILib.
 *	Add Util.saveProperties method to save the Properties object back to disk.
+*	Add user specified package path removal marker to strip package path from method names in the log file.
+	This allows logging to be used with any program.
 
-R. Corn, December 15, 2022
+R. Corn, December 16, 2022
 
 Version 4.1.0
 
