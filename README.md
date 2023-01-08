@@ -39,7 +39,7 @@ Version 4.2.0
 *	Add user specified package path removal marker to strip package path from method names in the log file.
 	This allows logging to be used with any program.
 
-R. Corn, December 16, 2022
+R. Corn, January 6, 2022
 
 Version 4.1.0
 
