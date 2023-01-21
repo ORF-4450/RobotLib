@@ -32,6 +32,12 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 4.3.0
+
+*	Move Swerve code into this library.
+
+R. Corn, January 20, 2023
+
 Version 4.2.0
 
 *	Update for 2023 WPILib.
@@ -39,7 +45,7 @@ Version 4.2.0
 *	Add user specified package path removal marker to strip package path from method names in the log file.
 	This allows logging to be used with any program.
 
-R. Corn, January 11, 2022
+R. Corn, January 11, 2023
 
 Version 4.1.0
 
