@@ -18,6 +18,9 @@ public class ModuleConfiguration
     private final double steerReduction;
     private final boolean steerInverted;
 
+    /**
+     * Identifies the location of a swerve module on the robot chassis.
+     */
     public enum ModulePosition 
     {
       FL,

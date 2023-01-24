@@ -6,7 +6,9 @@ import java.util.Objects;
  * Additional Mk4 module configuration parameters.
  * <p>
  * The configuration parameters here are used to customize the behavior of the Mk4 swerve module.
- * Each setting is initialized to a default that should be adequate for most use cases.
+ * Each setting is initialized to a default that should be adequate for most use cases. You can
+ * call the "set" methods to customize the configuration before passing it to a swerve module
+ * helper build method.
  */
 public class Mk4ModuleConfiguration 
 {
@@ -42,6 +44,14 @@ public class Mk4ModuleConfiguration
     public double getSteerI() { return steerI; }
     public double getSteerD() { return steerD; }
 
+    /**
+     * Set the values for the steering motor PID controller.
+     * Neo defaults: .5, 0, .05
+     * 500 defaults: .2, 0, .1
+     * @param p Proportional value.
+     * @param i Integral value.
+     * @param d Derivative value.
+     */
     public void setSteerPid(double p, double i, double d)
     {
         steerP = p;
@@ -51,26 +61,50 @@ public class Mk4ModuleConfiguration
 
     public double getNominalDriveVoltage() { return nominalDriveVoltage; }
 
+    /**
+     * Set the voltage compensation value for the drive motor. Defaults to 12v.
+     * @param nominalVoltage Desired max voltage.
+     */
     public void setNominalDriveVoltage(double nominalVoltage) { this.nominalDriveVoltage = nominalVoltage; }
 
     public double getNominalSteerVoltage() { return nominalSteerVoltage; }
 
+    /**
+     * Set the voltage compensation value for the steering motor. Defaults to 12v.
+     * @param nominalVoltage Desired max voltage.
+     */
     public void setNominalSteerVoltage(double nominalVoltage) { this.nominalSteerVoltage = nominalVoltage; }
 
     public double getDriveCurrentLimit() { return driveCurrentLimit; }
 
+    /**
+     * Set the max current for the drive motor. Defaults to 80 amps.
+     * @param driveCurrentLimit Desired max current in amps.
+     */
     public void setDriveCurrentLimit(double driveCurrentLimit) { this.driveCurrentLimit = driveCurrentLimit; }
 
     public double getSteerCurrentLimit() { return steerCurrentLimit; }
 
+    /**
+     * Set the max current for the steering motor. Defaults to 20 amps.
+     * @param steerCurrentLimit Desired max current in amps.
+     */
     public void setSteerCurrentLimit(double steerCurrentLimit) { this.steerCurrentLimit = steerCurrentLimit; }
 
     public double getDriveRampRate() { return driveRampRate; }
 
+    /**
+     * Set the ramp rate of the drive motor. Default is no ramping.
+     * @param rampRate Desired ramp rate. See motor vendors doc on ramping.
+     */
     public void setDriveRampRate(double rampRate) { this.driveRampRate = rampRate; }
 
     public double getSteerRampRate() { return steerRampRate; }
 
+    /**
+     * Set the ramp rate of the steering motor. Default is no ramping.
+     * @param rampRate Desired ramp rate. See motor vendors doc on ramping.
+     */
     public void setSteerRampRate(double rampRate) { this.steerRampRate = rampRate; }
 
     @Override
@@ -115,6 +149,11 @@ public class Mk4ModuleConfiguration
                 '}';
     }
 
+    /**
+     * Get a default configuration object for a Falcon 500 motor. You can then
+     * call the "set" methods above to customize it.
+     * @return A MK4 Module Configuration object.
+     */
     public static Mk4ModuleConfiguration getDefault500Config()
     {
         Mk4ModuleConfiguration config = new Mk4ModuleConfiguration();
@@ -124,6 +163,11 @@ public class Mk4ModuleConfiguration
         return config;
     }
 
+    /**
+     * Get a default configuration object for a Neo motor. You can then
+     * call the "set" methods above to customize it.
+     * @return A MK4 Module Configuration object.
+     */
     public static Mk4ModuleConfiguration getDefaultNeoConfig()
     {
         Mk4ModuleConfiguration config = new Mk4ModuleConfiguration();

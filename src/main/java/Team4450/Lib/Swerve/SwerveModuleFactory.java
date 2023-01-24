@@ -86,6 +86,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
             
             if (RobotBase.isSimulation()) 
             {
+            	// Moved to drive controller class.
                 // Only Neo sim implemented.
                 //REVPhysicsSim.getInstance().addSparkMax(driveController.getMotorNeo(), DCMotor.getNEO(1));
 
