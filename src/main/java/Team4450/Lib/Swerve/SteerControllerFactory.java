@@ -10,9 +10,10 @@ public interface SteerControllerFactory<Controller extends SteerController, Stee
     {
         Util.consoleLog();
     
-        container.addNumber("Current Angle", () -> Math.toDegrees(controller.getAngle()))
+        container.addString("Current Angle", () -> String.format("%.3f", Math.toDegrees(controller.getAngle())))
         					.withPosition(1, 0); // 1
-        container.addNumber("Target Angle", () -> Math.toDegrees(controller.getReferenceAngle()))
+        
+        container.addString("Target Angle", () -> String.format("%.3f", Math.toDegrees(controller.getReferenceAngle())))
         					.withPosition(0, 1); // 0, 2
     }
 

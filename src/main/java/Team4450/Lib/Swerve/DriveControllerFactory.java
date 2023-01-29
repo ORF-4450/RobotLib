@@ -10,10 +10,12 @@ public interface DriveControllerFactory<Controller extends DriveController, Driv
     {
         Util.consoleLog();
     
-        container.addNumber("Current Velocity", controller::getVelocity).withPosition(1, 1); // 0,3
+        container.addString("Current Velocity", () -> String.format("%.3f", controller.getVelocity()))
+        					.withPosition(1, 1); // 0,3
 
         //TODO: remove these items when done testing.
-        container.addNumber("Distance", controller::getDistance).withPosition(0, 2);
+        container.addString("Distance", () -> String.format("%.3f", controller.getDistance()))
+        					.withPosition(0, 2);
 
         //container.addNumber("Voltage", controller::getVoltage);
         //container.addNumber("Drive Encoder position", () -> controller.getEncoder().getPosition()); 
