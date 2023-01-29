@@ -110,7 +110,8 @@ public final class Falcon500SteerControllerFactoryBuilder
             SteerControllerFactory.super.addDashboardEntries(container, controller);
             container.addNumber("Absolute Encoder Angle", 
             					() -> Math.toDegrees(controller.absoluteEncoder.getAbsoluteAngle()))
-            			.withPosition(0, 0);
+            					.withPosition(0, 0);
+
         }
 
         @Override

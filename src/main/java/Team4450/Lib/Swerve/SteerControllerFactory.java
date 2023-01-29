@@ -5,23 +5,21 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 @FunctionalInterface
 public interface SteerControllerFactory<Controller extends SteerController, SteerConfiguration> 
-{
-    default void addDashboardEntries(
-            ShuffleboardContainer container,
-            Controller controller) 
+{	
+    default void addDashboardEntries(ShuffleboardContainer container, Controller controller) 
     {
         Util.consoleLog();
     
         container.addNumber("Current Angle", () -> Math.toDegrees(controller.getAngle()))
-        					.withPosition(0, 1);
+        					.withPosition(1, 0); // 1
         container.addNumber("Target Angle", () -> Math.toDegrees(controller.getReferenceAngle()))
-        					.withPosition(0, 2);
+        					.withPosition(0, 1); // 0, 2
     }
 
     default Controller create(
-            ShuffleboardContainer dashboardContainer,
-            SteerConfiguration steerConfiguration,
-            ModuleConfiguration moduleConfiguration) 
+            ShuffleboardContainer	dashboardContainer,
+            SteerConfiguration 		steerConfiguration,
+            ModuleConfiguration 	moduleConfiguration) 
     {
         Util.consoleLog();
     

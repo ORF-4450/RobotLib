@@ -11,13 +11,16 @@ import java.util.Objects;
  */
 public class ModuleConfiguration 
 {
-    private final double wheelDiameter;
-    private final double driveReduction;
-    private final boolean driveInverted;
+    private final double	wheelDiameter;
+    private final double	driveReduction;
+    private final boolean 	driveInverted;
 
-    private final double steerReduction;
-    private final boolean steerInverted;
-
+    private final double 	steerReduction;
+    private final boolean 	steerInverted;
+    
+    public static final int	shuffleBoardRows = 5;
+    //public static int		sbGridColumn;
+    
     /**
      * Identifies the location of a swerve module on the robot chassis.
      */
