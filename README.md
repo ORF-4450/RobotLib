@@ -34,9 +34,9 @@ library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
 Version 4.3.0
 
-*	Move Swerve code into this library.
+*	Move Swerve code into this library from Swerve-Demo.
 
-R. Corn, January 20, 2023
+R. Corn, February 1, 2023
 
 Version 4.2.0
 
