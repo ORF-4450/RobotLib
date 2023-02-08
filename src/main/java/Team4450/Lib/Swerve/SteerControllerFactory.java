@@ -8,7 +8,7 @@ public interface SteerControllerFactory<Controller extends SteerController, Stee
 {	
     default void addDashboardEntries(ShuffleboardContainer container, Controller controller) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         container.addString("Current Angle", () -> String.format("%.3f", Math.toDegrees(controller.getAngle())))
         					.withPosition(1, 0); // 1
@@ -22,7 +22,7 @@ public interface SteerControllerFactory<Controller extends SteerController, Stee
             SteerConfiguration 		steerConfiguration,
             ModuleConfiguration 	moduleConfiguration) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         var controller = create(steerConfiguration, moduleConfiguration);
 

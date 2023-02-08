@@ -22,7 +22,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
                                DriveControllerFactory<?, DriveConfiguration> driveControllerFactory,
                                SteerControllerFactory<?, SteerConfiguration> steerControllerFactory) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         this.moduleConfiguration = moduleConfiguration;
         this.driveControllerFactory = driveControllerFactory;
@@ -32,7 +32,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
     public SwerveModule create(DriveConfiguration driveConfiguration, SteerConfiguration steerConfiguration, 
                                double steerOffset, ModulePosition position) 
     {
-        Util.consoleLog();
+        Util.consoleLog("%s", position);
     
         var driveController = driveControllerFactory.create(driveConfiguration, moduleConfiguration);
         var steerController = steerControllerFactory.create(steerConfiguration, moduleConfiguration);
@@ -44,7 +44,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
                                SteerConfiguration steerConfiguration, double steerOffset,
                                ModulePosition position)
     {
-        Util.consoleLog();
+        Util.consoleLog("%s", position);
     
         var driveController = driveControllerFactory.create(
                 container,
@@ -76,7 +76,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
         private ModuleImplementation(DriveController driveController, SteerController steerController,
                                      double steerOffset, ModulePosition position, ShuffleboardLayout container) 
         {
-            Util.consoleLog("%s", position);
+            //Util.consoleLog("%s", position);
     
             this.driveController = driveController;
             this.steerController = steerController;
@@ -215,7 +215,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
         @Override
         public void resetMotorEncoders() 
         {
-            Util.consoleLog("%s", position);
+            //Util.consoleLog("%s", position);
     
             driveController.getEncoder().setPosition(0);
             steerController.getMotorEncoder().setPosition(0);
@@ -249,5 +249,11 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
             //                                            new Rotation2d(getSteerAngle()));
             //new Rotation2d(steerController.getMotorEncoder().getPosition()));
         }
+
+		@Override
+		public void setBrakeMode(boolean on) 
+		{
+			driveController.setBrakeMode(on);
+		}
     }
 } 

@@ -32,6 +32,12 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 4.3.1
+
+*	Remove unneeded logging from swerve code.
+
+R. Corn, February 8, 2023
+
 Version 4.3.0
 
 *	Move swerve drive code into this library from Swerve-Demo.

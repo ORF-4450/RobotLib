@@ -8,7 +8,7 @@ public interface DriveControllerFactory<Controller extends DriveController, Driv
 {
     default void addDashboardEntries(ShuffleboardContainer container, Controller controller) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         container.addString("Current Velocity", () -> String.format("%.3f", controller.getVelocity()))
         					.withPosition(1, 1); // 0,3
@@ -26,7 +26,7 @@ public interface DriveControllerFactory<Controller extends DriveController, Driv
             DriveConfiguration driveConfiguration,
             ModuleConfiguration moduleConfiguration) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         var controller = create(driveConfiguration, moduleConfiguration);
         

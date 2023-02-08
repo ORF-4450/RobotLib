@@ -28,7 +28,7 @@ public class CanCoderFactoryBuilder
 
     public AbsoluteEncoderFactory<CanCoderAbsoluteConfiguration> build() 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return configuration -> {
             CANCoderConfiguration config = new CANCoderConfiguration();
@@ -55,7 +55,7 @@ public class CanCoderFactoryBuilder
 
         private EncoderImplementation(WPI_CANCoder encoder) 
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             this.encoder = encoder;
         }

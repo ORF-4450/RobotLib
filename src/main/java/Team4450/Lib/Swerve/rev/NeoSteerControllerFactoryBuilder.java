@@ -26,7 +26,7 @@ public final class NeoSteerControllerFactoryBuilder
 
     public NeoSteerControllerFactoryBuilder withPidConstants(double proportional, double integral, double derivative) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         this.pidProportional = proportional;
         this.pidIntegral = integral;
@@ -75,7 +75,7 @@ public final class NeoSteerControllerFactoryBuilder
 
     public <T> SteerControllerFactory<ControllerImplementation, NeoSteerConfiguration<T>> build(AbsoluteEncoderFactory<T> encoderFactory) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return new FactoryImplementation<>(encoderFactory);
     }
@@ -86,7 +86,7 @@ public final class NeoSteerControllerFactoryBuilder
 
         public FactoryImplementation(AbsoluteEncoderFactory<T> encoderFactory) 
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             this.encoderFactory = encoderFactory;
         }
@@ -94,7 +94,7 @@ public final class NeoSteerControllerFactoryBuilder
         @Override
         public void addDashboardEntries(ShuffleboardContainer container, ControllerImplementation controller) 
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             container.addString("Absolute Angle", 
                     () -> String.format("%.3f", Math.toDegrees(controller.absoluteEncoder.getAbsoluteAngle())))
@@ -108,7 +108,7 @@ public final class NeoSteerControllerFactoryBuilder
         @Override
         public ControllerImplementation create(NeoSteerConfiguration<T> steerConfiguration, ModuleConfiguration moduleConfiguration) 
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
@@ -169,7 +169,7 @@ public final class NeoSteerControllerFactoryBuilder
 
         public ControllerImplementation(CANSparkMax motor, AbsoluteEncoder absoluteEncoder) 
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             this.motor = motor;
             this.controller = motor.getPIDController();
@@ -199,7 +199,7 @@ public final class NeoSteerControllerFactoryBuilder
         @Override
         public void setPidConstants(double proportional, double integral, double derivative)
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             checkNeoError(controller.setP(proportional), "Failed to set NEO PID proportional constant");
             checkNeoError(controller.setI(integral), "Failed to set NEO PID integral constant");

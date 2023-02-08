@@ -24,7 +24,7 @@ public final class NeoDriveControllerFactoryBuilder
 
     public NeoDriveControllerFactoryBuilder withVoltageCompensation(double nominalVoltage) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         this.nominalVoltage = nominalVoltage;
 
@@ -60,7 +60,7 @@ public final class NeoDriveControllerFactoryBuilder
 
     public DriveControllerFactory<ControllerImplementation, Integer> build() 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return new FactoryImplementation();
     }
@@ -70,7 +70,7 @@ public final class NeoDriveControllerFactoryBuilder
         @Override
         public ControllerImplementation create(Integer id, ModuleConfiguration moduleConfiguration) 
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             CANSparkMax motor = new CANSparkMax(id, CANSparkMaxLowLevel.MotorType.kBrushless);
 
@@ -114,7 +114,7 @@ public final class NeoDriveControllerFactoryBuilder
 
         private ControllerImplementation(CANSparkMax motor, RelativeEncoder encoder) 
         {
-            Util.consoleLog();
+            //Util.consoleLog();
     
             this.motor = motor;
             this.encoder = encoder;

@@ -36,7 +36,7 @@ public final class Mk4iSwerveModuleHelper
 
     private static DriveControllerFactory<?, Integer> getNeoDriveFactory(Mk4ModuleConfiguration configuration) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return new NeoDriveControllerFactoryBuilder()
                 .withVoltageCompensation(configuration.getNominalDriveVoltage())
@@ -47,7 +47,7 @@ public final class Mk4iSwerveModuleHelper
 
     private static SteerControllerFactory<?, NeoSteerConfiguration<CanCoderAbsoluteConfiguration>> getNeoSteerFactory(Mk4ModuleConfiguration configuration) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return new NeoSteerControllerFactoryBuilder()
                 .withVoltageCompensation(configuration.getNominalSteerVoltage())
@@ -216,7 +216,7 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset)
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return new SwerveModuleFactory<>(
                 gearRatio.getConfiguration(),
@@ -255,7 +255,7 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return createNeo(
             position, 
@@ -288,7 +288,7 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return new SwerveModuleFactory<>(
                 gearRatio.getConfiguration(),
@@ -323,7 +323,7 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset) 
     {
-        Util.consoleLog();
+        //Util.consoleLog();
     
         return createNeo(
             position, 

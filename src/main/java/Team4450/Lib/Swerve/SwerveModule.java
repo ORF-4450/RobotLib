@@ -118,4 +118,10 @@ public interface SwerveModule
      * @return SwerveModulePosition The module's field position.
      */
     SwerveModulePosition getFieldPosition();
+    
+    /**
+     * Sets the idle mode for the drive wheels. Defaults to brake.
+     * @param on True to set motor idle mode to brake, false to set to coast.
+     */
+    public void setBrakeMode(boolean on);
 }
