@@ -302,7 +302,9 @@ public final class NeoSteerControllerFactoryBuilder
          * This method launches a thread that uses a PID control to turn the
          * wheel to the "start" position, which represents wheel aligned straight
          * ahead and wheel gear facing the left side of the chassis. The start position
-         * is CanCoder absolute angle = 360 or 0.
+         * is CanCoder absolute angle = 360 or 0 with steering offset applied. Note that
+         * the steering offset is configured in the encoder and is automatically applied.
+         * Turns out steerOffset parameter is not needed here.
          */
         @Override
         public void setStartingPosition(double steerOffset) 

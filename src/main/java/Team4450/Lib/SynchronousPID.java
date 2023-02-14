@@ -101,7 +101,7 @@ public class SynchronousPID implements Sendable
 
     /**
      * Read the input, calculate the output accordingly, and return the result. This should be called at a constant
-     * rate by the user (ex. in a timed thread)
+     * rate by the user (ex. in a timed thread or execute/periodic function in a command or subsystem)
      *
      * @param input
      *            the input.
