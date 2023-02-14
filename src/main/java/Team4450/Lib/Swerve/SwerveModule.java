@@ -80,7 +80,7 @@ public interface SwerveModule
     Pose2d getPose();
 
     /**
-     * Set the module steer angle to the angle of the absolute encoder.
+     * Set the module steering encoder angle to the angle of the absolute encoder.
      */
     void resetSteerAngleToAbsolute();
 

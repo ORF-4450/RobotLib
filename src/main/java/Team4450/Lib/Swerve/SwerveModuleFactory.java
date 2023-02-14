@@ -203,6 +203,13 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
         @Override     
         public void resetSteerAngleToAbsolute() 
         {
+        	// The original SDS code had the steer offset subtracted below. But the steer offset is
+        	// configured into the SparkMax for Neos and so subtracting it here is an error. This 
+        	// caused this method to set an incorrect angle. So when we tried to use it to reset
+        	// after align to start position, it caused the steering to fail. With the offset
+        	// removed, things seem to be working much better.
+        	// NOTE: It may be that the offset needs to be subtracted here for 500s.
+        	
             double angleRad = steerController.getAbsoluteEncoder().getAbsoluteAngle(); // - steerOffset;
             
             Util.consoleLog("%s aa=%.3f  off=%.3f  result=%.3f rad=%.3f", position,

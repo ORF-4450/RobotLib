@@ -35,8 +35,10 @@ library and then generate a release on Github and Jitpack.
 Version 4.3.1
 
 *	Remove unneeded logging from swerve code.
+*	Fix bug in SwerveModuleFactory.resetSteerAngleToAbsolute() that was causing random steering failures when
+	called from setStartPosition(). Without it working, setStartPosition would fail when used after a reboot.
 
-R. Corn, February 8, 2023
+R. Corn, February 13, 2023
 
 Version 4.3.0
 
