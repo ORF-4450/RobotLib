@@ -84,6 +84,8 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
             this.position = position;
             this.container = container;
             
+            this.driveController.setPosition(position);
+            
             if (RobotBase.isSimulation()) 
             {
             	// Moved to drive controller class.
@@ -243,6 +245,8 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
         @Override
         public void setStartingPosition() 
         {
+            Util.consoleLog("offset=%.3f", steerOffset);
+            
             steerController.setStartingPosition(steerOffset);
             
             resetSteerAngleToAbsolute();

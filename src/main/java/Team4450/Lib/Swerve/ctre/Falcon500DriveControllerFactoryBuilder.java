@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import Team4450.Lib.Swerve.DriveController;
 import Team4450.Lib.Swerve.DriveControllerFactory;
 import Team4450.Lib.Swerve.ModuleConfiguration;
+import Team4450.Lib.Swerve.ModuleConfiguration.ModulePosition;
 
 public final class Falcon500DriveControllerFactoryBuilder 
 {
@@ -104,9 +105,11 @@ public final class Falcon500DriveControllerFactoryBuilder
 
     private class ControllerImplementation implements DriveController 
     {
-        private final WPI_TalonFX motor;
-        private final double sensorVelocityCoefficient, sensorPositionCoefficient;
-        private final double nominalVoltage = hasVoltageCompensation() ? Falcon500DriveControllerFactoryBuilder.this.nominalVoltage : 12.0;
+        private final WPI_TalonFX 		motor;
+        private ModulePosition			position;
+        private final double 			sensorVelocityCoefficient, sensorPositionCoefficient;
+        private final double 			nominalVoltage = hasVoltageCompensation() ? 
+        								Falcon500DriveControllerFactoryBuilder.this.nominalVoltage : 12.0;
 
         private ControllerImplementation(WPI_TalonFX motor, double sensorVelocityCoefficient,
                                          double sensorPositionCoefficient) 
@@ -183,5 +186,11 @@ public final class Falcon500DriveControllerFactoryBuilder
         {
             return motor.getMotorOutputVoltage();
         }
+
+		@Override
+		public void setPosition(ModulePosition position) 
+		{
+			this.position = position;
+		}
     }
 }

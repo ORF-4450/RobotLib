@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import Team4450.Lib.Swerve.DriveController;
 import Team4450.Lib.Swerve.DriveControllerFactory;
 import Team4450.Lib.Swerve.ModuleConfiguration;
+import Team4450.Lib.Swerve.ModuleConfiguration.ModulePosition;
 
 import static Team4450.Lib.Swerve.rev.RevUtils.checkNeoError;
 
@@ -111,6 +112,7 @@ public final class NeoDriveControllerFactoryBuilder
         private final CANSparkMax       motor;
         private final RelativeEncoder   encoder;
         private double                  currentSimVelocity, currentSimPosition;
+        private ModulePosition			position;
 
         private ControllerImplementation(CANSparkMax motor, RelativeEncoder encoder) 
         {
@@ -215,5 +217,11 @@ public final class NeoDriveControllerFactoryBuilder
             else
                 return currentSimPosition;
         }
+
+		@Override
+		public void setPosition(ModulePosition position) 
+		{
+			this.position = position;
+		}
     }
 }

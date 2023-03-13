@@ -6,6 +6,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.revrobotics.RelativeEncoder;
 
 import Team4450.Lib.Swerve.*;
+import Team4450.Lib.Swerve.ModuleConfiguration.ModulePosition;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 
 import static Team4450.Lib.Swerve.ctre.CtreUtils.checkCtreError;
@@ -184,6 +185,7 @@ public final class Falcon500SteerControllerFactoryBuilder
             );
 
             return new ControllerImplementation(motor,
+            		steerConfiguration.getPosition(),
                     sensorPositionCoefficient,
                     sensorVelocityCoefficient,
                     hasMotionMagic() ? TalonFXControlMode.MotionMagic : TalonFXControlMode.Position,
@@ -196,9 +198,10 @@ public final class Falcon500SteerControllerFactoryBuilder
         private static final int    ENCODER_RESET_ITERATIONS = 500;
         private static final double ENCODER_RESET_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
 
-        private final WPI_TalonFX   motor;
-        private final double        motorEncoderPositionCoefficient;
-        private final double        motorEncoderVelocityCoefficient;
+        private final WPI_TalonFX   	motor;
+        private final ModulePosition	position;
+        private final double        	motorEncoderPositionCoefficient;
+        private final double        	motorEncoderVelocityCoefficient;
 
         private final TalonFXControlMode    motorControlMode;
         private final AbsoluteEncoder       absoluteEncoder;
@@ -208,12 +211,14 @@ public final class Falcon500SteerControllerFactoryBuilder
         private double resetIteration = 0;
 
         private ControllerImplementation(WPI_TalonFX motor,
+        								 ModulePosition position,
                                          double motorEncoderPositionCoefficient,
                                          double motorEncoderVelocityCoefficient,
                                          TalonFXControlMode motorControlMode,
                                          AbsoluteEncoder absoluteEncoder) 
         {
             this.motor = motor;
+            this.position = position;
             this.motorEncoderPositionCoefficient = motorEncoderPositionCoefficient;
             this.motorEncoderVelocityCoefficient = motorEncoderVelocityCoefficient;
             this.motorControlMode = motorControlMode;

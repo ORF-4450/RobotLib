@@ -155,7 +155,7 @@ public class LCD
 	public static void clearLine(int line)
 	{
 		// The strange looking format specifier below repeats the "" 100 times.
-		String blankLine = String.format("%1$-100s", "");	//"                                          ";
+		String blankLine = String.format("%1$-100s", "");
 
 		print(line, 1, blankLine);
 	} 
@@ -166,7 +166,7 @@ public class LCD
 	
 	public static void clearAll()
 	{
-		String blankLine = String.format("%1$-100s", "");	//"                                          ";
+		String blankLine = String.format("%1$-100s", "");
 		
 		for (int i = 1; i < 11; i++) {print(i, 1, blankLine);}
 	} 
@@ -214,7 +214,7 @@ public class LCD
 	
 	public static void setClearLine(int line)
 	{
-		String blankLine = String.format("%1$-100s", "");	//"                                          ";
+		String blankLine = String.format("%1$-100s", "");
 
 		set(line, 1, blankLine);
 	} 
@@ -225,9 +225,9 @@ public class LCD
 	
 	public static void setClearAll()
 	{
-		String blankLine = String.format("%1$-100s", "");	//"                                          ";
+		String blankLine = String.format("%1$-100s", "");
 		
-		for (int i = 1; i < 11; i++) {set(i, 1, blankLine);}
+		for (int i = 1; i < 11; i++) { set(i, 1, blankLine); }
 	} 
 
 	/**

@@ -171,10 +171,10 @@ public class ColorUtil
     /**
      * Get the closest color name from our list
      * 
-     * @param r
-     * @param g
-     * @param b
-     * @return
+     * @param r Red component of target color 0-255.
+     * @param g Green component of target color 0-255.
+     * @param b Blue component of target color 0-255.
+     * @return The specified color name.
      */
     public static String getColorNameFromRgb(int r, int g, int b) 
     {
@@ -204,8 +204,8 @@ public class ColorUtil
     /**
      * Convert hexColor to rgb, then call getColorNameFromRgb(r, g, b)
      * 
-     * @param hexColor
-     * @return
+     * @param hexColor Target color in hex.
+     * @return Name of the specified color.
      */
     public static String getColorNameFromHex(int hexColor) 
     {

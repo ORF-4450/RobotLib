@@ -263,6 +263,7 @@ public class RevColorSensor implements Sendable
         
     /**
      * Same as getRGB() using the current sensor Color.
+     * @return RGB values as a string.
      */
     public String getRGB()
     {

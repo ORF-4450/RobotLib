@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import Team4450.Lib.Util;
 import Team4450.Lib.Swerve.*;
 import Team4450.Lib.Swerve.AbsoluteEncoder;
+import Team4450.Lib.Swerve.ModuleConfiguration.ModulePosition;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -149,7 +150,7 @@ public final class NeoSteerControllerFactoryBuilder
 
             checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
 
-            return new ControllerImplementation(motor, absoluteEncoder);
+            return new ControllerImplementation(motor, steerConfiguration.getPosition(), absoluteEncoder);
         }
     }
 
@@ -160,6 +161,7 @@ public final class NeoSteerControllerFactoryBuilder
 
         @SuppressWarnings({"FieldCanBeLocal", "unused"})
         private final CANSparkMax           motor;
+        private final ModulePosition		position;
         private final SparkMaxPIDController controller;
         private final RelativeEncoder       motorEncoder;
         private final AbsoluteEncoder       absoluteEncoder;
@@ -167,11 +169,12 @@ public final class NeoSteerControllerFactoryBuilder
         private double referenceAngleRadians = 0;
         private double resetIteration = 0;
 
-        public ControllerImplementation(CANSparkMax motor, AbsoluteEncoder absoluteEncoder) 
+        public ControllerImplementation(CANSparkMax motor, ModulePosition position, AbsoluteEncoder absoluteEncoder) 
         {
             //Util.consoleLog();
     
             this.motor = motor;
+            this.position = position;
             this.controller = motor.getPIDController();
             this.motorEncoder = motor.getEncoder();
             this.absoluteEncoder = absoluteEncoder;
@@ -357,7 +360,7 @@ public final class NeoSteerControllerFactoryBuilder
 
                 pid.close();
 
-                Util.consoleLog(result);
+                Util.consoleLog("%s %s", position.toString(), result);
             }).start();
         }
     }

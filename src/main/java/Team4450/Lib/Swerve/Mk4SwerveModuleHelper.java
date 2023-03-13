@@ -55,6 +55,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses Falcon 500s for driving and steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
@@ -83,6 +84,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new Falcon500SteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -94,6 +96,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses Falcon 500s for driving and steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive Falcon 500.
@@ -125,6 +128,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses Falcon 500s for driving and steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive Falcon 500.
@@ -150,6 +154,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new Falcon500SteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -160,6 +165,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses Falcon 500s for driving and steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive Falcon 500.
      * @param steerMotorPort   The CAN ID of the steer Falcon 500.
@@ -189,6 +195,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses NEOs for driving and steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
@@ -217,6 +224,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new NeoSteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -228,6 +236,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses NEOs for driving and steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
@@ -258,6 +267,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses NEOs for driving and steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
@@ -283,6 +293,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new NeoSteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -293,6 +304,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses NEOs for driving and steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
      * @param steerMotorPort   The CAN ID of the steer NEO.
@@ -322,6 +334,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses a Falcon 500 for driving and a NEO for steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
@@ -350,6 +363,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new NeoSteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -361,6 +375,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses a Falcon 500 for driving and a NEO for steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive Falcon 500.
@@ -392,6 +407,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses a Falcon 500 for driving and a NEO for steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive Falcon 500.
@@ -417,6 +433,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new NeoSteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -427,6 +444,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses a Falcon 500 for driving and a NEO for steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive Falcon 500.
      * @param steerMotorPort   The CAN ID of the steer NEO.
@@ -456,6 +474,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses a NEO for driving and a Falcon 500 for steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
@@ -484,6 +503,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new Falcon500SteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -495,6 +515,7 @@ public final class Mk4SwerveModuleHelper
      * Creates a Mk4 swerve module that uses a NEO for driving and a Falcon 500 for steering.
      * Module information is displayed in the specified ShuffleBoard container.
      *
+     * @param position		   The module location on the robot drive base.
      * @param container        The container to display module information in.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
@@ -525,6 +546,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses a NEO for driving and a Falcon 500 for steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param configuration    Module configuration parameters to use.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
@@ -550,6 +572,7 @@ public final class Mk4SwerveModuleHelper
                 driveMotorPort,
                 new Falcon500SteerConfiguration<>(
                         steerMotorPort,
+                        position,
                         new CanCoderAbsoluteConfiguration(steerEncoderPort, steerOffset)
                 ),
                 steerOffset,
@@ -560,6 +583,7 @@ public final class Mk4SwerveModuleHelper
     /**
      * Creates a Mk4 swerve module that uses a NEO for driving and a Falcon 500 for steering.
      *
+     * @param position		   The module location on the robot drive base.
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
      * @param steerMotorPort   The CAN ID of the steer Falcon 500.

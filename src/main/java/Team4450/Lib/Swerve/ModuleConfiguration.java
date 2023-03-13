@@ -38,7 +38,7 @@ public class ModuleConfiguration
      * @param wheelDiameter  The diameter of the module's wheel in meters.
      * @param driveReduction The overall drive reduction of the module. Multiplying motor rotations by this value
      *                       should result in wheel rotations.
-     * @param driveInverted  Whether the drive motor should be inverted. If there is an odd number of gea reductions
+     * @param driveInverted  Whether the drive motor should be inverted. If there is an odd number of gear reductions
      *                       this is typically true.
      * @param steerReduction The overall steer reduction of the module. Multiplying motor rotations by this value
      *                       should result in rotations of the steering pulley.
@@ -57,6 +57,7 @@ public class ModuleConfiguration
 
     /**
      * Gets the diameter of the wheel in meters.
+     * @return The wheel diameter in meters.
      */
     public double getWheelDiameter() 
     {
@@ -67,6 +68,7 @@ public class ModuleConfiguration
      * Gets the overall reduction of the drive system.
      * <p>
      * If this value is multiplied by drive motor rotations the result would be drive wheel rotations.
+     * @return The drive reduction (gear ratio).
      */
     public double getDriveReduction() 
     {
@@ -75,6 +77,7 @@ public class ModuleConfiguration
 
     /**
      * Gets if the drive motor should be inverted.
+     * @return True if drive motor should be inverted.
      */
     public boolean isDriveInverted() 
     {
@@ -85,6 +88,7 @@ public class ModuleConfiguration
      * Gets the overall reduction of the steer system.
      * <p>
      * If this value is multiplied by steering motor rotations the result would be steering pulley rotations.
+     * @return The steer reduction (gear ratio).
      */
     public double getSteerReduction() 
     {
@@ -93,6 +97,7 @@ public class ModuleConfiguration
 
     /**
      * Gets if the steering motor should be inverted.
+     * @return True if steering motor should be inverted.
      */
     public boolean isSteerInverted() 
     {

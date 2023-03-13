@@ -4,6 +4,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
+import Team4450.Lib.Swerve.ModuleConfiguration.ModulePosition;
+
 public interface DriveController 
 {
     void setReferenceVoltage(double voltage, double velocity);
@@ -23,4 +25,6 @@ public interface DriveController
     public TalonFX getMotor500();
 
     public void setBrakeMode(boolean on);
+    
+    public void setPosition(ModulePosition position);
 }
