@@ -150,6 +150,12 @@ public final class NeoSteerControllerFactoryBuilder
 
             checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
 
+            // Save all above settings to flash memory. If sparkmax power fails, it will restart with
+            // the saved settings. It will still need the start position button pressed to completely
+            // recover.
+            
+            checkNeoError(motor.burnFlash(), "Failed to burn steering NEO config");
+            
             return new ControllerImplementation(motor, steerConfiguration.getPosition(), absoluteEncoder);
         }
     }

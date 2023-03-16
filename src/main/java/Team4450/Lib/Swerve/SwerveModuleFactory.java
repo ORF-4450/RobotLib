@@ -245,7 +245,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
         @Override
         public void setStartingPosition() 
         {
-            Util.consoleLog("offset=%.3f", steerOffset);
+            Util.consoleLog("offset=%.3fr", steerOffset);
             
             steerController.setStartingPosition(steerOffset);
             

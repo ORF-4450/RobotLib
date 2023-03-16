@@ -80,6 +80,7 @@ public final class Falcon500DriveControllerFactoryBuilder
             }
 
             WPI_TalonFX motor = new WPI_TalonFX(driveConfiguration);
+            
             CtreUtils.checkCtreError(motor.configAllSettings(motorConfiguration), "Failed to configure Falcon 500");
 
             if (hasVoltageCompensation()) motor.enableVoltageCompensation(true);
@@ -126,7 +127,7 @@ public final class Falcon500DriveControllerFactoryBuilder
             // we are not actually moving. This prevents constantly applying
             // a voltage that is not enough to move the robot possibly damaging
             // the motor.
-            if (Math.abs(voltage) > .25)
+            if (Math.abs(voltage) > .05)
                 motor.setVoltage(voltage);
             else
                 motor.setVoltage(0);

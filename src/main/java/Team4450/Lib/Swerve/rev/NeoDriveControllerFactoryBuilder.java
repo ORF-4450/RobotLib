@@ -103,6 +103,11 @@ public final class NeoDriveControllerFactoryBuilder
             checkNeoError(encoder.setPositionConversionFactor(positionConversionFactor), "Failed to set drive NEO encoder pos conversion factor");
             checkNeoError(encoder.setVelocityConversionFactor(positionConversionFactor / 60.0), "Failed to set drive NEO encoder vel conversion factor");
 
+            // Save all above settings to flash memory. If sparkmax power fails, it will restart with
+            // the saved settings.
+            
+            checkNeoError(motor.burnFlash(), "Failed to burn drive NEO config");
+
             return new ControllerImplementation(motor, encoder);
         }
     }
@@ -140,7 +145,7 @@ public final class NeoDriveControllerFactoryBuilder
             // we are not actually moving. This prevents constantly applying
             // a voltage that is not enough to move the robot possibly damaging
             // the motor.
-            if (Math.abs(voltage) > .25)
+            if (Math.abs(voltage) > .05)
                 motor.setVoltage(voltage);
             else
                 motor.setVoltage(0);
