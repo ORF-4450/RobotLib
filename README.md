@@ -32,13 +32,14 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
-Version 4.2.0
+Version 4.4.0
 
 *	Reduce swerve not moving threshold voltage from .25 to .05 in the drive controllers. .25 too high causing
 	some problems. 
 *	Add code to swerve steering controller to save (burn) SparkMax configuration set in our code to flash memory
 	so SM will retain that config if SM power is interrupted.
 
+R. Corn, March 20, 2023
 
 Version 4.3.1
 
