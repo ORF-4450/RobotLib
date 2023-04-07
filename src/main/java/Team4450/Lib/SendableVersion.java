@@ -7,6 +7,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.util.WPILibVersion;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.net.URL;
 import java.util.jar.Attributes;
@@ -122,6 +123,24 @@ public class SendableVersion implements Sendable
 	public void removeSendable()
 	{
 		SendableRegistry.remove(this);
+	}
+	
+	/**
+	 * Update the dashboard directly with version information. Use instead
+	 * adding this Sendable to the dashboard. This gets around the problem 
+	 * where adding this aa a sendable causes the static version information
+	 * to be updated every 20ms as part of the Sendable scheme. That is a lot
+	 * of useless overhead, so added a function to just add the version info
+	 * to the dashboard as static data.
+	 */
+	public void updateDashBoard()
+	{
+		SmartDashboard.putString("Version/Program", programVersion);
+		SmartDashboard.putString("Version/RobotLib", robotlibVersion);
+		SmartDashboard.putString("Version/Branch", branch);
+		SmartDashboard.putString("Version/Commit", commit);
+		SmartDashboard.putString("Version/Time", time);
+		SmartDashboard.putString("Version/User", user);
 	}
 	
     /**

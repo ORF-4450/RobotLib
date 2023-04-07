@@ -32,6 +32,20 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 4.5.0
+
+*	Modify MonitorPDP class to correctly check port current for REV PDH.
+*	Change the MonitorPDP alarms to not reset if the alarm condition clears on its own. This way the alarms 
+	will remain visible on the dashboard to be observed after a match. Transient alarms were not being seen
+	by the drivers and we did not know they were happening. Will need to call new reset() function to clear
+	alarms on enable of robot (RobotContainer.resetFaults()).
+*	Modify SendableVersion to fix problem created by changes to how SendableRegistry works. See the code for
+	details. Modify Robot class to follow this change.
+*	Update SynchronousPID class to correctly support tuning via LiveWindow.
+*	Update SynchronousPID class to automatically track elapsed time between calculate() calls.
+	
+R. Corn, April 6, 2023
+
 Version 4.4.0
 
 *	Reduce swerve not moving threshold voltage from .25 to .05 in the drive controllers. .25 too high causing

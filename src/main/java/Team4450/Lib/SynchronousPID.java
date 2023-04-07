@@ -34,60 +34,90 @@ public class SynchronousPID implements Sendable
     private double m_error = 0.0;
     private double m_result = 0.0;
     private double m_last_input = Double.NaN;
+    private double m_last_time_called = Double.NaN;
     private double m_deadband = 0.0; // If the absolute error is less than dead band.
                                      // then treat error for the proportional term as 0.
 
-    public SynchronousPID() 
+    @SuppressWarnings("unused")
+	private SynchronousPID() 
     {
-    	//registerSendable("SynchronousPID");
     }
 
     /**
      * Allocate a PID object with the given constants for P, I, D
      *
-     * @param Kp
+     * @param p
      *            the proportional coefficient
-     * @param Ki
+     * @param i
      *            the integral coefficient
-     * @param Kd
+     * @param d
      *            the derivative coefficient
      */
-    public SynchronousPID(double Kp, double Ki, double Kd) 
+    public SynchronousPID(double p, double i, double d) 
     {
-        m_P = Kp;
-        m_I = Ki;
-        m_D = Kd;
-        m_F = 0;
+    	this("", p, i, d, 0);
+    }
 
-        instances++;
-        
-    	//registerSendable("SynchronousPID", instances);
-        SendableRegistry.add(this, "SynchronousPID", instances);
+    /**
+     * Allocate a PID object with the given constants for P, I, D
+     * @param name 
+     * 			  Title in Live Window
+     * @param p
+     *            the proportional coefficient
+     * @param i
+     *            the integral coefficient
+     * @param d
+     *            the derivative coefficient
+     */
+    public SynchronousPID(String name, double p, double i, double d) 
+    {
+    	this(name, p, i, d, 0);
     }
 
     /**
      * Allocate a PID object with the given constants for P, I, D, F
      *
-     * @param Kp
+     * @param p
      *            the proportional coefficient
-     * @param Ki
+     * @param i
      *            the integral coefficient
-     * @param Kd
+     * @param d
      *            the derivative coefficient
-     * @param Kf
+     * @param f
      *            the feed forward gain coefficient
      */
-    public SynchronousPID(double Kp, double Ki, double Kd, double Kf) 
+    public SynchronousPID(double p, double i, double d, double f) 
     {
-        m_P = Kp;
-        m_I = Ki;
-        m_D = Kd;
-        m_F = Kf;
+    	this("", p, i, d, f);
+    }
+
+    /**
+     * Allocate a PID object with the given constants for P, I, D, F
+     *
+     * @param name 
+     * 			  Title in Live Window
+     * @param p
+     *            the proportional coefficient
+     * @param i
+     *            the integral coefficient
+     * @param d
+     *            the derivative coefficient
+     * @param f
+     *            the feed forward gain coefficient
+     */
+    public SynchronousPID(String name, double p, double i, double d, double f) 
+    {
+        m_P = p;
+        m_I = i;
+        m_D = d;
+        m_F = f;
 
         instances++;
         
-    	//registerSendable("SynchronousPID", instances);
-        SendableRegistry.add(this, "SynchronousPID", instances);
+        if (name.isEmpty())
+        	SendableRegistry.addLW(this, "SynchronousPID", instances);
+        else
+        	SendableRegistry.addLW(this, name + "-PID");
     }
     
     /**
@@ -95,7 +125,6 @@ public class SynchronousPID implements Sendable
      */
     public void close()
     {
-    	//removeSendable();
     	SendableRegistry.remove(this);
     }
 
@@ -152,6 +181,27 @@ public class SynchronousPID implements Sendable
         return m_result;
     }
 
+    /**
+     * Read the input, calculate the output accordingly, and return the result. This should be called at a constant
+     * rate by the user (ex. in a timed thread or execute/periodic function in a command or subsystem). The time
+     * passed since previous call is tracked internally.
+     *
+     * @param input
+     *            the input.
+     * @return
+     *            the output.           
+     */
+    public double calculate(double input) 
+    {
+    	if (m_last_time_called == Double.NaN) m_last_time_called = Util.timeStamp();
+    		
+    	double elapsedTime = Util.getElaspedTime(m_last_time_called);
+    	 
+    	m_last_time_called = Util.timeStamp();
+    	 
+    	return calculate(input, elapsedTime);
+    }
+    
     /**
      * Set the PID controller gain parameters. Set the proportional, integral, and differential coefficients.
      *
@@ -451,14 +501,14 @@ public class SynchronousPID implements Sendable
 	public void initSendable( SendableBuilder builder )
 	{
 		builder.setSmartDashboardType("SynchronousPID");
-	    builder.addDoubleProperty("p", this::getP, this::setP);
-	    builder.addDoubleProperty("i", this::getI, this::setI);
-	    builder.addDoubleProperty("d", this::getD, this::setD);
-	    builder.addDoubleProperty("f", this::getF, this::setF);
-	    builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
-	    builder.addDoubleProperty("input", this::getInput, null);
-	    builder.addDoubleProperty("error", this::getError, null);
-	    builder.addDoubleProperty("result", this::get, null);
+	    builder.addDoubleProperty("1 p", this::getP, this::setP);
+	    builder.addDoubleProperty("2 i", this::getI, this::setI);
+	    builder.addDoubleProperty("3 d", this::getD, this::setD);
+	    builder.addDoubleProperty("4 f", this::getF, this::setF);
+	    builder.addDoubleProperty("5 setpoint", this::getSetpoint, this::setSetpoint);
+	    builder.addDoubleProperty("6 input", this::getInput, null);
+	    builder.addDoubleProperty("7 error", this::getError, null);
+	    builder.addDoubleProperty("8 result", this::get, null);
 	}
     
 }

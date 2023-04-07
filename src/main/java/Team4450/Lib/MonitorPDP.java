@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
- * CTRE Power Distribution Panel monitoring task. Monitors battery
+ * CTRE/REV Power Distribution Panel/Hub monitoring task. Monitors battery
  * voltage, current draw (overload) and brownout. Logs warnings to
  * console and shuffleboard LEDs. Runs as a separate thread from the 
  * Robot class. Runs until robot program is terminated.
@@ -23,7 +23,8 @@ public class MonitorPDP extends Thread implements Sendable
   private PowerDistribution			pdp;
   private double					sampleInterval = 1.0;	// Seconds
   private boolean					alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
-  private boolean					ports[] = new boolean[16];
+  private boolean					ports[] = new boolean[24];
+  private int						numPorts;
   
   /**
    * Static reference to the internal MonitorPDP instance created by
@@ -107,8 +108,8 @@ public class MonitorPDP extends Thread implements Sendable
   }
 
   /**
-   * Enable PDP port to be monitored.
-   * @param port Port number 0..15.
+   * Enable PDP/PDH port to be monitored. 0-15 for PDP, 0-23 for PDH.
+   * @param port Port number 0..23.
    * @param enabled True to monitor port.
    */
   
@@ -148,6 +149,17 @@ public class MonitorPDP extends Thread implements Sendable
   }
   
   /**
+   * Reset the alarms. Typically called in auto init and telop init or
+   * RobotContainer.resetFaults.
+   */
+  public void reset()
+  {
+	  alarmInProgress = false;
+	  lowBatteryAlarm = false;
+	  overloadAlarm = false;
+  }
+  
+  /**
    * Start monitoring. Called by Thread.start().
    */
   public void run()
@@ -158,12 +170,15 @@ public class MonitorPDP extends Thread implements Sendable
 	  try
 	  {
 		  Util.consoleLog();
+		  
+		  numPorts = pdp.getNumChannels();
         
-          // Check battery voltage and brownout every second.
+          // Check battery voltage, max current and brownout every second. If any problem
+		  // detected start flashing the appropriate LED on SB. Flashing does not reset.
         
 		  while (!isInterrupted())
           {
-			  alarmInProgress = false;
+			  //alarmInProgress = false;
 			  
 			  // Check PDP input voltage.
 			  
@@ -173,28 +188,36 @@ public class MonitorPDP extends Thread implements Sendable
 			  
 				  alarmInProgress = true;
 				  lowBatteryAlarm = true;
-			  } else
-				  lowBatteryAlarm = false;
+			  } //else
+				  //lowBatteryAlarm = false;
 			  
 			  // Check PDP total current flow.
 			  
 			  if (pdp.getTotalCurrent() > MAX_CURRENT)
 			  {
-				  DriverStation.reportError(String.format("battery total current warning: %.1famps", pdp.getTotalCurrent()), false);
+				  DriverStation.reportError(String.format("battery total current warning: %.1f amps", pdp.getTotalCurrent()), false);
 			  
 				  alarmInProgress = true;
 				  overloadAlarm = true;
-			  } else
-				  overloadAlarm = false;
+			  } //else
+				  //overloadAlarm = false;
 			  
 			  // check the PDP output port current levels for enabled ports.
 			  
-			  for (int i = 0; i < 16; i++)
-			  {
-				  if (ports[i])
-    				  if (((i < 4 && i > 11) && pdp.getCurrent(i) > 40) | ((i > 3 && i < 12) && pdp.getCurrent(i) > 30))
-    					  DriverStation.reportError(String.format("pdp port %d current warning: %.1famps", i,  pdp.getCurrent(i)), false);
-			  }
+			  if (numPorts == 16)
+				  for (int i = 0; i < 16; i++)
+				  {
+					  if (ports[i])
+	    				  if (((i < 4 && i > 11) && pdp.getCurrent(i) > 40) | ((i > 3 && i < 12) && pdp.getCurrent(i) > 30))
+	    					  DriverStation.reportError(String.format("pdp port %d current warning: %.1f amps", i,  pdp.getCurrent(i)), false);
+				  }
+			  else
+				  for (int i = 0; i < 24; i++)
+				  {
+					  if (ports[i])
+	    				  if (pdp.getCurrent(i) > 40)
+	    					  DriverStation.reportError(String.format("pdp port %d current warning: %.1f amps", i,  pdp.getCurrent(i)), false);
+				  }	  
 			  
 			  // Check driver station brownout flag.
 			  
@@ -204,8 +227,8 @@ public class MonitorPDP extends Thread implements Sendable
 			  
 				  alarmInProgress = true;
 				  overloadAlarm = true;
-			  } else
-				  overloadAlarm = false;
+			  } //else
+				  //overloadAlarm = false;
 				  
 			  // flash DS leds for alarms.
 			  
