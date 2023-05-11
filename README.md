@@ -43,8 +43,10 @@ Version 4.5.0
 	details. Modify Robot class to follow this change.
 *	Update SynchronousPID class to correctly support tuning via LiveWindow.
 *	Update SynchronousPID class to automatically track elapsed time between calculate() calls.
+*	Change default swerve drive-motor current limit from 80 to 40 amps. 80 way too high and contributed to 
+	power issues at Houston.
 	
-R. Corn, April 6, 2023
+R. Corn, May 10, 2023
 
 Version 4.4.0
 

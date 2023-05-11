@@ -20,7 +20,7 @@ public class Mk4ModuleConfiguration
     private double driveRampRate        = 0.0;
     private double steerRampRate        = 0.0;
 
-    private double driveCurrentLimit    = 80;   // amps.
+    private double driveCurrentLimit    = 40;   // amps.
     private double steerCurrentLimit    = 20;
 
     // Steer PID values for Neo. Customized by 4450.
