@@ -81,7 +81,7 @@ jobs:
       uses: EndBug/add-and-commit@v9.1.3
       with:
         add: './robotlib.json'
-        branch: 'master'
+        new_branch: 'testing-branch-please-ignore'
         message: 'Automated - Update robotlib.json for release'
 
     - name: Upload robotlib.json to Release
