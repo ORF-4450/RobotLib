@@ -26,6 +26,7 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: 11
+        cache: gradle
 
     - name: Build RobotLib
       run: './gradlew build'
@@ -73,6 +74,7 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: 11
+        cache: gradle
 
     - name: Generate robotlib.json
       run: './gradlew vendorJSON'
@@ -81,7 +83,6 @@ jobs:
       uses: EndBug/add-and-commit@v9.1.3
       with:
         add: './robotlib.json'
-        new_branch: 'testing-branch-please-ignore'
         message: 'Automated - Update robotlib.json for release'
 
     - name: Upload robotlib.json to Release
