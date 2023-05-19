@@ -145,6 +145,7 @@ public final class NeoDriveControllerFactoryBuilder
             // we are not actually moving. This prevents constantly applying
             // a voltage that is not enough to move the robot possibly damaging
             // the motor.
+        	
             if (Math.abs(voltage) > .05)
                 motor.setVoltage(voltage);
             else
@@ -152,9 +153,10 @@ public final class NeoDriveControllerFactoryBuilder
 
             // We track the "requested" velocity to use as a substitute for measured
             // velocity due to problems with Neo simulation not calculating a correct
-            // velocity. We also compute the distance travelled for the same reason.
+            // velocity. We also compute the distance traveled for the same reason.
             // TODO Fix Rev simulation to work correctly. The code below appears to
             // work as a workaround but hard to say how well it models reality.
+            
             currentSimVelocity = velocity;
             
             double distancePer20Ms = currentSimVelocity / 50.0;

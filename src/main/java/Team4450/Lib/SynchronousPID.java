@@ -1,8 +1,6 @@
 package Team4450.Lib;
 
 import edu.wpi.first.util.sendable.Sendable;
-//import edu.wpi.first.wpilibj.Sendable;
-//import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.hal.util.BoundaryException;
@@ -15,10 +13,11 @@ import edu.wpi.first.hal.util.BoundaryException;
  * This class courtesy of Team 254 with modifications.
  */
 
-public class SynchronousPID implements Sendable
+public class SynchronousPID implements Sendable, AutoCloseable
 {
 	private static int	instances;
 	
+	private String m_name;
     private double m_P; 	// factor for "proportional" control.
     private double m_I; 	// factor for "integral" control.
     private double m_D; 	// factor for "derivative" control.
@@ -61,7 +60,7 @@ public class SynchronousPID implements Sendable
     /**
      * Allocate a PID object with the given constants for P, I, D
      * @param name 
-     * 			  Title in Live Window
+     * 			  Title in Live Window, will have instance number and -PID appended.
      * @param p
      *            the proportional coefficient
      * @param i
@@ -95,7 +94,7 @@ public class SynchronousPID implements Sendable
      * Allocate a PID object with the given constants for P, I, D, F
      *
      * @param name 
-     * 			  Title in Live Window
+     * 			  Title in Live Window, will have instance number and -PID appended.
      * @param p
      *            the proportional coefficient
      * @param i
@@ -114,10 +113,36 @@ public class SynchronousPID implements Sendable
 
         instances++;
         
+        m_name = String.format("%s(%d)-PID", name, instances);
+        
         if (name.isEmpty())
         	SendableRegistry.addLW(this, "SynchronousPID", instances);
         else
-        	SendableRegistry.addLW(this, name + "-PID");
+        	SendableRegistry.addLW(this, m_name);
+
+        Util.consoleLog("%s", m_name);
+    }
+    
+    /**
+     * Returns the name of the object instance.
+     * @return Name of this object instance.
+     */
+    public String getName()
+    {
+    	return m_name;
+    }
+    
+    /**
+     * Sets the name of the object instance.
+     * @param name Name of this object instance.
+     */
+    public void setName(String name)
+    {
+    	Util.consoleLog("%s", name);
+    	
+    	m_name = name + "-PID";
+    	
+    	SendableRegistry.setName(this, m_name);
     }
     
     /**
@@ -125,6 +150,8 @@ public class SynchronousPID implements Sendable
      */
     public void close()
     {
+    	Util.consoleLog("%s", m_name);
+
     	SendableRegistry.remove(this);
     }
 
@@ -246,6 +273,7 @@ public class SynchronousPID implements Sendable
      */
     public double getP() 
     {
+    	Util.consoleLog("%s: p=%.4f", m_name, m_P);
         return m_P;
     }
     
@@ -256,6 +284,9 @@ public class SynchronousPID implements Sendable
      */
     public void setP(double p)
     {
+    	//Exception e = new Exception(m_name + ": setP");
+    	//Util.logException(e);
+    	Util.consoleLog("%s: p=%.4f", m_name, p);
     	m_P = p;
     }
 
@@ -320,7 +351,7 @@ public class SynchronousPID implements Sendable
     }
     
     /**
-     * Return the current PID result This is always centered on zero and constrained the the max and min outs
+     * Return the current PID result This is always centered on zero and constrained the the max and min outputs.
      *
      * @return the latest calculated output
      */
@@ -336,7 +367,7 @@ public class SynchronousPID implements Sendable
      * constraints, it considers them to be the same point and automatically calculates the shortest route to the
      * setpoint.
      *
-     * @param continuous
+     * @param continuous 
      *            Set to true turns on continuous, false turns off continuous
      */
     public void setContinuous(boolean continuous) 
@@ -492,7 +523,7 @@ public class SynchronousPID implements Sendable
     {
         return "PIDController";
     }
-
+    
 	/**
 	 * Initialize the Sendable. Called by SmartDashboard.putData().
 	 * @param builder SendableBuilder object.
@@ -501,6 +532,7 @@ public class SynchronousPID implements Sendable
 	public void initSendable( SendableBuilder builder )
 	{
 		builder.setSmartDashboardType("SynchronousPID");
+    	builder.addBooleanProperty(".controllable", () -> true, null);
 	    builder.addDoubleProperty("1 p", this::getP, this::setP);
 	    builder.addDoubleProperty("2 i", this::getI, this::setI);
 	    builder.addDoubleProperty("3 d", this::getD, this::setD);

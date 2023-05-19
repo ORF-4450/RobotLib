@@ -322,7 +322,7 @@ public final class NeoSteerControllerFactoryBuilder
             {
                 PIDController pid = new PIDController(.01, 0, 0);
                 
-                pid.setTolerance(0.5);
+                pid.setTolerance(0.25);
                 pid.enableContinuousInput(0, 360);
 
                 double  power, angle, startTime = Util.timeStamp();

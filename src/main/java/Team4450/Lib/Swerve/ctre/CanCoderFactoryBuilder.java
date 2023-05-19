@@ -8,6 +8,7 @@ import com.ctre.phoenix.sensors.CANCoderStatusFrame;
 import Team4450.Lib.Util;
 import Team4450.Lib.Swerve.AbsoluteEncoder;
 import Team4450.Lib.Swerve.AbsoluteEncoderFactory;
+import edu.wpi.first.util.sendable.SendableRegistry;
 
 public class CanCoderFactoryBuilder 
 {
@@ -45,6 +46,8 @@ public class CanCoderFactoryBuilder
             CtreUtils.checkCtreError(encoder.setStatusFramePeriod(CANCoderStatusFrame.SensorData, periodMilliseconds, 
                                      250), "Failed to configure CANCoder update rate");
 
+            SendableRegistry.addLW(encoder, "DriveBase", "CanCoder[" + encoder.getDeviceID() + "]");
+            
             return new EncoderImplementation(encoder);
         };
     }
