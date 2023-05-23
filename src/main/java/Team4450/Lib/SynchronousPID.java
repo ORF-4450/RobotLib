@@ -273,7 +273,8 @@ public class SynchronousPID implements Sendable, AutoCloseable
      */
     public double getP() 
     {
-    	Util.consoleLog("%s: p=%.4f", m_name, m_P);
+    	//Util.consoleLog("%s: p=%.4f", m_name, m_P);
+    	
         return m_P;
     }
     
@@ -286,7 +287,8 @@ public class SynchronousPID implements Sendable, AutoCloseable
     {
     	//Exception e = new Exception(m_name + ": setP");
     	//Util.logException(e);
-    	Util.consoleLog("%s: p=%.4f", m_name, p);
+    	//Util.consoleLog("%s: p=%.4f", m_name, p);
+    	
     	m_P = p;
     }
 

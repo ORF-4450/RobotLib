@@ -49,7 +49,7 @@ Version 4.5.0
 *	Update SynchrounousPID to more correctly implement Sendable so LiveWindow can be used to tune such controllers.
 *	Update CANCoder instances in swerve code to add themselves to LiveWindow under the DriveBase subsystem.
 	
-R. Corn, May 10, 2023
+R. Corn, May 22, 2023
 
 Version 4.4.0
 
