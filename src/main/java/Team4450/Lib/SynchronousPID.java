@@ -18,24 +18,26 @@ public class SynchronousPID implements Sendable, AutoCloseable
 	private static int	instances;
 	
 	private String m_name;
-    private double m_P; 	// factor for "proportional" control.
-    private double m_I; 	// factor for "integral" control.
-    private double m_D; 	// factor for "derivative" control.
-    private double m_F; 	// factor for feed forward gain.
+	private int	   m_instance;
+    private double m_P; 					// factor for "proportional" control.
+    private double m_I; 					// factor for "integral" control.
+    private double m_D; 					// factor for "derivative" control.
+    private double m_F; 					// factor for feed forward gain.
     private double m_maximumOutput = 1.0; 	// maximum output.
     private double m_minimumOutput = -1.0; 	// minimum output.
     private double m_maximumInput = 0.0; 	// maximum input - limit setpoint to this.
     private double m_minimumInput = 0.0; 	// minimum input - limit setpoint to this.
     private boolean m_continuous = false; 	// do the end points wrap around? eg. Absolute encoder.
-    private double m_prevError = 0.0; 	// the prior sensor input (used to compute velocity).
-    private double m_totalError = 0.0; 	// the sum of the errors for use in the integral calc.
+    private double m_prevError = 0.0; 		// the prior sensor input (used to compute velocity).
+    private double m_totalError = 0.0; 		// the sum of the errors for use in the integral calc.
     private double m_setpoint = 0.0;
     private double m_error = 0.0;
-    private double m_result = 0.0;
+    private double m_output = 0.0;
     private double m_last_input = Double.NaN;
     private double m_last_time_called = Double.NaN;
-    private double m_deadband = 0.0; // If the absolute error is less than dead band.
-                                     // then treat error for the proportional term as 0.
+    private double m_tolerance = Double.NaN;
+    private double m_deadband = 0.0; 		// If the absolute error is less than dead band.
+                                     		// then treat error for the proportional term as 0.
 
     @SuppressWarnings("unused")
 	private SynchronousPID() 
@@ -43,14 +45,14 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Allocate a PID object with the given constants for P, I, D
+     * Allocate a PID object with the given constants for P, I, D.
      *
      * @param p
-     *            the proportional coefficient
+     *            The proportional coefficient.
      * @param i
-     *            the integral coefficient
+     *            The integral coefficient.
      * @param d
-     *            the derivative coefficient
+     *            The derivative coefficient.
      */
     public SynchronousPID(double p, double i, double d) 
     {
@@ -58,15 +60,16 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Allocate a PID object with the given constants for P, I, D
+     * Allocate a PID object with the given constants for P, I, D.
+     * 
      * @param name 
      * 			  Title in Live Window, will have instance number and -PID appended.
      * @param p
-     *            the proportional coefficient
+     *            The proportional coefficient.
      * @param i
-     *            the integral coefficient
+     *            The integral coefficient.
      * @param d
-     *            the derivative coefficient
+     *            The derivative coefficient.
      */
     public SynchronousPID(String name, double p, double i, double d) 
     {
@@ -74,16 +77,16 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Allocate a PID object with the given constants for P, I, D, F
+     * Allocate a PID object with the given constants for P, I, D, F.
      *
      * @param p
-     *            the proportional coefficient
+     *            The proportional coefficient.
      * @param i
-     *            the integral coefficient
+     *            The integral coefficient.
      * @param d
-     *            the derivative coefficient
+     *            The derivative coefficient.
      * @param f
-     *            the feed forward gain coefficient
+     *            The feed forward gain coefficient.
      */
     public SynchronousPID(double p, double i, double d, double f) 
     {
@@ -91,18 +94,18 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Allocate a PID object with the given constants for P, I, D, F
+     * Allocate a PID object with the given constants for P, I, D, F.
      *
      * @param name 
      * 			  Title in Live Window, will have instance number and -PID appended.
      * @param p
-     *            the proportional coefficient
+     *            The proportional coefficient.
      * @param i
-     *            the integral coefficient
+     *            The integral coefficient.
      * @param d
-     *            the derivative coefficient
+     *            The derivative coefficient.
      * @param f
-     *            the feed forward gain coefficient
+     *            The feed forward gain coefficient.
      */
     public SynchronousPID(String name, double p, double i, double d, double f) 
     {
@@ -113,12 +116,11 @@ public class SynchronousPID implements Sendable, AutoCloseable
 
         instances++;
         
-        m_name = String.format("%s(%d)-PID", name, instances);
+        m_instance = instances;
         
-        if (name.isEmpty())
-        	SendableRegistry.addLW(this, "SynchronousPID", instances);
-        else
-        	SendableRegistry.addLW(this, m_name);
+        m_name = String.format("%s[%d]-PID", name, instances);
+        
+       	SendableRegistry.addLW(this, "SynchronousPID Controllers", m_name);
 
         Util.consoleLog("%s", m_name);
     }
@@ -157,14 +159,14 @@ public class SynchronousPID implements Sendable, AutoCloseable
 
     /**
      * Read the input, calculate the output accordingly, and return the result. This should be called at a constant
-     * rate by the user (ex. in a timed thread or execute/periodic function in a command or subsystem)
+     * rate by the user (ex. in a timed thread or execute/periodic function in a command or subsystem).
      *
      * @param input
-     *            the input.
+     *            The input.
      * @param dt
-     *            time passed since previous call to calculate in seconds.
+     *            Time passed since previous call to calculate in seconds.
      * @return
-     *            the output.           
+     *            The output.           
      */
     public double calculate(double input, double dt) 
     {
@@ -195,17 +197,17 @@ public class SynchronousPID implements Sendable, AutoCloseable
         // Don't blow away m_error so as to not break derivative but apply deadband.
         double proportionalError = Math.abs(m_error) < m_deadband ? 0 : m_error;
 
-        m_result = (m_P * proportionalError) + (m_I * m_totalError) + (m_D * (m_error - m_prevError) / dt)
+        m_output = (m_P * proportionalError) + (m_I * m_totalError) + (m_D * (m_error - m_prevError) / dt)
                 	+ (m_F * m_setpoint);
         
         m_prevError = m_error;
         
-        if (m_result > m_maximumOutput) 
-            m_result = m_maximumOutput;
-        else if (m_result < m_minimumOutput) 
-            m_result = m_minimumOutput;
+        if (m_output > m_maximumOutput) 
+            m_output = m_maximumOutput;
+        else if (m_output < m_minimumOutput) 
+            m_output = m_minimumOutput;
         
-        return m_result;
+        return m_output;
     }
 
     /**
@@ -214,9 +216,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
      * passed since previous call is tracked internally.
      *
      * @param input
-     *            the input.
+     *            The input.
      * @return
-     *            the output.           
+     *            The output.           
      */
     public double calculate(double input) 
     {
@@ -233,11 +235,11 @@ public class SynchronousPID implements Sendable, AutoCloseable
      * Set the PID controller gain parameters. Set the proportional, integral, and differential coefficients.
      *
      * @param p
-     *            Proportional coefficient
+     *            Proportional coefficient.
      * @param i
-     *            Integral coefficient
+     *            Integral coefficient.
      * @param d
-     *            Differential coefficient
+     *            Differential coefficient.
      */
     public void setPID(double p, double i, double d) 
     {
@@ -250,13 +252,13 @@ public class SynchronousPID implements Sendable, AutoCloseable
      * Set the PID controller gain parameters. Set the proportional, integral, and differential coefficients.
      *
      * @param p
-     *            Proportional coefficient
+     *            Proportional coefficient.
      * @param i
-     *            Integral coefficient
+     *            Integral coefficient.
      * @param d
-     *            Differential coefficient
+     *            Differential coefficient.
      * @param f
-     *            Feed forward coefficient
+     *            Feed forward coefficient.
      */
     public void setPID(double p, double i, double d, double f) 
     {
@@ -267,9 +269,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Get the Proportional coefficient
+     * Get the Proportional coefficient.
      *
-     * @return proportional coefficient
+     * @return Proportional coefficient.
      */
     public double getP() 
     {
@@ -279,9 +281,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
     
     /**
-     * Set the Proportional coefficient
+     * Set the Proportional coefficient.
      * 
-     * @param p The proportional coefficient
+     * @param p The proportional coefficient.
      */
     public void setP(double p)
     {
@@ -293,9 +295,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Get the Integral coefficient
+     * Get the Integral coefficient.
      *
-     * @return integral coefficient
+     * @return Integral coefficient.
      */
     public double getI() 
     {
@@ -303,9 +305,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
     
     /**
-     * Set the Integral coefficient
+     * Set the Integral coefficient.
      * 
-     * @param i The integral coefficient
+     * @param i The integral coefficient.
      */
     public void setI(double i)
     {
@@ -313,9 +315,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Get the Differential coefficient
+     * Get the Differential coefficient.
      *
-     * @return differential coefficient
+     * @return Differential coefficient.
      */
     public double getD() 
     {
@@ -323,9 +325,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
     
     /**
-     * Set the Differential coefficient
+     * Set the Differential coefficient.
      * 
-     * @param d The differential coefficient
+     * @param d The differential coefficient.
      */
     public void setD(double d)
     {
@@ -333,9 +335,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Get the Feed forward coefficient
+     * Get the Feed forward coefficient.
      *
-     * @return feed forward coefficient
+     * @return Feed forward coefficient.
      */
     public double getF() 
     {
@@ -343,9 +345,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
     
     /**
-     * Set the Feed Forward coefficient
+     * Set the Feed Forward coefficient.
      * 
-     * @param f The fee forward coefficient
+     * @param f The feed forward coefficient.
      */
     public void setF(double f)
     {
@@ -355,13 +357,13 @@ public class SynchronousPID implements Sendable, AutoCloseable
     /**
      * Return the current PID result This is always centered on zero and constrained the the max and min outputs.
      *
-     * @return the latest calculated output
+     * @return The latest calculated output.
      */
     public double get()
     {
     	//Util.consoleLog();
     	
-        return m_result;
+        return m_output;
     }
 
     /**
@@ -370,13 +372,17 @@ public class SynchronousPID implements Sendable, AutoCloseable
      * setpoint.
      *
      * @param continuous 
-     *            Set to true turns on continuous, false turns off continuous
+     *            True turns on continuous, false turns off continuous.
      */
     public void setContinuous(boolean continuous) 
     {
         m_continuous = continuous;
     }
 
+    /**
+     * Set deadband for error value.
+     * @param deadband If error is below this value, set error to zero.
+     */
     public void setDeadband(double deadband) 
     {
         m_deadband = deadband;
@@ -393,12 +399,13 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Sets the maximum and minimum values expected from the input.
+     * Sets the maximum and minimum values expected from the input. Constrains the SetPoint
+     * to be within these values.
      *
      * @param minimumInput
-     *            the minimum value expected from the input
+     *            The minimum value expected from the input.
      * @param maximumInput
-     *            the maximum value expected from the output
+     *            The maximum value expected from the output.
      */
     public void setInputRange(double minimumInput, double maximumInput) 
     {
@@ -415,9 +422,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
      * Sets the minimum and maximum values to write.
      *
      * @param minimumOutput
-     *            the minimum value to write to the output
+     *            The minimum value to write to the output.
      * @param maximumOutput
-     *            the maximum value to write to the output
+     *            The maximum value to write to the output.
      */
     public void setOutputRange(double minimumOutput, double maximumOutput) 
     {
@@ -429,10 +436,10 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Set the setpoint for the PID controller
+     * Set the setpoint for the PID controller.
      *
      * @param setpoint
-     *            the desired setpoint
+     *            The desired setpoint.
      */
     public void setSetpoint(double setpoint) 
     {
@@ -450,9 +457,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Returns the current setpoint of the PID controller
+     * Returns the setpoint of the PID controller.
      *
-     * @return the current setpoint
+     * @return The current setpoint.
      */
     public double getSetpoint() 
     {
@@ -460,9 +467,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Returns the current difference of the input from the setpoint
+     * Returns the last difference of the input from the setpoint.
      *
-     * @return the current error
+     * @return The last error.
      */
     public double getError() 
     {
@@ -470,23 +477,53 @@ public class SynchronousPID implements Sendable, AutoCloseable
     }
 
     /**
-     * Returns the current input to the calculate() function.
+     * Returns the last input to the calculate() function.
      *
-     * @return the current input.
+     * @return The last input.
      */
     public double getInput() 
     {
         return m_last_input;
     }
+    
+    /**
+     * Set tolerance value. If error is within this tolerance, onTarget()
+     * will return true.
+     * @param tolerance Tolerance value.
+     */
+    public void setTolerance(double tolerance)
+    {
+    	m_tolerance = tolerance;
+    }
+    
+    /**
+     * Returns the current tolerance value.
+     * @return The tolerance. NaN if not set.
+     */
+    public double getTolerance()
+    {
+    	return m_tolerance;
+    }
  
     /**
-     * Return true if the error is within the tolerance
+     * Return true if the last error is within the tolerance.
      * @param tolerance Tolerance value 0..t
-     * @return true if the error is less than the tolerance
+     * @return True if the error is less than the tolerance.
      */
     public boolean onTarget(double tolerance) 
     {
         return m_last_input != Double.NaN && Math.abs(m_last_input - m_setpoint) < tolerance;
+    }
+
+    /**
+     * Return true if the last error is within the tolerance set with setTolerance().
+     * @return True if the error is less than the tolerance.
+     */
+    public boolean onTarget() 
+    {
+    	if (m_tolerance == Double.NaN) throw new IllegalArgumentException("Tolerance not set");
+    		
+        return m_last_input != Double.NaN && Math.abs(m_last_input - m_setpoint) < m_tolerance;
     }
 
     /**
@@ -497,8 +534,10 @@ public class SynchronousPID implements Sendable, AutoCloseable
         m_last_input = Double.NaN;
         m_prevError = 0;
         m_totalError = 0;
-        m_result = 0;
-        m_setpoint = 0;
+        m_output = 0;
+        
+        // Don't know why you would want to do this. Removed for 4.5.0.
+        //m_setpoint = 0;
     }
 
     /**
@@ -526,6 +565,11 @@ public class SynchronousPID implements Sendable, AutoCloseable
         return "PIDController";
     }
     
+    private void setOutputRange(double range)
+    {
+    	setOutputRange(-range, range);
+    }
+    
 	/**
 	 * Initialize the Sendable. Called by SmartDashboard.putData().
 	 * @param builder SendableBuilder object.
@@ -539,10 +583,12 @@ public class SynchronousPID implements Sendable, AutoCloseable
 	    builder.addDoubleProperty("2 i", this::getI, this::setI);
 	    builder.addDoubleProperty("3 d", this::getD, this::setD);
 	    builder.addDoubleProperty("4 f", this::getF, this::setF);
-	    builder.addDoubleProperty("5 setpoint", this::getSetpoint, this::setSetpoint);
-	    builder.addDoubleProperty("6 input", this::getInput, null);
-	    builder.addDoubleProperty("7 error", this::getError, null);
-	    builder.addDoubleProperty("8 result", this::get, null);
+	    builder.addDoubleProperty("5 max output", () -> m_maximumOutput, this::setOutputRange);
+	    builder.addDoubleProperty("6 tolerance", this::getTolerance, this::setTolerance);
+	    builder.addDoubleProperty("7 setpoint", this::getSetpoint, this::setSetpoint);
+	    builder.addDoubleProperty("8 input", this::getInput, null);
+	    builder.addDoubleProperty("9 error", this::getError, null);
+	    builder.addDoubleProperty("91 output", this::get, null);
 	}
     
 }
