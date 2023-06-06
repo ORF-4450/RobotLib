@@ -170,8 +170,6 @@ public class SynchronousPID implements Sendable, AutoCloseable
      */
     public double calculate(double input, double dt) 
     {
-    	//Util.consoleLog();
-    	
         if (dt < 1E-6) dt = 1E-6;
         
         m_last_input = input;
@@ -206,7 +204,9 @@ public class SynchronousPID implements Sendable, AutoCloseable
             m_output = m_maximumOutput;
         else if (m_output < m_minimumOutput) 
             m_output = m_minimumOutput;
-        
+    	
+        //Util.consoleLog("input=%.3f  dt=%.6f  output=%.3f", input, dt, m_output);
+    	
         return m_output;
     }
 
@@ -222,7 +222,7 @@ public class SynchronousPID implements Sendable, AutoCloseable
      */
     public double calculate(double input) 
     {
-    	if (m_last_time_called == Double.NaN) m_last_time_called = Util.timeStamp();
+    	if (Double.isNaN(m_last_time_called)) m_last_time_called = Util.timeStamp();
     		
     	double elapsedTime = Util.getElaspedTime(m_last_time_called);
     	 
@@ -531,6 +531,7 @@ public class SynchronousPID implements Sendable, AutoCloseable
      */
     public void reset() 
     {
+    	m_last_time_called = Double.NaN;
         m_last_input = Double.NaN;
         m_prevError = 0;
         m_totalError = 0;
@@ -588,7 +589,7 @@ public class SynchronousPID implements Sendable, AutoCloseable
 	    builder.addDoubleProperty("7 setpoint", this::getSetpoint, this::setSetpoint);
 	    builder.addDoubleProperty("8 input", this::getInput, null);
 	    builder.addDoubleProperty("9 error", this::getError, null);
-	    builder.addDoubleProperty("91 output", this::get, null);
+	    builder.addDoubleProperty("a output", this::get, null);
 	}
     
 }

@@ -47,7 +47,7 @@ public class LibraryVersion
 	 * of the Jitpack compile when requested and will be automatically made available via JitPack 
 	 */
 	
-	public static final String version = "4.5.0 (05.22.2023) WPILib=" + WPILibVersion.Version;	
+	public static final String version = "4.5.0 (06.05.2023) WPILib=" + WPILibVersion.Version;	
 	
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()

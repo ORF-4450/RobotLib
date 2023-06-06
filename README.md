@@ -42,14 +42,16 @@ Version 4.5.0
 *	Modify SendableVersion to fix problem created by changes to how SendableRegistry works. See the code for
 	details. Modify Robot class to follow this change.
 *	Update SynchronousPID class to correctly support tuning via LiveWindow.
-*	Update SynchronousPID class to automatically track elapsed time between calculate() calls.
+*	Update SynchronousPID class to optionally automatically track elapsed time between calculate() calls.
 *	Change swerve default drive-motor current limit from 80 to 40 amps. 80 way too high and contributed to 
 	power issues at Houston.
 *	Update GitHub Actions to use Node 16 per Sean Flo.
 *	Update SynchrounousPID to more correctly implement Sendable so LiveWindow can be used to tune such controllers.
 *	Update CANCoder instances in swerve code to add themselves to LiveWindow under the DriveBase subsystem.
+*	Update MonitorPDP low voltage alarm from 11v to 8v. Brown out at 7v. Set max current alarm to 240 amps as
+	theoretical max current from a good FRC battery is 250 amps.
 	
-R. Corn, May 22, 2023
+R. Corn, June 5, 2023
 
 Version 4.4.0
 

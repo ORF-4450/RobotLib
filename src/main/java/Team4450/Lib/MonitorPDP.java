@@ -19,7 +19,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class MonitorPDP extends Thread implements Sendable
 {
-  private final double		  		LOW_BATTERY = 11, MAX_CURRENT = 180;
+  // Theoretical max current from good FRC battery is 250 amps, brown out power
+  // cuts start at 7 volts.
+  private final double		  		LOW_BATTERY = 8, MAX_CURRENT = 240;
   private PowerDistribution			pdp;
   private double					sampleInterval = 1.0;	// Seconds
   private boolean					alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
