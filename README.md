@@ -51,7 +51,7 @@ Version 4.5.0
 *	Update MonitorPDP low voltage alarm from 11v to 8v. Brown out at 7v. Set max current alarm to 240 amps as
 	theoretical max current from a good FRC battery is 250 amps.
 	
-R. Corn, June 5, 2023
+R. Corn, June 8, 2023
 
 Version 4.4.0
 

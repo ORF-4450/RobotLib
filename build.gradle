@@ -60,8 +60,8 @@ else {
 					// RobotLib, edit their local RobotLib.json to reflect the new version number 
 					// and on next compile, gradle will pull the new library to their PC.
 					//
-					// If using VSCode, run the Manage Vendor Libraries (online) and it will detect
-					// the new RobotLib version and offer to update the VSCode project.
+					// Or if using VSCode, run the Manage Vendor Libraries (online) command and 
+					// it will detect the new RobotLib version and offer to update the VSCode project.
 					//
 					// Warning: The github release action only works on the master branch. Do not
 					// create releases from other branches.
