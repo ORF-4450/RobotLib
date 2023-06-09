@@ -38,7 +38,7 @@ Version 4.5.0
 *	Change the MonitorPDP alarms to not reset if the alarm condition clears on its own. This way the alarms 
 	will remain visible on the dashboard to be observed after a match. Transient alarms were not being seen
 	by the drivers and we did not know they were happening. Will need to call new reset() function to clear
-	alarms on enable of robot (RobotContainer.resetFaults()).
+	alarms on enable of robot (see RobotContainer.resetFaults()).
 *	Modify SendableVersion to fix problem created by changes to how SendableRegistry works. See the code for
 	details. Modify Robot class to follow this change.
 *	Update SynchronousPID class to correctly support tuning via LiveWindow.
