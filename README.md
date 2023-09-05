@@ -32,6 +32,12 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
 ***************************************************************************************************************
+Version 4.6.0
+
+*	Update to WPILib 2023.4.3 and use the 2023 WPILib JDK directory (JDK-17). Update Gradle to 7.5.1.
+
+R. Corn, September 4, 2023
+
 Version 4.5.0
 
 *	Modify MonitorPDP class to correctly check port current for REV PDH.
