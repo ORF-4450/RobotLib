@@ -491,8 +491,8 @@ public class GamePad
   public class GamePadButton
   {
 	  public GamePadButtonIDs	id;
-      public boolean		currentState, latchedState;
-      public int			povAngle = -1, lastPOVAngle;
+      public boolean			currentState, latchedState;
+      public int				povAngle = -1, lastPOVAngle;
   
       public GamePadButton(GamePadButtonIDs buttonID)
       {

@@ -702,6 +702,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
+		// Type must be Gyro to connect this sendable to the Shuffleboard gyro widget.
 		builder.setSmartDashboardType("Gyro");
     	builder.addBooleanProperty(".controllable", () -> false, null);
 	    builder.addDoubleProperty("Value", this::getHeadingInt, null);

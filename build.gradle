@@ -1,7 +1,7 @@
 plugins {
     id "java-library"
     id "eclipse"
-	id "edu.wpi.first.GradleRIO" version "2023.2.1"
+	id "edu.wpi.first.GradleRIO" version "2023.4.3"
     id "org.ajoberstar.grgit" version "3.0.0"
     id "maven-publish"
     id "io.github.mosadie.vendorJSON" version "1.0"
@@ -173,8 +173,12 @@ javadoc {
     destinationDir = file("doc")
     title = "RobotLib"
     options.overview = "src/main/resources/overview.html"
-    options.addBooleanOption "-no-module-directories", true
-    options.addBooleanOption "-frames", true
+    // These options obsolete with move to JDK 17.
+    //options.addBooleanOption "-no-module-directories", true
+    //options.addBooleanOption "-frames", true
+    // This option supresses all Javadoc warnings. Some warnings are usefull but many
+    // we ignore. Should review warnings with any significant changes to the library.
+	options.addStringOption('Xdoclint:all,-missing', '-quiet')
 }
 
 // Create Javadoc Jar
@@ -189,7 +193,7 @@ artifacts {
     archives javadocJar
 }
 
-// Required with gradle 7.1.1. Configures PublishToMavenLocal task. This task is required to get our
+// Required as of gradle 7.1.1. Configures PublishToMavenLocal task. This task is required to get our
 // jars published to the local maven repository on this PC for consumption by robot projects on this PC.
 // The PubishToMavenLocal task is executed in the eclipse .launch files that run this build.
 publishing {
