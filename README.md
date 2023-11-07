@@ -31,6 +31,15 @@ v2.x is not compatible with 2019 (full release) or later FRC robotics platform. 
 ### NOTICE TO DEVELOPERS
 Read the documentation in build.gradle for the procedure to do development on this
 library and then generate a release on Github and Jitpack.
+
+This project originally set up under Eclipse. You can use VSCode with the following notes:
+  To compile, from the WPILib drop down command menu use "Run a Command in Gradle" and execute the
+  following commands to build and deploy RobotLib locally:
+  build -Dlocal=true
+  PublishToMavenLocal -Dlocal=true
+
+  Do not let VSCode update the project automatically on a new year. This may damage the highly customized
+  build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
 Version 4.6.0
 
