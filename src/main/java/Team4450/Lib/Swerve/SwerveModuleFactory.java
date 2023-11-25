@@ -224,7 +224,7 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
         @Override
         public void resetMotorEncoders() 
         {
-            Util.consoleLog("%s", position);
+            //Util.consoleLog("%s", position);
     
             driveController.getEncoder().setPosition(0);
             steerController.getMotorEncoder().setPosition(0);

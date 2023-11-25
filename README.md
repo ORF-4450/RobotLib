@@ -41,6 +41,12 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.7.0
+
+*	Update to WPILib 2024-Beta-3 along with beta vendor libraries,
+
+R. Corn, November 2023
+
 Version 4.6.0
 
 *	Update to WPILib 2023.4.3 and use the 2023 WPILib JDK directory (JDK-17). 

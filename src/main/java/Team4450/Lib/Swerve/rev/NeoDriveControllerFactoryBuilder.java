@@ -208,7 +208,7 @@ public final class NeoDriveControllerFactoryBuilder
         @Override
         public void setBrakeMode(boolean on) 
         {
-            Util.consoleLog("%b", on);
+            //Util.consoleLog("%b", on);
     
             if (on)
                 motor.setIdleMode(IdleMode.kBrake);
