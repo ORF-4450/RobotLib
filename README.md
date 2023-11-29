@@ -43,7 +43,9 @@ This project originally set up under Eclipse. You can use VSCode with the follow
 ***************************************************************************************************************
 Version 4.7.0
 
-*	Update to WPILib 2024-Beta-3 along with beta vendor libraries,
+*	Update to WPILib 2024-Beta-3 along with beta vendor libraries.
+*	Add new required parameter frcYear to RobotLib.json.
+*	Update to use Java-17 and Gradle 8.4 from WPILib 2024 directory.
 
 R. Corn, November 2023
 

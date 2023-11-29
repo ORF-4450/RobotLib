@@ -1,7 +1,7 @@
 plugins {
     id "java-library"
     id "eclipse"
-	id "edu.wpi.first.GradleRIO" version "2023.4.3"
+	id "edu.wpi.first.GradleRIO" version "2024.1.1-beta-3"
     id "org.ajoberstar.grgit" version "3.0.0"
     id "maven-publish"
     id "io.github.mosadie.vendorJSON" version "1.0"
@@ -9,9 +9,9 @@ plugins {
 
 group = archivesGroup
 
-// Sets JDK compatibility to JDK 11
-sourceCompatibility = JavaVersion.VERSION_11
-targetCompatibility = JavaVersion.VERSION_11
+// Sets JDK compatibility to JDK 17
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 // Configuration for build task which compiles RobotLib, generates the javadoc and does the install 
 // of RobotLib in local maven cache.
