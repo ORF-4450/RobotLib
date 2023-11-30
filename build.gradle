@@ -69,6 +69,15 @@ else {
 					// Note: the github action files gradleCI.yml and gradleRelease.yml are
 					// located in .github\workflows.
 					//
+					// More notes on updating each year:
+					// Update the gradlerio version above along with any change to JDK version. Note
+					// we point the Eclipse JDK path to the WPILib JDK path which gets the required
+					// JDK and Gradle versions for the new year. The path is in the Build Robotlib.launch
+					// files. You need to update the github action files when JDK version changes. On 
+					// Gradle change, update gradle-wrapper.properties located in the gradle directory.
+					// After updating vendordep files for new year, run a gradle refresh from the
+					// right click menu on project folder in the explorer pane.
+					// Also need up update the year in settings.gradle.
 
 println("LibraryVersion=" + LibraryVersion + "; compile version=" + version)
 					
