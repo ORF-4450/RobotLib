@@ -78,7 +78,7 @@ public class Mk4ModuleConfiguration
     public double getDriveCurrentLimit() { return driveCurrentLimit; }
 
     /**
-     * Set the max current for the drive motor. Defaults to 80 amps.
+     * Set the max current for the drive motor. Defaults to 40 amps.
      * @param driveCurrentLimit Desired max current in amps.
      */
     public void setDriveCurrentLimit(double driveCurrentLimit) { this.driveCurrentLimit = driveCurrentLimit; }

@@ -191,6 +191,8 @@ public final class Mk4SwerveModuleHelper
             steerOffset);
     }
 
+    //----- Start of Neo-Neo configurations. 
+    
     /**
      * Creates a Mk4 swerve module that uses NEOs for driving and steering.
      * Module information is displayed in the specified ShuffleBoard container.
@@ -330,6 +332,8 @@ public final class Mk4SwerveModuleHelper
             steerOffset);
     }
 
+    //----------- End of Neo-Neo configurations.
+    
     /**
      * Creates a Mk4 swerve module that uses a Falcon 500 for driving and a NEO for steering.
      * Module information is displayed in the specified ShuffleBoard container.
@@ -609,7 +613,8 @@ public final class Mk4SwerveModuleHelper
             steerOffset);
     }
 
-    public enum GearRatio {
+    public enum GearRatio 
+    {
         L1(SdsModuleConfigurations.MK4_L1),
         L2(SdsModuleConfigurations.MK4_L2),
         L3(SdsModuleConfigurations.MK4_L3),
@@ -617,11 +622,13 @@ public final class Mk4SwerveModuleHelper
 
         private final ModuleConfiguration configuration;
 
-        GearRatio(ModuleConfiguration configuration) {
+        GearRatio(ModuleConfiguration configuration) 
+        {
             this.configuration = configuration;
         }
 
-        public ModuleConfiguration getConfiguration() {
+        public ModuleConfiguration getConfiguration() 
+        {
             return configuration;
         }
     }
