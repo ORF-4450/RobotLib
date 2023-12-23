@@ -74,6 +74,37 @@ public final class SdsModuleConfigurations
             false
     );
 
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
+    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
+    // robot that drives faster).
+    
+    
+    public static final ModuleConfiguration MAXSWERVE_T12 = new ModuleConfiguration(
+            0.0762,											// wheel diameter (m)
+            (45.0 * 22) / (12 * 15),						// drive reduction
+            false,											// drive inverted
+            // steer reduction is from SDS, will have to measure MxSw reduction.
+            (14.0 / 50.0) * (10.0 / 60.0),					// steer reduction
+            false											// steer inverted
+    );
+
+    
+    public static final ModuleConfiguration MAXSWERVE_T13 = new ModuleConfiguration(
+            0.0762,											// wheel diameter (m)
+            (45.0 * 22) / (13 * 15),						// drive reduction
+            false,											// drive inverted
+            (14.0 / 50.0) * (10.0 / 60.0),					// steer reduction
+            false											// steer inverted
+    );
+
+    public static final ModuleConfiguration MAXSWERVE_T14 = new ModuleConfiguration(
+            0.0762,											// wheel diameter (m)
+            (45.0 * 22) / (14 * 15),						// drive reduction
+            false,											// drive inverted
+            (14.0 / 50.0) * (10.0 / 60.0),					// steer reduction
+            false											// steer inverted
+    );
+
     private SdsModuleConfigurations() 
     {
     }

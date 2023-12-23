@@ -76,7 +76,7 @@ public final class NeoSteerControllerFactoryBuilder
 
     public <T> SteerControllerFactory<ControllerImplementation, NeoSteerConfiguration<T>> build(AbsoluteEncoderFactory<T> encoderFactory) 
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
         return new FactoryImplementation<>(encoderFactory);
     }
@@ -87,7 +87,7 @@ public final class NeoSteerControllerFactoryBuilder
 
         public FactoryImplementation(AbsoluteEncoderFactory<T> encoderFactory) 
         {
-            //Util.consoleLog();
+            Util.consoleLog();
     
             this.encoderFactory = encoderFactory;
         }
@@ -109,14 +109,20 @@ public final class NeoSteerControllerFactoryBuilder
         @Override
         public ControllerImplementation create(NeoSteerConfiguration<T> steerConfiguration, ModuleConfiguration moduleConfiguration) 
         {
-            //Util.consoleLog();
-    
-            AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
+            Util.consoleLog();
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
 
             motor.restoreFactoryDefaults(); // 4450
-            //motor.getAbsoluteEncoder(Type.kDutyCycle)
+            
+            try
+            {
+            	TBEncoderAbsoluteConfiguration encoderConfig = (TBEncoderAbsoluteConfiguration) steerConfiguration.getEncoderConfiguration();
+            
+            	encoderConfig.setMotor(motor);
+            } catch (Exception e) {}
+            
+            AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
@@ -124,6 +130,9 @@ public final class NeoSteerControllerFactoryBuilder
             checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
             
             motor.setInverted(!moduleConfiguration.isSteerInverted());
+            
+            // Set neutral mode to brake. Maxswerve code does this, SDS does not...
+            //motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
             
             if (hasVoltageCompensation()) 
                 checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
@@ -163,7 +172,7 @@ public final class NeoSteerControllerFactoryBuilder
 
     public static class ControllerImplementation implements SteerController 
     {
-        private static final int ENCODER_RESET_ITERATIONS = 500;
+        private static final int 	ENCODER_RESET_ITERATIONS = 500;
         private static final double ENCODER_RESET_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
 
         @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -178,7 +187,7 @@ public final class NeoSteerControllerFactoryBuilder
 
         public ControllerImplementation(CANSparkMax motor, ModulePosition position, AbsoluteEncoder absoluteEncoder) 
         {
-            //Util.consoleLog();
+            Util.consoleLog();
     
             this.motor = motor;
             this.position = position;

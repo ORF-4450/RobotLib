@@ -28,6 +28,10 @@ public class Mk4ModuleConfiguration
     private static final double DEFAULT_NEO_I = 0.0;
     private static final double DEFAULT_NEO_D = 0.05;
 
+    private static final double DEFAULT_NEO550_P = 0.5;
+    private static final double DEFAULT_NEO550_I = 0.0;
+    private static final double DEFAULT_NEO550_D = 0.05;
+
     private static final double DEFAULT_500_P = 0.2;
     private static final double DEFAULT_500_I = 0.0;
     private static final double DEFAULT_500_D = 0.1;
@@ -173,6 +177,20 @@ public class Mk4ModuleConfiguration
         Mk4ModuleConfiguration config = new Mk4ModuleConfiguration();
 
         config.setSteerPid(DEFAULT_NEO_P, DEFAULT_NEO_I, DEFAULT_NEO_D);
+
+        return config;
+    }
+
+    /**
+     * Get a default configuration object for a Neo 550 motor. You can then
+     * call the "set" methods above to customize it.
+     * @return A MK4 Module Configuration object.
+     */
+    public static Mk4ModuleConfiguration getDefaultNeo550Config()
+    {
+        Mk4ModuleConfiguration config = new Mk4ModuleConfiguration();
+
+        config.setSteerPid(DEFAULT_NEO550_P, DEFAULT_NEO550_I, DEFAULT_NEO550_D);
 
         return config;
     }
