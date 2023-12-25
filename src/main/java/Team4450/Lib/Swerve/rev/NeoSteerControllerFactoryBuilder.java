@@ -109,7 +109,9 @@ public final class NeoSteerControllerFactoryBuilder
         @Override
         public ControllerImplementation create(NeoSteerConfiguration<T> steerConfiguration, ModuleConfiguration moduleConfiguration) 
         {
-            Util.consoleLog();
+            boolean		isNeo550 = false;
+            
+        	Util.consoleLog();
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
 
@@ -120,6 +122,8 @@ public final class NeoSteerControllerFactoryBuilder
             	TBEncoderAbsoluteConfiguration encoderConfig = (TBEncoderAbsoluteConfiguration) steerConfiguration.getEncoderConfiguration();
             
             	encoderConfig.setMotor(motor);
+            	
+            	isNeo550 = true;
             } catch (Exception e) {}
             
             AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
@@ -131,7 +135,7 @@ public final class NeoSteerControllerFactoryBuilder
             
             motor.setInverted(!moduleConfiguration.isSteerInverted());
             
-            // Set neutral mode to brake. Maxswerve code does this, SDS does not...
+            // Set neutral mode to brake. MaxSwerve code does this, SDS does not...
             //motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
             
             if (hasVoltageCompensation()) 
@@ -147,6 +151,7 @@ public final class NeoSteerControllerFactoryBuilder
 
             checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "");
             checkNeoError(integratedEncoder.setVelocityConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction() / 60.0), "Failed to set steer NEO encoder vel conversion factor");
+            
             checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
 
             SparkMaxPIDController controller = motor.getPIDController();
@@ -166,7 +171,7 @@ public final class NeoSteerControllerFactoryBuilder
             
             checkNeoError(motor.burnFlash(), "Failed to burn steering NEO config");
             
-            return new ControllerImplementation(motor, steerConfiguration.getPosition(), absoluteEncoder);
+            return new ControllerImplementation(motor, steerConfiguration.getPosition(), absoluteEncoder, isNeo550);
         }
     }
 
@@ -185,7 +190,8 @@ public final class NeoSteerControllerFactoryBuilder
         private double referenceAngleRadians = 0;
         private double resetIteration = 0;
 
-        public ControllerImplementation(CANSparkMax motor, ModulePosition position, AbsoluteEncoder absoluteEncoder) 
+        public ControllerImplementation(CANSparkMax motor, ModulePosition position, AbsoluteEncoder absoluteEncoder,
+        								boolean isNeo550) 
         {
             Util.consoleLog();
     
@@ -194,7 +200,7 @@ public final class NeoSteerControllerFactoryBuilder
             this.controller = motor.getPIDController();
             this.motorEncoder = motor.getEncoder();
             this.absoluteEncoder = absoluteEncoder;
-                                    
+                             
             if (RobotBase.isSimulation()) 
             {
                 // Note that the REV simulation does not work correctly. We have hacked
@@ -202,8 +208,12 @@ public final class NeoSteerControllerFactoryBuilder
                 // REV simulated encoder position and velocity, which are incorrect. However, 
                 // registering the motor controller with the REV sim is still needed.
 
-                // Add Neo to sim.
-                REVPhysicsSim.getInstance().addSparkMax(motor, DCMotor.getNEO(1));
+            	if (isNeo550)
+            		// Add Neo550 to sim.
+            		REVPhysicsSim.getInstance().addSparkMax(motor, DCMotor.getNeo550(1));
+            	else
+            		// Add Neo to sim.
+            		REVPhysicsSim.getInstance().addSparkMax(motor, DCMotor.getNEO(1));
 
                 //controller.setP(1, 3);
             }

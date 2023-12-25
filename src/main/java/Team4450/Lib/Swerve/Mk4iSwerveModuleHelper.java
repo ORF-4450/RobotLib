@@ -377,7 +377,7 @@ public final class Mk4iSwerveModuleHelper
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
      * @param steerMotorPort   The CAN ID of the steer NEO.
-     * @param steerEncoderPort The CAN ID of the steer TBEncoder.
+     * @param steerEncoderPort The CAN ID of the steer TBEncoder SparkMax.
      * @param steerOffset      The offset of the TBEncoder in radians.
      * @return The configured swerve module.
      */
@@ -391,7 +391,7 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset)
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
         return new SwerveModuleFactory<>(
                 gearRatio.getConfiguration(),
@@ -419,7 +419,7 @@ public final class Mk4iSwerveModuleHelper
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
      * @param steerMotorPort   The CAN ID of the steer NEO.
-     * @param steerEncoderPort The CAN ID of the steer TBEncoder.
+     * @param steerEncoderPort The CAN ID of the steer TBEncoder SparkMax.
      * @param steerOffset      The offset of the TBEncoder in radians.
      * @return The configured swerve module.
      */
@@ -432,9 +432,9 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset) 
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
-        return createNeo(
+        return createNeo550(
             position, 
             container, 
             Mk4ModuleConfiguration.getDefaultNeo550Config(), 
@@ -453,7 +453,7 @@ public final class Mk4iSwerveModuleHelper
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
      * @param steerMotorPort   The CAN ID of the steer NEO.
-     * @param steerEncoderPort The CAN ID of the steer TBEncoder.
+     * @param steerEncoderPort The CAN ID of the steer TBEncoder SparkMax.
      * @param steerOffset      The offset of the TBEncoder in radians.
      * @return The configured swerve module.
      */
@@ -466,7 +466,7 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset) 
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
         return new SwerveModuleFactory<>(
                 gearRatio.getConfiguration(),
@@ -491,7 +491,7 @@ public final class Mk4iSwerveModuleHelper
      * @param gearRatio        The gearing configuration the module is in.
      * @param driveMotorPort   The CAN ID of the drive NEO.
      * @param steerMotorPort   The CAN ID of the steer NEO.
-     * @param steerEncoderPort The CAN ID of the steer TBEncoder.
+     * @param steerEncoderPort The CAN ID of the steer TBEncoder SparkMax.
      * @param steerOffset      The offset of the TBEncoder in radians.
      * @return The configured swerve module.
      */
@@ -503,9 +503,9 @@ public final class Mk4iSwerveModuleHelper
             int steerEncoderPort,
             double steerOffset) 
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
-        return createNeo(
+        return createNeo550(
             position, 
             Mk4ModuleConfiguration.getDefaultNeo550Config(), 
             gearRatio, 

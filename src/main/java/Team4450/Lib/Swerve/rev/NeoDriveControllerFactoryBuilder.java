@@ -151,6 +151,8 @@ public final class NeoDriveControllerFactoryBuilder
             else
                 motor.setVoltage(0);
 
+            //Util.consoleLog("%s v=%.2f  vel=%.2f  evel=%.2f", position, voltage, velocity, motor.getEncoder().getVelocity());
+            
             // We track the "requested" velocity to use as a substitute for measured
             // velocity due to problems with Neo simulation not calculating a correct
             // velocity. We also compute the distance traveled for the same reason.

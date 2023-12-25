@@ -29,7 +29,7 @@ public class CanCoderFactoryBuilder
 
     public AbsoluteEncoderFactory<CanCoderAbsoluteConfiguration> build() 
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
         return configuration -> {
             CANCoderConfiguration config = new CANCoderConfiguration();

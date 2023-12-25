@@ -5,6 +5,7 @@ import static Team4450.Lib.Swerve.rev.RevUtils.checkNeoError;
 import com.revrobotics.SparkMaxAbsoluteEncoder;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
+import Team4450.Lib.Util;
 import Team4450.Lib.Swerve.AbsoluteEncoder;
 import Team4450.Lib.Swerve.AbsoluteEncoderFactory;
 
@@ -13,7 +14,7 @@ public class TBEncoderFactoryBuilder
 
     public AbsoluteEncoderFactory<TBEncoderAbsoluteConfiguration> build() 
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
         return configuration -> {
         	
@@ -56,7 +57,7 @@ public class TBEncoderFactoryBuilder
         @Override
         public double getAbsoluteAngle() 
         {
-            double angle = Math.toRadians(encoder.getPosition());
+            double angle = encoder.getPosition();
 
             angle %= 2.0 * Math.PI;
 

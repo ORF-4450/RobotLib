@@ -11,17 +11,17 @@ public class TBEncoderAbsoluteConfiguration
     private CANSparkMax			motor;
     private boolean				inverted = true;	// Required for MaxSwerve.
 
-//    public TBEncoderAbsoluteConfiguration withPositionConvertionFactor(double factor) 
-//    {
-//        positionConversionFactor = factor;
-//        return this;
-//    }
-//
-//    public TBEncoderAbsoluteConfiguration withVelocityConvertionFactor(double factor) 
-//    {
-//        velocityConversionFactor = factor;
-//        return this;
-//    }
+    public TBEncoderAbsoluteConfiguration withPositionConvertionFactor(double factor) 
+    {
+        positionConversionFactor = factor;
+        return this;
+    }
+
+    public TBEncoderAbsoluteConfiguration withVelocityConvertionFactor(double factor) 
+    {
+        velocityConversionFactor = factor;
+        return this;
+    }
     
     public TBEncoderAbsoluteConfiguration(int id, double offset, CANSparkMax motor) 
     {

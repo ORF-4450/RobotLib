@@ -86,15 +86,6 @@ public class SwerveModuleFactory<DriveConfiguration, SteerConfiguration>
             
             this.driveController.setPosition(position);
             
-            if (RobotBase.isSimulation()) 
-            {
-            	// Moved to drive controller class.
-                // Only Neo sim implemented.
-                //REVPhysicsSim.getInstance().addSparkMax(driveController.getMotorNeo(), DCMotor.getNEO(1));
-
-                //driveController.getMotorNeo().getPIDController().setP(1, 3);
-            }
-
             resetSteerAngleToAbsolute();
         }
 
