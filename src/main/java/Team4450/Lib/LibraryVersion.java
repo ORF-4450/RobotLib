@@ -44,10 +44,10 @@ public class LibraryVersion
 	 * release from Jitpack.
 	 * 
 	 * Note: The Javadoc output is not pushed to GitHub. Javadoc will be generated as an artifact 
-	 * of the Jitpack compile when requested and will be automatically made available via JitPack 
+	 * of the Jitpack compile when requested and will be automatically made available via JitPack. 
 	 */
 	
-	public static final String version = "4.8.0 (12.24.2023) WPILib=" + WPILibVersion.Version;	
+	public static final String version = "4.8.0 (12.28.2023) WPILib=" + WPILibVersion.Version;	
 	
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
