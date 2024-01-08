@@ -17,6 +17,7 @@ import edu.wpi.first.cscore.MjpegServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.cscore.UsbCameraInfo;
 import edu.wpi.first.cscore.VideoMode;
+import edu.wpi.first.util.PixelFormat;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -110,7 +111,7 @@ public class CameraFeed extends Thread
             
             // Create output image stream.
             
-            imageOutputStream = new CvSource("4450-CvSource", VideoMode.PixelFormat.kMJPEG, imageWidth, imageHeight, (int) frameRate);
+            imageOutputStream = new CvSource("4450-CvSource", PixelFormat.kMJPEG, imageWidth, imageHeight, (int) frameRate);
             
             mjpegServer.setSource(imageOutputStream);
             

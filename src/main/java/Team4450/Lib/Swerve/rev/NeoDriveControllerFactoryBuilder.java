@@ -1,11 +1,11 @@
 package Team4450.Lib.Swerve.rev;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import Team4450.Lib.Util;
 import edu.wpi.first.math.system.plant.DCMotor;

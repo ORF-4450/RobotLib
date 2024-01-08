@@ -1,7 +1,7 @@
 package Team4450.Lib.Swerve.rev;
 
 import com.revrobotics.*;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import Team4450.Lib.Util;
 import Team4450.Lib.Swerve.*;
