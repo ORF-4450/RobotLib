@@ -41,6 +41,12 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.8.1
+
+*	Update Jitpack configuration to JDK 17.
+
+R. Corn, January 16 2024
+
 Version 4.8.0
 
 *	Update in parallel for 2024 WPILib and vendor libraries as noted below.
