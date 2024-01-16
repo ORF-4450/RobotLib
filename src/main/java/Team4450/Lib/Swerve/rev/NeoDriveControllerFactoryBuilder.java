@@ -1,11 +1,11 @@
 package Team4450.Lib.Swerve.rev;
 
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.REVPhysicsSim;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMax.IdleMode;
 
 import Team4450.Lib.Util;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -151,6 +151,8 @@ public final class NeoDriveControllerFactoryBuilder
             else
                 motor.setVoltage(0);
 
+            //Util.consoleLog("%s v=%.2f  vel=%.2f  evel=%.2f", position, voltage, velocity, motor.getEncoder().getVelocity());
+            
             // We track the "requested" velocity to use as a substitute for measured
             // velocity due to problems with Neo simulation not calculating a correct
             // velocity. We also compute the distance traveled for the same reason.
@@ -208,7 +210,7 @@ public final class NeoDriveControllerFactoryBuilder
         @Override
         public void setBrakeMode(boolean on) 
         {
-            Util.consoleLog("%b", on);
+            //Util.consoleLog("%b", on);
     
             if (on)
                 motor.setIdleMode(IdleMode.kBrake);

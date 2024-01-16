@@ -5,7 +5,6 @@ import Team4450.Lib.Swerve.ctre.*;
 import Team4450.Lib.Swerve.rev.NeoDriveControllerFactoryBuilder;
 import Team4450.Lib.Swerve.rev.NeoSteerConfiguration;
 import Team4450.Lib.Swerve.rev.NeoSteerControllerFactoryBuilder;
-import Team4450.Lib.Util;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 
 public final class Mk4iSwerveModuleHelper 
@@ -199,6 +198,8 @@ public final class Mk4iSwerveModuleHelper
             steerOffset);
     }
 
+    //------ Start of Neo-Neo section.
+    
     /**
      * Creates a Mk4i swerve module that uses NEOs for driving and steering.
      * Module information is displayed in the specified ShuffleBoard container.
@@ -347,6 +348,8 @@ public final class Mk4iSwerveModuleHelper
             steerOffset);
     }
 
+    //----- End of Neo-Neo section.
+    
     /**
      * Creates a Mk4i swerve module that uses a Falcon 500 for driving and a NEO for steering.
      * Module information is displayed in the specified ShuffleBoard container.
@@ -631,7 +634,10 @@ public final class Mk4iSwerveModuleHelper
     {
         L1(SdsModuleConfigurations.MK4I_L1),
         L2(SdsModuleConfigurations.MK4I_L2),
-        L3(SdsModuleConfigurations.MK4I_L3);
+        L3(SdsModuleConfigurations.MK4I_L3),
+    	T12(RevModuleConfigurations.MAXSWERVE_T12),
+    	T13(RevModuleConfigurations.MAXSWERVE_T13),
+    	T14(RevModuleConfigurations.MAXSWERVE_T14);
 
         private final ModuleConfiguration configuration;
 

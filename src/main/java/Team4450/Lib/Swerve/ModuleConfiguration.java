@@ -5,9 +5,7 @@ import java.util.Objects;
 /**
  * A swerve module configuration.
  * <p>
- * A configuration represents a unique mechanical configuration of a module. For example, the Swerve Drive Specialties
- * Mk3 swerve module has two configurations, standard and fast, and therefore should have two configurations
- * ({@link SdsModuleConfigurations#MK3_STANDARD} and {@link SdsModuleConfigurations#MK3_FAST} respectively).
+ * A configuration represents a unique mechanical configuration of a module.
  */
 public class ModuleConfiguration 
 {

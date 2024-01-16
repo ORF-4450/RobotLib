@@ -3,12 +3,12 @@ package Team4450.Lib.Swerve;
 import java.util.Objects;
 
 /**
- * Additional Mk4 module configuration parameters.
+ * Additional Swerve module configuration parameters.
  * <p>
- * The configuration parameters here are used to customize the behavior of the Mk4 swerve module.
+ * The configuration parameters here are used to customize the behavior of the swerve module.
  * Each setting is initialized to a default that should be adequate for most use cases. You can
  * call the "set" methods to customize the configuration before passing it to a swerve module
- * helper build method.
+ * helper build method. This class is used for both SDS and Rev modules.
  */
 public class Mk4ModuleConfiguration 
 {
@@ -23,10 +23,14 @@ public class Mk4ModuleConfiguration
     private double driveCurrentLimit    = 40;   // amps.
     private double steerCurrentLimit    = 20;
 
-    // Steer PID values for Neo. Customized by 4450.
+    // Steer PID values for Neos. Customized by 4450.
     private static final double DEFAULT_NEO_P = 0.5;
     private static final double DEFAULT_NEO_I = 0.0;
     private static final double DEFAULT_NEO_D = 0.05;
+
+    private static final double DEFAULT_NEO550_P = 0.5;
+    private static final double DEFAULT_NEO550_I = 0.0;
+    private static final double DEFAULT_NEO550_D = 0.05;
 
     private static final double DEFAULT_500_P = 0.2;
     private static final double DEFAULT_500_I = 0.0;
@@ -78,7 +82,7 @@ public class Mk4ModuleConfiguration
     public double getDriveCurrentLimit() { return driveCurrentLimit; }
 
     /**
-     * Set the max current for the drive motor. Defaults to 80 amps.
+     * Set the max current for the drive motor. Defaults to 40 amps.
      * @param driveCurrentLimit Desired max current in amps.
      */
     public void setDriveCurrentLimit(double driveCurrentLimit) { this.driveCurrentLimit = driveCurrentLimit; }
@@ -173,6 +177,20 @@ public class Mk4ModuleConfiguration
         Mk4ModuleConfiguration config = new Mk4ModuleConfiguration();
 
         config.setSteerPid(DEFAULT_NEO_P, DEFAULT_NEO_I, DEFAULT_NEO_D);
+
+        return config;
+    }
+
+    /**
+     * Get a default configuration object for a Neo 550 motor. You can then
+     * call the "set" methods above to customize it.
+     * @return A MK4 Module Configuration object.
+     */
+    public static Mk4ModuleConfiguration getDefaultNeo550Config()
+    {
+        Mk4ModuleConfiguration config = new Mk4ModuleConfiguration();
+
+        config.setSteerPid(DEFAULT_NEO550_P, DEFAULT_NEO550_I, DEFAULT_NEO550_D);
 
         return config;
     }

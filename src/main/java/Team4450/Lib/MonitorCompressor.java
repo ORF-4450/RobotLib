@@ -200,7 +200,7 @@ public class MonitorCompressor extends Thread implements Sendable
 
 		while (!isInterrupted())
 		{
-			compressorState = compressor.enabled();
+			compressorState = compressor.isEnabled();
 			
 			if (compressorState != saveState)
 			{

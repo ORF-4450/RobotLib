@@ -1,12 +1,13 @@
 package Team4450.Lib.Swerve.rev;
 
 import com.revrobotics.*;
-import com.revrobotics.CANSparkMax.IdleMode;
+import com.revrobotics.CANSparkBase.IdleMode;
 
 import Team4450.Lib.Util;
 import Team4450.Lib.Swerve.*;
 import Team4450.Lib.Swerve.AbsoluteEncoder;
 import Team4450.Lib.Swerve.ModuleConfiguration.ModulePosition;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -76,7 +77,7 @@ public final class NeoSteerControllerFactoryBuilder
 
     public <T> SteerControllerFactory<ControllerImplementation, NeoSteerConfiguration<T>> build(AbsoluteEncoderFactory<T> encoderFactory) 
     {
-        //Util.consoleLog();
+        Util.consoleLog();
     
         return new FactoryImplementation<>(encoderFactory);
     }
@@ -87,7 +88,7 @@ public final class NeoSteerControllerFactoryBuilder
 
         public FactoryImplementation(AbsoluteEncoderFactory<T> encoderFactory) 
         {
-            //Util.consoleLog();
+            Util.consoleLog();
     
             this.encoderFactory = encoderFactory;
         }
@@ -109,13 +110,24 @@ public final class NeoSteerControllerFactoryBuilder
         @Override
         public ControllerImplementation create(NeoSteerConfiguration<T> steerConfiguration, ModuleConfiguration moduleConfiguration) 
         {
-            //Util.consoleLog();
-    
-            AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
+            boolean		isNeo550 = false;
+            
+        	Util.consoleLog();
 
             CANSparkMax motor = new CANSparkMax(steerConfiguration.getMotorPort(), CANSparkMaxLowLevel.MotorType.kBrushless);
 
             motor.restoreFactoryDefaults(); // 4450
+            
+            try
+            {
+            	TBEncoderAbsoluteConfiguration encoderConfig = (TBEncoderAbsoluteConfiguration) steerConfiguration.getEncoderConfiguration();
+            
+            	encoderConfig.setMotor(motor);
+            	
+            	isNeo550 = true;
+            } catch (Exception e) {}
+            
+            AbsoluteEncoder absoluteEncoder = encoderFactory.create(steerConfiguration.getEncoderConfiguration());
 
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
@@ -123,6 +135,9 @@ public final class NeoSteerControllerFactoryBuilder
             checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
             
             motor.setInverted(!moduleConfiguration.isSteerInverted());
+            
+            // Set neutral mode to brake. MaxSwerve code does this, SDS does not...
+            //motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
             
             if (hasVoltageCompensation()) 
                 checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
@@ -137,6 +152,7 @@ public final class NeoSteerControllerFactoryBuilder
 
             checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "");
             checkNeoError(integratedEncoder.setVelocityConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction() / 60.0), "Failed to set steer NEO encoder vel conversion factor");
+            
             checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
 
             SparkMaxPIDController controller = motor.getPIDController();
@@ -156,13 +172,13 @@ public final class NeoSteerControllerFactoryBuilder
             
             checkNeoError(motor.burnFlash(), "Failed to burn steering NEO config");
             
-            return new ControllerImplementation(motor, steerConfiguration.getPosition(), absoluteEncoder);
+            return new ControllerImplementation(motor, steerConfiguration.getPosition(), absoluteEncoder, isNeo550);
         }
     }
 
     public static class ControllerImplementation implements SteerController 
     {
-        private static final int ENCODER_RESET_ITERATIONS = 500;
+        private static final int 	ENCODER_RESET_ITERATIONS = 500;
         private static final double ENCODER_RESET_MAX_ANGULAR_VELOCITY = Math.toRadians(0.5);
 
         @SuppressWarnings({"FieldCanBeLocal", "unused"})
@@ -175,16 +191,17 @@ public final class NeoSteerControllerFactoryBuilder
         private double referenceAngleRadians = 0;
         private double resetIteration = 0;
 
-        public ControllerImplementation(CANSparkMax motor, ModulePosition position, AbsoluteEncoder absoluteEncoder) 
+        public ControllerImplementation(CANSparkMax motor, ModulePosition position, AbsoluteEncoder absoluteEncoder,
+        								boolean isNeo550) 
         {
-            //Util.consoleLog();
+            Util.consoleLog();
     
             this.motor = motor;
             this.position = position;
             this.controller = motor.getPIDController();
             this.motorEncoder = motor.getEncoder();
             this.absoluteEncoder = absoluteEncoder;
-                                    
+                             
             if (RobotBase.isSimulation()) 
             {
                 // Note that the REV simulation does not work correctly. We have hacked
@@ -192,8 +209,12 @@ public final class NeoSteerControllerFactoryBuilder
                 // REV simulated encoder position and velocity, which are incorrect. However, 
                 // registering the motor controller with the REV sim is still needed.
 
-                // Add Neo to sim.
-                REVPhysicsSim.getInstance().addSparkMax(motor, DCMotor.getNEO(1));
+            	if (isNeo550)
+            		// Add Neo550 to sim.
+            		REVPhysicsSim.getInstance().addSparkMax(motor, DCMotor.getNeo550(1));
+            	else
+            		// Add Neo to sim.
+            		REVPhysicsSim.getInstance().addSparkMax(motor, DCMotor.getNEO(1));
 
                 //controller.setP(1, 3);
             }
