@@ -45,6 +45,7 @@ Version 4.8.0
 
 *	Update in parallel for 2024 WPILib and vendor libraries as noted below.
 *	Extensive modifications to swerve code to support REV MaxSwerve modules.
+*	Pre-released 1-15-24 before MaxSwerve testing.
 
 R. Corn, November 2023 into January 2024.
 
@@ -53,6 +54,8 @@ Version 4.7.0
 *	Update to WPILib 2024-Beta-3 along with beta vendor libraries.
 *	Add new required parameter frcYear to RobotLib.json.
 *	Update to use Java-17 and Gradle 8.4 from WPILib 2024 directory.
+*	This version was not released. Transitioned to MaxSwerve version developed
+	as 4.8.0 to be the 2024 release.
 
 R. Corn, November 2023
 

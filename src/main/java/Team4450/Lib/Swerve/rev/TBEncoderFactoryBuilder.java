@@ -9,10 +9,11 @@ import Team4450.Lib.Util;
 import Team4450.Lib.Swerve.AbsoluteEncoder;
 import Team4450.Lib.Swerve.AbsoluteEncoderFactory;
 
+@SuppressWarnings("removal")
 public class TBEncoderFactoryBuilder 
 {
 
-    public AbsoluteEncoderFactory<TBEncoderAbsoluteConfiguration> build() 
+	public AbsoluteEncoderFactory<TBEncoderAbsoluteConfiguration> build() 
     {
         Util.consoleLog();
     
