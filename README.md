@@ -41,6 +41,13 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.8.2
+
+*	Modify file paths used for logging and properties under simulation to use / file path
+	separator for compatibility with Macs.
+
+R. Corn, January 17 2024
+
 Version 4.8.1
 
 *	Update Jitpack configuration to JDK 17.

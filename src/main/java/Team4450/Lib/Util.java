@@ -80,7 +80,7 @@ public class Util
         // Determine directory path on robot or local disk under simulation.
         
         if (RobotBase.isSimulation())
-        	path = Paths.get("").toAbsolutePath().toString() + "\\robot-properties\\";
+        	path = Paths.get("").toAbsolutePath().toString() + "/robot-properties/";
         else
         	path = "/home/lvuser/";
 
@@ -110,7 +110,7 @@ public class Util
         // Determine directory path on robot or local disk under simulation.
         
         if (RobotBase.isSimulation())
-        	path = Paths.get("").toAbsolutePath().toString() + "\\robot-properties\\";
+        	path = Paths.get("").toAbsolutePath().toString() + "/robot-properties/";
         else
         	path = "/home/lvuser/";
 
@@ -188,7 +188,7 @@ public class Util
             // Determine directory path on robot or local disk under simulation.
             
             if (RobotBase.isSimulation())
-            	path = Paths.get("").toAbsolutePath().toString() + "\\logging\\";
+            	path = Paths.get("").toAbsolutePath().toString() + "/logging/";
             else
             	path = "/home/lvuser/";
             
