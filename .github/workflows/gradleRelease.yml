@@ -58,38 +58,50 @@ jobs:
         asset_name: RobotLib-${{ steps.getTag.outputs.tag }}-sources.jar
         tag: ${{ github.ref }}
 
-
-  generateJSON:
-    # The build job (above) must complete successfully in order for this job to run.
-    needs: build
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v3
-
-    - name: Set up JDK 11
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'adopt'
-        java-version: 11
-        cache: gradle
-
     - name: Generate robotlib.json
       run: './gradlew vendorJSON'
 
-    - name: Commit robotlib.json
-      uses: EndBug/add-and-commit@v9.1.3
-      with:
-        add: './robotlib.json'
-        message: 'Automated - Update robotlib.json for release'
-
     - name: Upload robotlib.json to Release
-      id: upload-release-asset 
+      id: upload-release-asset-json
       uses: svenstaro/upload-release-action@v2
       with:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: ./robotlib.json
         asset_name: robotlib.json
         tag: ${{ github.ref }}
+
+    - name: Upload robotlib.json to Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: robotlib.json
+        path: ./robotlib.json
+
+
+  commitJSON:
+    # The build job (above) must complete successfully in order for this job to run.
+    needs: build
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - name: Download robotlib.json
+      uses: actions/download-artifact@v4
+      with:
+        name: robotlib.json
+        path: ${{ runner.temp }}
+
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        ref: "ignore-me-json-testing" # TODO: Change to master
+
+    - name: Move robotlib.json
+      run: mv ${{ runner.temp }}/robotlib.json ${{ github.workspace }}/robotlib.json
+
+    
+    - name: Commit robotlib.json
+      uses: EndBug/add-and-commit@v9.1.3
+      with:
+        add: './robotlib.json'
+        message: 'Automated - Update robotlib.json for release'
