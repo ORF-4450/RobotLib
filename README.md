@@ -45,6 +45,7 @@ Version 4.8.2
 
 *	Modify file paths used for logging and properties under simulation to use / file path
 	separator for compatibility with Macs.
+*	Fix problem in gradleRelease.yml where it would not automatically update RobotLib.json.
 
 R. Corn, January 17 2024
 
