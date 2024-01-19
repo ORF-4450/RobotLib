@@ -28,9 +28,9 @@ public class Mk4ModuleConfiguration
     private static final double DEFAULT_NEO_I = 0.0;
     private static final double DEFAULT_NEO_D = 0.05;
 
-    private static final double DEFAULT_NEO550_P = 0.5;
+    private static final double DEFAULT_NEO550_P = 1.0;
     private static final double DEFAULT_NEO550_I = 0.0;
-    private static final double DEFAULT_NEO550_D = 0.05;
+    private static final double DEFAULT_NEO550_D = 0.5;
 
     private static final double DEFAULT_500_P = 0.2;
     private static final double DEFAULT_500_I = 0.0;

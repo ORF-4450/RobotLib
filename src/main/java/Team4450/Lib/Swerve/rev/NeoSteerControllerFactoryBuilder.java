@@ -132,39 +132,45 @@ public final class NeoSteerControllerFactoryBuilder
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus0, 100), "Failed to set periodic status frame 0 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus1, 20), "Failed to set periodic status frame 1 rate");
             checkNeoError(motor.setPeriodicFramePeriod(CANSparkMaxLowLevel.PeriodicFrame.kStatus2, 20), "Failed to set periodic status frame 2 rate");
-            checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
+            checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set sterr NEO idle mode");
             
             motor.setInverted(!moduleConfiguration.isSteerInverted());
             
             // Set neutral mode to brake. MaxSwerve code does this, SDS does not...
-            //motor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+            //if (!isNeo550) checkNeoError(motor.setIdleMode(CANSparkMax.IdleMode.kBrake), "Failed to set NEO idle mode");
             
             if (hasVoltageCompensation()) 
-                checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable voltage compensation");
+                checkNeoError(motor.enableVoltageCompensation(nominalVoltage), "Failed to enable steer Neo voltage compensation");
             
             if (hasCurrentLimit())
-                checkNeoError(motor.setSmartCurrentLimit((int) Math.round(currentLimit)), "Failed to set NEO current limits");
+                checkNeoError(motor.setSmartCurrentLimit((int) Math.round(currentLimit)), "Failed to set steer NEO current limits");
             
             if (hasRampRate())
                 checkNeoError(motor.setOpenLoopRampRate(rampRate), "Failed to set NEO ramp rate");
             
             RelativeEncoder integratedEncoder = motor.getEncoder();
 
-            checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()), "");
-            checkNeoError(integratedEncoder.setVelocityConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction() / 60.0), "Failed to set steer NEO encoder vel conversion factor");
+            checkNeoError(integratedEncoder.setPositionConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction()),
+            		"Failed to set steer NEO encoder pos conversion factor");
+            checkNeoError(integratedEncoder.setVelocityConversionFactor(2.0 * Math.PI * moduleConfiguration.getSteerReduction() / 60.0), 
+            		"Failed to set steer NEO encoder vel conversion factor");
             
-            checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set NEO encoder position");
+            // Absolute encoder offset set in SparkMax for MaxSwerve, not with SDS so set here.
+            if (!isNeo550) checkNeoError(integratedEncoder.setPosition(absoluteEncoder.getAbsoluteAngle()), "Failed to set steer NEO encoder position");
 
             SparkMaxPIDController controller = motor.getPIDController();
 
             if (hasPidConstants()) 
             {
-                checkNeoError(controller.setP(pidProportional), "Failed to set NEO PID proportional constant");
-                checkNeoError(controller.setI(pidIntegral), "Failed to set NEO PID integral constant");
-                checkNeoError(controller.setD(pidDerivative), "Failed to set NEO PID derivative constant");
+                checkNeoError(controller.setP(pidProportional), "Failed to set steer NEO PID proportional constant");
+                checkNeoError(controller.setI(pidIntegral), "Failed to set steer NEO PID integral constant");
+                checkNeoError(controller.setD(pidDerivative), "Failed to set steer NEO PID derivative constant");
             }
 
-            checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set NEO PID feedback device");
+            //if (isNeo550)
+            //	checkNeoError(controller.setFeedbackDevice((SparkAbsoluteEncoder) absoluteEncoder), "Failed to set steer NEO PID feedback device");
+            //else
+            	checkNeoError(controller.setFeedbackDevice(integratedEncoder), "Failed to set steer NEO PID feedback device");
 
             // Save all above settings to flash memory. If sparkmax power fails, it will restart with
             // the saved settings. It will still need the start position button pressed to completely
