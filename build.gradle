@@ -60,8 +60,6 @@ else {
 					// The release action will update robolib.json to the new version on github.
 					// After release action is complete you can fetch from github with tags to 
 					// get the updated robotlib.json and release tag back into the local git repo.
-					// Note: as of 1-16-24, this step is not working. So after successful release,
-					// manually update RobotLib.json to the new version and push it to github.
 					//
 					// When all this is done, other user's robot projects that want the updated
 					// RobotLib, edit their local RobotLib.json to reflect the new version number 
@@ -69,9 +67,6 @@ else {
 					//
 					// Or if using VSCode, run the Manage Vendor Libraries (online) command and 
 					// it will detect the new RobotLib version and offer to update the VSCode project.
-					//
-					// Warning: The github release action only works on the master branch. Do not
-					// create releases from other branches.
 					//
 					// Note: the github action files gradleCI.yml and gradleRelease.yml are
 					// located in .github\workflows.

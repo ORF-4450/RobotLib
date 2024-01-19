@@ -94,7 +94,7 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
       with:
-        ref: "ignore-me-json-testing" # TODO: Change to master
+        ref: "master"
 
     - name: Move robotlib.json
       run: mv ${{ runner.temp }}/robotlib.json ${{ github.workspace }}/robotlib.json
@@ -104,4 +104,4 @@ jobs:
       uses: EndBug/add-and-commit@v9.1.3
       with:
         add: './robotlib.json'
-        message: 'Automated - Update robotlib.json for release'
+        message: 'Automated - Update robotlib.json'
