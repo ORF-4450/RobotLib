@@ -17,6 +17,7 @@ import java.util.logging.Handler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 //import java.util.logging.SimpleFormatter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -133,6 +134,7 @@ public class Util
 	public static class CustomLogger 
 	{
         static private FileHandler 		fileTxt;
+		static private DataLogHandler   wpiLog;
         //static private SimpleFormatter	formatterTxt;
         static private LogFormatter		logFormatter;
         
@@ -206,10 +208,13 @@ public class Util
             	new File(path + "Logging.txt.99").delete();
 
             fileTxt = new AsyncFileHandler(path + "Logging.txt", 0, 99);
-            
             fileTxt.setFormatter(logFormatter);
+
+			wpiLog = new DataLogHandler();
+			wpiLog.setFormatter(logFormatter);
             
             logger.addHandler(fileTxt);
+			logger.addHandler(wpiLog);
         }
         
     	/**
