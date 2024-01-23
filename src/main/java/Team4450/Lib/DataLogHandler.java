@@ -2,7 +2,6 @@ package Team4450.Lib;
 
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
-import java.util.logging.StreamHandler;
 
 import edu.wpi.first.util.datalog.StringLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
