@@ -209,12 +209,18 @@ public class Util
 
             fileTxt = new AsyncFileHandler(path + "Logging.txt", 0, 99);
             fileTxt.setFormatter(logFormatter);
+			logger.addHandler(fileTxt);
 
+			// setup a DataLogHandler to log console messages to
+			// the RoboRio USB drive for log replay in AdvantageScope
 			wpiLog = new DataLogHandler();
 			wpiLog.setFormatter(logFormatter);
-            
-            logger.addHandler(fileTxt);
 			logger.addHandler(wpiLog);
+
+			// start the DataLogManager to begin recording networktables
+			// and joystick values
+			DataLogManager.start();
+			DriverStation.startDataLog(DataLogManager.getLog()); // (for joysticks)
         }
         
     	/**
