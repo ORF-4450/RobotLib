@@ -24,22 +24,22 @@
 		<link>
 			<name>gradle/gradleCI.yml</name>
 			<type>1</type>
-			<location>C:/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleCI.yml</location>
+			<location>/Users/cole/FRC/RobotLib/C::/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleCI.yml</location>
 		</link>
 		<link>
 			<name>gradle/gradleRelease.yml</name>
 			<type>1</type>
-			<location>C:/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleRelease.yml</location>
+			<location>/Users/cole/FRC/RobotLib/C::/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleRelease.yml</location>
 		</link>
 	</linkedResources>
 	<filteredResources>
 		<filter>
-			<id>1654560228124</id>
+			<id>1706034181273</id>
 			<name></name>
 			<type>30</type>
 			<matcher>
 				<id>org.eclipse.core.resources.regexFilterMatcher</id>
-				<arguments>node_modules|.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
+				<arguments>node_modules|\.git|__CREATED_BY_JAVA_LANGUAGE_SERVER__</arguments>
 			</matcher>
 		</filter>
 	</filteredResources>
