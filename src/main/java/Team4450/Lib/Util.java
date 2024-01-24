@@ -17,6 +17,7 @@ import java.util.logging.Handler;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 //import java.util.logging.SimpleFormatter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,6 +28,7 @@ import java.nio.ByteOrder;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -133,6 +135,7 @@ public class Util
 	public static class CustomLogger 
 	{
         static private FileHandler 		fileTxt;
+		static private DataLogHandler   wpiLog;
         //static private SimpleFormatter	formatterTxt;
         static private LogFormatter		logFormatter;
         
@@ -206,10 +209,19 @@ public class Util
             	new File(path + "Logging.txt.99").delete();
 
             fileTxt = new AsyncFileHandler(path + "Logging.txt", 0, 99);
-            
             fileTxt.setFormatter(logFormatter);
-            
-            logger.addHandler(fileTxt);
+			logger.addHandler(fileTxt);
+
+			// setup a DataLogHandler to log console messages to WpiLog on
+			// the RoboRio USB drive for log replay in AdvantageScope
+			wpiLog = new DataLogHandler();
+			wpiLog.setFormatter(logFormatter);
+			logger.addHandler(wpiLog);
+
+			// start the DataLogManager to begin recording networktables
+			// and joystick values
+			DataLogManager.start();
+			DriverStation.startDataLog(DataLogManager.getLog()); // (for joysticks)
         }
         
     	/**
