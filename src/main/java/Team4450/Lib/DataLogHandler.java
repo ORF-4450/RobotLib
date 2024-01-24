@@ -20,7 +20,7 @@ public class DataLogHandler extends Handler {
 
     /**
      * Default constructor to create a {@code DataLogHandler} object with the default
-     * {@log DataLogEntry} key of "UtilConsoleLog"
+     * {@code DataLogEntry} key of "UtilConsoleLog"
      */
     public DataLogHandler() {
         this("UtilConsoleLog");
@@ -29,7 +29,7 @@ public class DataLogHandler extends Handler {
 
     /**
      * Constructor to create a {@code DataLogHandler} object with the specified
-     * {@log DataLogEntry} key
+     * {@code DataLogEntry} key
      * 
      * @param key the key to be used when logging to the current {@code DataLog}
      */
