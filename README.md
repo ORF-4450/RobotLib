@@ -48,7 +48,7 @@ Version 4.8.2
 *	Fix problem in gradleRelease.yml where it would not automatically update RobotLib.json.
 *	Add logging of consoleLog messages to the WPI DataLogger (WpiLog).
 
-R. Corn, January 24 2024
+R. Corn, January 30 2024
 
 Version 4.8.1
 
