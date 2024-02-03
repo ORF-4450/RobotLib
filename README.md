@@ -41,6 +41,12 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.8.3
+
+*	Update VendorJSON plugin to v1.1.
+
+R. Corn, February 3 2024
+
 Version 4.8.2
 
 *	Modify file paths used for logging and properties under simulation to use / file path
