@@ -33,7 +33,7 @@ public class DataLogHandler extends Handler {
      * @param key the key to be used when logging to the current {@code DataLog}
      */
     public DataLogHandler(String key) {
-        dataLogEntry = new StringLogEntry(DataLogManager.getLog(), "key");
+        dataLogEntry = new StringLogEntry(DataLogManager.getLog(), key);
     }
 
     /**
