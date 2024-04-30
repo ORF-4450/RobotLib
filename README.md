@@ -44,8 +44,9 @@ This project originally set up under Eclipse. You can use VSCode with the follow
 Version 4.8.3
 
 *	Update VendorJSON plugin to v1.1.
+*	Correct bug in DataLogHandler class.
 
-R. Corn, February 3 2024
+R. Corn, April 30 2024
 
 Version 4.8.2
 
