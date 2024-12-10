@@ -4,19 +4,15 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.function.DoubleSupplier;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXUpdateRate;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 //import Team4450.Lib.Wpilib.Sendable;
 
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
-//import edu.wpi.first.wpilibj.PIDSource;
-//import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -45,7 +41,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	public static NavX		INSTANCE;
 	
 	private AHRS			ahrs;
-	private byte			navxUpdateRate = 50;		// 50hz or 20ms.
+	private NavXUpdateRate	navxUpdateRate = NavXUpdateRate.k50Hz;		// 50hz or 20ms.
 	private double 			totalAngle = 0, targetHeading = 0;
 	private double			yawResetDelaySec = .050;	// 50ms.
 	//private String			name = "NavX", subSystem = "Ungrouped";
@@ -66,7 +62,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Identifies port the NavX is plugged into
 	 */
-	public enum PortType {SPI, I2C, I2C_MXP, USB};
+	public enum PortType {SPI, I2C, USB1, USB2};
 	
 	/**
 	 * Specifies pin type when accessing NavX pins.
@@ -86,31 +82,37 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	{
 		Util.consoleLog("portType=%d", portType.ordinal());
 		
-		// NavX is plugged into the RoboRio MXP port.
+		// NavX is typically plugged into the RoboRio MXP SPI port.
 		
 		switch (portType)
 		{
 			case SPI:
-				ahrs = new AHRS(SPI.Port.kMXP, navxUpdateRate);
+				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
 				break;
 				
 			case I2C:
-				ahrs = new AHRS(I2C.Port.kOnboard, navxUpdateRate);
+				ahrs = new AHRS(AHRS.NavXComType.kI2C, navxUpdateRate);
 				break;
 
-			case I2C_MXP:
-				ahrs = new AHRS(I2C.Port.kMXP, navxUpdateRate);
-				break;
+			//case I2C_MXP:
+			//	ahrs = new AHRS(AHRS.NavXComType., navxUpdateRate);
+			//	break;
 
-			case USB:
-				ahrs = new AHRS(SerialPort.Port.kUSB);
-				
+			case USB1:
+				ahrs = new AHRS(AHRS.NavXComType.kUSB1);
+
 				Timer.delay(1);	// delay to ensure USB port is opened.
+				break;
 				
+			case USB2:
+				ahrs = new AHRS(AHRS.NavXComType.kUSB2);
+
+				Timer.delay(1);	// delay to ensure USB port is opened.
+			
 				break;
 				
 			default:
-				ahrs = new AHRS(SPI.Port.kMXP, navxUpdateRate);
+				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
 		}
 		
 		//ahrs.enableBoardlevelYawReset(true);
@@ -957,7 +959,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void initializeSim()
 	{
-		int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+		int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
 		
 		simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
 	}

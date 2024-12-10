@@ -41,6 +41,15 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.9.0
+
+*	Update to 2025 Beta WPILib & vendor libraries.
+*	Significant internal changes to FXEncoder, NavX.
+*	Upgrading SDS swerve library was going to be a huge project and we don't use SDS anymore so deleted
+	those classes.
+	
+R. Corn, December 9 2024
+
 Version 4.8.3
 
 *	Update VendorJSON plugin to v1.1.
