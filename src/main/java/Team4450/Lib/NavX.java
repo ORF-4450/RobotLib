@@ -5,6 +5,7 @@ import java.util.EventObject;
 import java.util.function.DoubleSupplier;
 
 import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
 import com.studica.frc.AHRS.NavXUpdateRate;
 
 import Team4450.Lib.Wpilib.PIDSource;
@@ -62,7 +63,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Identifies port the NavX is plugged into
 	 */
-	public enum PortType {SPI, I2C, USB1, USB2};
+	//public enum PortType {SPI, I2C, USB1, USB2};
 	
 	/**
 	 * Specifies pin type when accessing NavX pins.
@@ -78,57 +79,68 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	    
 	// Private constructor forces use of getInstance().
 	
-	private NavX(PortType portType)
+	private NavX(NavXComType portType, NavXUpdateRate updateRate)
 	{
-		Util.consoleLog("portType=%d", portType.ordinal());
+		Util.consoleLog("portType=%d, rate=%d", portType.ordinal(), updateRate.ordinal());
 		
 		// NavX is typically plugged into the RoboRio MXP SPI port.
 		
-		switch (portType)
-		{
-			case SPI:
-				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
-				break;
-				
-			case I2C:
-				ahrs = new AHRS(AHRS.NavXComType.kI2C, navxUpdateRate);
-				break;
+		ahrs = new AHRS(portType, updateRate);
 
-			//case I2C_MXP:
-			//	ahrs = new AHRS(AHRS.NavXComType., navxUpdateRate);
-			//	break;
-
-			case USB1:
-				ahrs = new AHRS(AHRS.NavXComType.kUSB1);
-
-				Timer.delay(1);	// delay to ensure USB port is opened.
-				break;
-				
-			case USB2:
-				ahrs = new AHRS(AHRS.NavXComType.kUSB2);
-
-				Timer.delay(1);	// delay to ensure USB port is opened.
-			
-				break;
-				
-			default:
-				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
-		}
+		Timer.delay(1);	// delay to ensure USB port is opened.
+	}
+	
+//	private NavX(PortType portType)
+//	{
+//		Util.consoleLog("portType=%d", portType.ordinal());
+//		
+//		// NavX is typically plugged into the RoboRio MXP SPI port.
+//		
+//		switch (portType)
+//		{
+//			case SPI:
+//				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
+//				break;
+//				
+//			case I2C:
+//				ahrs = new AHRS(AHRS.NavXComType.kI2C, navxUpdateRate);
+//				break;
+//
+//			//case I2C_MXP:
+//			//	ahrs = new AHRS(AHRS.NavXComType., navxUpdateRate);
+//			//	break;
+//
+//			case USB1:
+//				ahrs = new AHRS(AHRS.NavXComType.kUSB1);
+//
+//				Timer.delay(1);	// delay to ensure USB port is opened.
+//				break;
+//				
+//			case USB2:
+//				ahrs = new AHRS(AHRS.NavXComType.kUSB2);
+//
+//				Timer.delay(1);	// delay to ensure USB port is opened.
+//			
+//				break;
+//				
+//			default:
+//				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
+//		}
 		
 		//ahrs.enableBoardlevelYawReset(true);
-	}
+//	}
 	
 	/**
 	 * Return global instance of NavX object. First call creates the NavX global
 	 * object and starts the calibration process. Calibration can take up 10 seconds.
-	 * Uses SPI PortType to access the NavX.
+	 * Uses MXP_SPI PortType at 50hz to access the NavX.
 	 * @return NavX object reference.
 	 */
 	public static NavX getInstance()
 	{
 		Util.consoleLog();
 		
-		if (INSTANCE == null) INSTANCE = new NavX(PortType.SPI);
+		if (INSTANCE == null) INSTANCE = new NavX(NavXComType.kMXP_SPI, NavXUpdateRate.k50Hz);
 		
 		return INSTANCE;
 	}
@@ -136,14 +148,32 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Return global instance of NavX object. First call creates the NavX global
 	 * object and starts the calibration process. Calibration can take up 10 seconds.
+	 * Update rate is 50hz.
 	 * @param portType Specify the interface port to be used to access the NavX.
 	 * @return NavX object reference.
 	 */
-	public static NavX getInstance(PortType portType)
+	public static NavX getInstance(NavXComType portType)
 	{
 		Util.consoleLog();
 		
-		if (INSTANCE == null) INSTANCE = new NavX(portType);
+		if (INSTANCE == null) INSTANCE = new NavX(portType, NavXUpdateRate.k50Hz);
+		
+		return INSTANCE;
+	}
+
+	/**
+	 * Return global instance of NavX object. First call creates the NavX global
+	 * object and starts the calibration process. Calibration can take up 10 seconds.
+	 * @param portType Specify the interface port to be used to access the NavX.
+	 * @param portType Specify the interface port to be used to access the NavX.
+	 * @param updateRate Specify the navx update rate.
+	 * @return NavX object reference.
+	 */
+	public static NavX getInstance(NavXComType portType, NavXUpdateRate updateRate)
+	{
+		Util.consoleLog();
+		
+		if (INSTANCE == null) INSTANCE = new NavX(portType, updateRate);
 		
 		return INSTANCE;
 	}
