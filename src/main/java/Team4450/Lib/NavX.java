@@ -165,7 +165,6 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 * Return global instance of NavX object. First call creates the NavX global
 	 * object and starts the calibration process. Calibration can take up 10 seconds.
 	 * @param portType Specify the interface port to be used to access the NavX.
-	 * @param portType Specify the interface port to be used to access the NavX.
 	 * @param updateRate Specify the navx update rate.
 	 * @return NavX object reference.
 	 */
@@ -670,7 +669,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
  
         /* These functions are compatible w/the WPI Gyro Class, providing a simple  */
         /* path for upgrading from the Kit-of-Parts gyro to the navx MXP            */
-        
+
         table.getEntry(    "IMU_TotalYaw")        .setNumber( ahrs.getAngle());
         table.getEntry(    "IMU_AngleAdjustment") .setNumber( ahrs.getAngleAdjustment());
         table.getEntry(    "IMU_YawRateDPS")      .setNumber( ahrs.getRate());
@@ -687,7 +686,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         /* FIRST FRC Robotics Field, due to accelerometer noise and the compounding */
         /* of these errors due to single (velocity) integration and especially      */
         /* double (displacement) integration.                                       */
-        
+
         table.getEntry(    "IMU_Velocity_X")      .setNumber( ahrs.getVelocityX());
         table.getEntry(    "IMU_Velocity_Y")      .setNumber( ahrs.getVelocityY());
         table.getEntry(    "IMU_Displacement_X")  .setNumber( ahrs.getDisplacementX());
@@ -697,7 +696,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         /* NOTE:  These values are not normally necessary, but are made available   */
         /* for advanced users.  Before using this data, please consider whether     */
         /* the processed data (see above) will suit your needs.                     */
-        
+
         table.getEntry(    "IMU_RawGyro_X")       .setNumber( ahrs.getRawGyroX());
         table.getEntry(    "IMU_RawGyro_Y")       .setNumber( ahrs.getRawGyroY());
         table.getEntry(    "IMU_RawGyro_Z")       .setNumber( ahrs.getRawGyroZ());
@@ -709,23 +708,30 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         table.getEntry(    "IMU_RawMag_Z")        .setNumber( ahrs.getRawMagZ());
         table.getEntry(    "IMU_Temp_C")          .setNumber( ahrs.getTempC());
         table.getEntry(    "IMU_Timestamp")       .setNumber( ahrs.getLastSensorTimestamp());
-        
+
         /* Omnimount Yaw Axis Information                                           */
         /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
-        AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
-        table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
-        table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
-        
+        //AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
+		Util.consoleLog("6.01");
+		//if (yaw_axis == null) 		Util.consoleLog("yaw axis is null");
+
+        //table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
+		Util.consoleLog("6.1");
+
+        //table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
+
         /* Quaternion Data                                                          */
         /* Quaternions are fascinating, and are the most compact representation of  */
         /* orientation data.  All of the Yaw, Pitch and Roll Values can be derived  */
         /* from the Quaternions.  If interested in motion processing, knowledge of  */
         /* Quaternions is highly recommended.                                       */
         table.getEntry(    "IMU_QuaternionW")     .setNumber( ahrs.getQuaternionW());
+
         table.getEntry(    "IMU_QuaternionX")     .setNumber( ahrs.getQuaternionX());
+
         table.getEntry(    "IMU_QuaternionY")     .setNumber( ahrs.getQuaternionY());
         table.getEntry(    "IMU_QuaternionZ")     .setNumber( ahrs.getQuaternionZ());
-         
+
         /* Connectivity Debugging Support                                           */
         table.getEntry(    "IMU_Byte_Count")      .setNumber( ahrs.getByteCount());
         table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
