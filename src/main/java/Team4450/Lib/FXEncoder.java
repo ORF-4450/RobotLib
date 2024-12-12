@@ -58,7 +58,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 		// Select Talon FX integrated encoder as feedback device.
 		//this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 		
-		// May not need this for 2025.
+		// 2025 version of above below, may not need this for 2025.
 //		TalonFXConfigurator config = this.talon.getConfigurator();
 //		FeedbackConfigs configs = new FeedbackConfigs();
 //		configs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;

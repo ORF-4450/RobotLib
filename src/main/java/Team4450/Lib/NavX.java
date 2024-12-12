@@ -18,7 +18,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
+//import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -711,14 +712,9 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 
         /* Omnimount Yaw Axis Information                                           */
         /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
-        //AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
-		Util.consoleLog("6.01");
-		//if (yaw_axis == null) 		Util.consoleLog("yaw axis is null");
-
-        //table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
-		Util.consoleLog("6.1");
-
-        //table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
+        AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
+        table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
+        table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
 
         /* Quaternion Data                                                          */
         /* Quaternions are fascinating, and are the most compact representation of  */
@@ -995,9 +991,13 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void initializeSim()
 	{
-		int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
+		//int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
 		
-		simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+		//simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+		
+		SimDeviceSim device = new SimDeviceSim("navX-Sensor", ahrs.getPort());
+		
+		simAngle = device.getDouble("Yaw");
 	}
 	
 	/**
