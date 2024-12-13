@@ -3,15 +3,8 @@ package Team4450.Lib;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix6.sim.TalonFXSimState;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
-import com.ctre.phoenix6.configs.FeedbackConfigs;
-
-import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 //import Team4450.Lib.Wpilib.Sendable;
@@ -47,7 +40,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	/**
 	 * Create FXEncoder and set the Talon the encoder is
 	 * connected to.
-	 * @param talon Talon FX object encoder is connected to.
+	 * @param talon TalonFX object encoder is connected to.
 	 */
 	public FXEncoder( TalonFX talon )
 	{
@@ -70,7 +63,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	/**
 	 * Create FXEncoder setting the Talon the encoder is
 	 * connected to and the wheel diameter of the wheel being monitored.
-	 * @param talon Talon FX object encoder is connected to.
+	 * @param talon TalonFX object encoder is connected to.
  	 * @param wheelDiameter Wheel diameter in inches.
 	 */
 	public FXEncoder( TalonFX talon, double wheelDiameter )
