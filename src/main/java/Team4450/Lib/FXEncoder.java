@@ -11,6 +11,7 @@ import Team4450.Lib.Wpilib.PIDSourceType;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
@@ -27,6 +28,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0, absoluteOffset;
 	private boolean			inverted = false, direction = false;
+	private String			name;
+	private static int		instances;
 
 	private TalonFXSimState	simState;
 	
@@ -38,53 +41,101 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	}
 	
 	/**
-	 * Create FXEncoder and set the Talon the encoder is
+	 * Create FXEncoder and set the TalonFX the encoder is
 	 * connected to.
 	 * @param talon TalonFX object encoder is connected to.
 	 */
 	public FXEncoder( TalonFX talon )
 	{
-		Util.consoleLog("%s", talon.getDescription());
-		
-		this.talon = talon;
-
-		// Select Talon FX integrated encoder as feedback device.
-		//this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-		
-		// 2025 version of above below, may not need this for 2025.
-//		TalonFXConfigurator config = this.talon.getConfigurator();
-//		FeedbackConfigs configs = new FeedbackConfigs();
-//		configs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
-//		config.apply(configs)
-
-		reset();
+		this("FXEncoder", talon, 0);
 	}
 	
 	/**
-	 * Create FXEncoder setting the Talon the encoder is
+	 * Create FXEncoder and set the TalonFX the encoder is
+	 * connected to.
+	 * @param name Name assigned in Network Tables viewer.
+	 * @param talon TalonFX object encoder is connected to.
+	 */
+	public FXEncoder( String name, TalonFX talon )
+	{
+		this(name, talon, 0);
+	}
+	
+	/**
+	 * Create FXEncoder setting the TalonFX the encoder is
 	 * connected to and the wheel diameter of the wheel being monitored.
 	 * @param talon TalonFX object encoder is connected to.
  	 * @param wheelDiameter Wheel diameter in inches.
 	 */
 	public FXEncoder( TalonFX talon, double wheelDiameter )
 	{
-		Util.consoleLog("%s", talon.getDescription());
+		this("FXEncoder", talon, wheelDiameter);
+	}
+	
+	/**
+	 * Create FXEncoder setting the TalonFX the encoder is
+	 * connected to and the wheel diameter of the wheel being monitored.
+	 * @param name Name assigned in Network Tables viewer.
+	 * @param talon TalonFX object encoder is connected to.
+ 	 * @param wheelDiameter Wheel diameter in inches.
+	 */
+	public FXEncoder( String name, TalonFX talon, double wheelDiameter )
+	{
+		//Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
 		
-		// Select Talon FX integrated encoder as feedback device.
+		//rich Select Talon FX integrated encoder as feedback device.
 		//this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 		
-		// May not need this for 2025.
+		// May not need this for 2025. RotoSensor is default feedback source.
 //		TalonFXConfigurator config = this.talon.getConfigurator();
 //		FeedbackConfigs configs = new FeedbackConfigs();
 //		configs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
 //		config.apply(configs);
 		
 		setWheelDiameter(wheelDiameter);
+        
+        name = String.format("%s[%d]", name, talon.getDeviceID());
+
+       	SendableRegistry.addLW(this, name);
+
+        Util.consoleLog("%s", name);
 		
 		reset();
 	}
+    
+    /**
+     * Returns the name of the object instance.
+     * @return Name of this object instance.
+     */
+    public String getName()
+    {
+    	return name;
+    }
+    
+    /**
+     * Sets the name of the object instance.
+     * @param name Name of this object instance.
+     */
+    public void setName(String name)
+    {
+    	Util.consoleLog("%s", name);
+    	
+    	name = String.format("%s[%d]", name, talon.getDeviceID());
+    	
+    	SendableRegistry.setName(this, name);
+    }
+    
+    /**
+     * Release resources in preparation to destroy this object.
+     */
+    public void close()
+    {
+    	Util.consoleLog("%s", name);
+
+    	SendableRegistry.remove(this);
+    }
 	
 	/**
 	 * Sets the pid source type to be used for pidGet() calls by PID controllers. When
@@ -148,7 +199,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	}
 
 	/**
-	 * Return the encoder count since last reset. Note: 4096 counts per
+	 * Return the encoder count since last reset. Note: 2048 counts per
 	 * encoder revolution divided by the scale factor.
 	 * @return The encoder count.
 	 */
@@ -183,7 +234,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 */
 	private int getRaw()
 	{
-//			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
+//rich			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
 //				(int) talon.getSensorCollection().getIntegratedSensorPosition();
 			//return isInverted() ? (int) talon.getp.getSelectedSensorPosition() * -1 :
 			//	(int) talon.getSelectedSensorPosition();
@@ -276,7 +327,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 */
 	private int getRawRate()
 	{
-//		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
+//rich		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
 //			(int) talon.getSensorCollection().getIntegratedSensorVelocity();
 		//return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
 		//	(int) talon.getSelectedSensorVelocity();
@@ -789,17 +840,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 */
 	public int getAbsolutePosition()
 	{
-		//return (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
-	
-		//rich Not yet converted for 2025.
-		
-		//int ticks =  (int) talon.get;
-		
-		//ticks -= absoluteOffset;
-		
-		//if (ticks < 0) ticks += TICKS_PER_REVOLUTION;
-	
-		return 0; //ticks;
+		return (Math.abs(get() - (get() / TICKS_PER_REVOLUTION * TICKS_PER_REVOLUTION))) - absoluteOffset;
 	}
 	
 	/**
@@ -838,10 +879,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
-		builder.setSmartDashboardType("Encoder");
+		builder.setSmartDashboardType("FXEncoder");
     	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addDoubleProperty("Position", this::get, null);
-	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
+	    builder.addDoubleProperty("Position (ticks)", this::get, null);
+	    builder.addDoubleProperty("AbsPosition (ticks)", this::getAbsolutePosition, null);
 	    builder.addDoubleProperty("RPM", this::getRPM, null);
 	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
 	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
