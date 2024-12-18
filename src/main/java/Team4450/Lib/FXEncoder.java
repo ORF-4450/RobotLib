@@ -29,8 +29,6 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0, absoluteOffset;
 	private boolean			inverted = false, direction = false;
 	private String			name;
-	private static int		instances;
-
 	private TalonFXSimState	simState;
 	
 	public static final int		TICKS_PER_REVOLUTION = 2048;
@@ -741,7 +739,8 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	
 	/**
 	 * Initialize the built-in simulation support in the FX encoder. Must be called before sim
-	 * run starts.
+	 * run starts. As of 2025, this is only needed if not using simulation on the TalonFX either
+	 * by direct code or using the Talon_FX wrapper class (which has TalonFX simulation built-in).
 	 */
 	public void initializeSim()
 	{
@@ -752,7 +751,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 
 	/**
 	 * During simulation sets the current values for the encoder. Requires
-	 * a non-zero wheel diameter set for the encoder.
+	 * a non-zero wheel diameter set for the encoder.  As of 2025, this is 
+	 * only needed if not using simulation on the TalonFX either by direct 
+	 * code or using the Talon_FX wrapper class (which has TalonFX simulation built-in).
 	 * @param position Current position in meters (from DifferentialDrivesim).
 	 * @param velocity Current velocity in meters/sec (from DifferentialDrivesim).
 	 */
@@ -760,8 +761,6 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	{
 		//Util.consoleLog("%.3f, %.3f", position, velocity);
 		
-		// May be incorrect for 2025. May be cumulative, meanding the value here may be
-		// the delta since last call.
 		simState.setRawRotorPosition(metersToTicks(position) / TICKS_PER_REVOLUTION);
 		
 		simState.setRotorVelocity(velocityToTicks(velocity) / TICKS_PER_REVOLUTION);
