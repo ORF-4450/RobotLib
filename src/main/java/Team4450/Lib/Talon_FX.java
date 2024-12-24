@@ -164,7 +164,7 @@ public class Talon_FX extends TalonFX
 	{
 		builder.setSmartDashboardType("Talon_FX");
     	//builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addDoubleProperty("amps", () -> this.motorSimModel.getCurrentDrawAmps(), null);
+	    //builder.addDoubleProperty("amps", () -> this., null);
 	    builder.addDoubleProperty("speed", this::get, null);
 	    builder.addDoubleProperty("position (rot)", getPositionDS(), null);
 	    builder.addDoubleProperty("velocity (rps)", getVelocityDS(), null);
