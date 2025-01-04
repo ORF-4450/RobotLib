@@ -22,7 +22,9 @@ Import of Javadocs, source attachment, and jars will be done automatically when 
 This library no longer contains its dependencies. You have to import the dependent libraries in the robot project
 consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix. You can copy the json files for
 these libraries from RobotLib vendordeps folder to your robot project vendordeps folder. Don't forget to do a 
-Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REVColorSensorV3.
+Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REVColorSensorV3. Note the REV color
+sensor vendordep was later included into REVLib so dropped as a separate vendordep for this library and robot
+projects.
 
 ### NOTICE
 
@@ -48,7 +50,7 @@ Version 4.9.0
 *	Upgrading SDS swerve library was going to be a huge project and we don't use SDS anymore so deleted
 	those classes.
 	
-R. Corn, December 9 2024
+R. Corn, December 9 2024 to January 3 2025
 
 Version 4.8.3
 
