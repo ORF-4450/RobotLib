@@ -32,7 +32,7 @@ public class LibraryVersion
 	 * pulled from the local cache. However, a side effect of this scheme is that
 	 * since the version, "local", never changes, you have to refresh the programs
 	 * external references to have the updated local version pulled into the project.
-	 * With VSCode, you may have to restart VSC to get it to load the updated library.
+	 * With VSCode, close and reopenyour project to get it to load the updated library.
 	 * Robot projects on other PCs use a RobotLib.json with an actual version number
 	 * to pull that version from the online artifact library Jitpack.io where our
 	 * releases are stored.
@@ -47,7 +47,7 @@ public class LibraryVersion
 	 * of the Jitpack compile when requested and will be automatically made available via JitPack. 
 	 */
 	
-	public static final String version = "4.8.3 (04.30.2024) WPILib=" + WPILibVersion.Version;	
+	public static final String version = "4.9.0 (01.11.2025) WPILib=" + WPILibVersion.Version;	
 	
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()

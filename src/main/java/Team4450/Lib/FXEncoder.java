@@ -2,19 +2,16 @@ package Team4450.Lib;
 
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
-import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
-import com.ctre.phoenix.motorcontrol.TalonFXSimCollection;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-
-import Team4450.Lib.SRXMagneticEncoderRelative.PIDRateType;
+import com.ctre.phoenix6.StatusCode;
+import com.ctre.phoenix6.sim.TalonFXSimState;
+import com.ctre.phoenix6.hardware.TalonFX;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 //import Team4450.Lib.Wpilib.Sendable;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
@@ -25,14 +22,14 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendable
 {
-	private WPI_TalonFX		talon;
+	private TalonFX			talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
 	private PIDRateType		pidRateType = PIDRateType.ticksPer100ms;
 	private double			maxPeriod = 0, wheelDiameter = 0, gearRatio = 1.0, lastSampleTime;
 	private int				scaleFactor = 1, lastCount = 0, maxRate = 0, absoluteOffset;
 	private boolean			inverted = false, direction = false;
-
-	private TalonFXSimCollection	simCollection;
+	private String			name;
+	private TalonFXSimState	simState;
 	
 	public static final int		TICKS_PER_REVOLUTION = 2048;
 	private static final double	TICKS_PER_REVOLUTION_D = 2048.0;
@@ -42,41 +39,101 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	}
 	
 	/**
-	 * Create FXEncoder and set the Talon the encoder is
+	 * Create FXEncoder and set the TalonFX the encoder is
 	 * connected to.
-	 * @param talon Talon FX object encoder is connected to.
+	 * @param talon TalonFX object encoder is connected to.
 	 */
-	public FXEncoder( WPI_TalonFX talon )
+	public FXEncoder( TalonFX talon )
 	{
-		Util.consoleLog("%s", talon.getDescription());
-		
-		this.talon = talon;
-
-		// Select Talon FX integrated encoder as feedback device.
-		this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-
-		reset();
+		this("FXEncoder", talon, 0);
 	}
 	
 	/**
-	 * Create FXEncoder setting the Talon the encoder is
+	 * Create FXEncoder and set the TalonFX the encoder is
+	 * connected to.
+	 * @param name Name assigned in Network Tables viewer.
+	 * @param talon TalonFX object encoder is connected to.
+	 */
+	public FXEncoder( String name, TalonFX talon )
+	{
+		this(name, talon, 0);
+	}
+	
+	/**
+	 * Create FXEncoder setting the TalonFX the encoder is
 	 * connected to and the wheel diameter of the wheel being monitored.
-	 * @param talon Talon FX object encoder is connected to.
+	 * @param talon TalonFX object encoder is connected to.
  	 * @param wheelDiameter Wheel diameter in inches.
 	 */
-	public FXEncoder( WPI_TalonFX talon, double wheelDiameter )
+	public FXEncoder( TalonFX talon, double wheelDiameter )
 	{
-		Util.consoleLog("%s", talon.getDescription());
+		this("FXEncoder", talon, wheelDiameter);
+	}
+	
+	/**
+	 * Create FXEncoder setting the TalonFX the encoder is
+	 * connected to and the wheel diameter of the wheel being monitored.
+	 * @param name Name assigned in Network Tables viewer.
+	 * @param talon TalonFX object encoder is connected to.
+ 	 * @param wheelDiameter Wheel diameter in inches.
+	 */
+	public FXEncoder( String name, TalonFX talon, double wheelDiameter )
+	{
+		//Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
 		
-		// Select Talon FX integrated encoder as feedback device.
-		this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+		//rich Select Talon FX integrated encoder as feedback device.
+		//this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
+		
+		// May not need this for 2025. RotoSensor is default feedback source.
+//		TalonFXConfigurator config = this.talon.getConfigurator();
+//		FeedbackConfigs configs = new FeedbackConfigs();
+//		configs.FeedbackSensorSource = FeedbackSensorSourceValue.RotorSensor;
+//		config.apply(configs);
 		
 		setWheelDiameter(wheelDiameter);
+        
+        name = String.format("%s[%d]", name, talon.getDeviceID());
+
+       	SendableRegistry.addLW(this, name);
+
+        Util.consoleLog("%s", name);
 		
 		reset();
 	}
+    
+    /**
+     * Returns the name of the object instance.
+     * @return Name of this object instance.
+     */
+    public String getName()
+    {
+    	return name;
+    }
+    
+    /**
+     * Sets the name of the object instance.
+     * @param name Name of this object instance.
+     */
+    public void setName(String name)
+    {
+    	Util.consoleLog("%s", name);
+    	
+    	name = String.format("%s[%d]", name, talon.getDeviceID());
+    	
+    	SendableRegistry.setName(this, name);
+    }
+    
+    /**
+     * Release resources in preparation to destroy this object.
+     */
+    public void close()
+    {
+    	Util.consoleLog("%s", name);
+
+    	SendableRegistry.remove(this);
+    }
 	
 	/**
 	 * Sets the pid source type to be used for pidGet() calls by PID controllers. When
@@ -140,7 +197,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	}
 
 	/**
-	 * Return the encoder count since last reset. Note: 4096 counts per
+	 * Return the encoder count since last reset. Note: 2048 counts per
 	 * encoder revolution divided by the scale factor.
 	 * @return The encoder count.
 	 */
@@ -175,10 +232,16 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 */
 	private int getRaw()
 	{
-//			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
+//rich			return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorPosition() * -1 :
 //				(int) talon.getSensorCollection().getIntegratedSensorPosition();
-			return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
-				(int) talon.getSelectedSensorPosition();
+			//return isInverted() ? (int) talon.getp.getSelectedSensorPosition() * -1 :
+			//	(int) talon.getSelectedSensorPosition();
+			
+			var rotorPosSignal = talon.getRotorPosition(true); // rotations.
+			double rotorRotations = rotorPosSignal.getValueAsDouble();
+			
+			return isInverted() ? (int) (rotorRotations * -1.0 * TICKS_PER_REVOLUTION_D) :
+				(int) (rotorRotations * TICKS_PER_REVOLUTION_D);
 	}
 	
 	/**
@@ -262,10 +325,17 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 */
 	private int getRawRate()
 	{
-//		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
+//rich		return isInverted() ? (int) talon.getSensorCollection().getIntegratedSensorVelocity() * -1 :
 //			(int) talon.getSensorCollection().getIntegratedSensorVelocity();
-		return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
-			(int) talon.getSelectedSensorVelocity();
+		//return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
+		//	(int) talon.getSelectedSensorVelocity();
+		
+		var rotorVelSignal = talon.getRotorVelocity(true); // Rotations/second
+		double rotorVelocity = rotorVelSignal.getValueAsDouble();
+		
+		return isInverted() ? (int) (rotorVelocity * -1.0 * TICKS_PER_REVOLUTION_D * 0.1) :
+			(int) (rotorVelocity * TICKS_PER_REVOLUTION_D * 0.1);
+
 	}
 	
 	/**
@@ -326,11 +396,11 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	@Override
 	public void reset()
 	{
-		ErrorCode	errorCode;
+		StatusCode	errorCode;
 		
-		errorCode = talon.setSelectedSensorPosition(0);
+		errorCode = talon.setPosition(0);
 
-		if (errorCode != ErrorCode.OK) 
+		if (errorCode != StatusCode.OK) 
 			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());
 	}
 
@@ -344,12 +414,12 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 */
 	public int reset(int timeout)
 	{
-		ErrorCode	errorCode;
+		StatusCode	errorCode;
 		
 		if (timeout < 0) throw new IllegalArgumentException("Timeout < 0");
 
 		//errorCode = talon.getSensorCollection().setIntegratedSensorPosition(0, timeout);
-		errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
+		errorCode = talon.setPosition(0);
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
 		// the reset command. It may take up to 20 additional ms for the zeroing to be reflected
@@ -357,7 +427,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 		// encoder counts from FXEnc to the API. We go ahead and delay the requested amount to guarantee
 		// we wait long enough that next get() call returns zero counts.
 		
-		if (errorCode == ErrorCode.OK) 
+		if (errorCode == StatusCode.OK) 
 			Timer.delay(timeout / 1000.0);	// delay value is seconds so we convert.
 		else
 			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());
@@ -427,7 +497,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 * Returns the Talon the encoder is connected to.
 	 * @return The Talon instance the encoder is connected to.
 	 */
-	public WPI_TalonFX getTalon()
+	public TalonFX getTalon()
 	{
 		return talon;
 	}
@@ -436,7 +506,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 * Sets the Talon the encoder is connected to.
 	 * @param talon The Talon the encoder is connected to.
 	 */
-	public void setTalon( WPI_TalonFX talon )
+	public void setTalon( TalonFX talon )
 	{
 		Util.consoleLog("%s", talon.getDescription());
 		
@@ -455,9 +525,11 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
+		//StatusCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
 
-		if (errorCode == ErrorCode.OK) 
+		StatusCode errorCode = talon.getPosition(true).setUpdateFrequency(1000 / period);
+		
+		if (errorCode == StatusCode.OK) 
 			Timer.delay(.010);
 		else
 			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
@@ -472,13 +544,15 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	public void setStatusFrame8Period(int period)
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
-
-		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
 		
-		if (errorCode == ErrorCode.OK) 
-			Timer.delay(.010);
-		else
-			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
+		// Waiting for absolute encoder doc for 2025.
+
+//		StatusCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+//		
+//		if (errorCode == StatusCode.OK) 
+//			Timer.delay(.010);
+//		else
+//			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
 	}
 	
 	/**
@@ -665,18 +739,21 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	
 	/**
 	 * Initialize the built-in simulation support in the FX encoder. Must be called before sim
-	 * run starts.
+	 * run starts. As of 2025, this is only needed if not using simulation on the TalonFX either
+	 * by direct code or using the Talon_FX wrapper class (which has TalonFX simulation built-in).
 	 */
 	public void initializeSim()
 	{
-		simCollection = talon.getSimCollection();
+		simState = talon.getSimState();
 	}
 	
 	// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20General/DifferentialDrive_Simulation/src/main/java/frc/robot/Robot.java
 
 	/**
 	 * During simulation sets the current values for the encoder. Requires
-	 * a non-zero wheel diameter set for the encoder.
+	 * a non-zero wheel diameter set for the encoder.  As of 2025, this is 
+	 * only needed if not using simulation on the TalonFX either by direct 
+	 * code or using the Talon_FX wrapper class (which has TalonFX simulation built-in).
 	 * @param position Current position in meters (from DifferentialDrivesim).
 	 * @param velocity Current velocity in meters/sec (from DifferentialDrivesim).
 	 */
@@ -684,9 +761,9 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	{
 		//Util.consoleLog("%.3f, %.3f", position, velocity);
 		
-		simCollection.setIntegratedSensorRawPosition(metersToTicks(position));
+		simState.setRawRotorPosition(metersToTicks(position) / TICKS_PER_REVOLUTION);
 		
-		simCollection.setIntegratedSensorVelocity(velocityToTicks(velocity));
+		simState.setRotorVelocity(velocityToTicks(velocity) / TICKS_PER_REVOLUTION);
 	}
 	
 	/**
@@ -762,15 +839,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	 */
 	public int getAbsolutePosition()
 	{
-		//return (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
-		
-		int ticks =  (int) talon.getSensorCollection().getIntegratedSensorAbsolutePosition();
-		
-		ticks -= absoluteOffset;
-		
-		if (ticks < 0) ticks += TICKS_PER_REVOLUTION;
-	
-		return ticks;
+		return (Math.abs(get() - (get() / TICKS_PER_REVOLUTION * TICKS_PER_REVOLUTION))) - absoluteOffset;
 	}
 	
 	/**
@@ -809,10 +878,10 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, Sendab
 	@Override
 	public void initSendable( SendableBuilder builder )
 	{
-		builder.setSmartDashboardType("Encoder");
+		builder.setSmartDashboardType("FXEncoder");
     	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addDoubleProperty("Position", this::get, null);
-	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
+	    builder.addDoubleProperty("Position (ticks)", this::get, null);
+	    builder.addDoubleProperty("AbsPosition (ticks)", this::getAbsolutePosition, null);
 	    builder.addDoubleProperty("RPM", this::getRPM, null);
 	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
 	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);

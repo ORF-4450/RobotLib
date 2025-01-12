@@ -210,6 +210,7 @@ public class Util
 
             fileTxt = new AsyncFileHandler(path + "Logging.txt", 0, 99);
             fileTxt.setFormatter(logFormatter);
+            
 			logger.addHandler(fileTxt);
 
 			// setup a DataLogHandler to log console messages to WpiLog on
@@ -218,7 +219,7 @@ public class Util
 			wpiLog.setFormatter(logFormatter);
 			logger.addHandler(wpiLog);
 
-			// start the DataLogManager to begin recording networktables
+			// start the WPILib DataLogManager to begin recording networktables
 			// and joystick values
 			DataLogManager.start();
 			DriverStation.startDataLog(DataLogManager.getLog()); // (for joysticks)

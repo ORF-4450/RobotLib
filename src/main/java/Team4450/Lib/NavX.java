@@ -4,24 +4,22 @@ import java.util.EventListener;
 import java.util.EventObject;
 import java.util.function.DoubleSupplier;
 
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
+import com.studica.frc.AHRS.NavXComType;
+import com.studica.frc.AHRS.NavXUpdateRate;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 //import Team4450.Lib.Wpilib.Sendable;
 
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Notifier;
-//import edu.wpi.first.wpilibj.PIDSource;
-//import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
+import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
+//import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 
@@ -45,7 +43,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	public static NavX		INSTANCE;
 	
 	private AHRS			ahrs;
-	private byte			navxUpdateRate = 50;		// 50hz or 20ms.
+	private NavXUpdateRate	navxUpdateRate = NavXUpdateRate.k50Hz;		// 50hz or 20ms.
 	private double 			totalAngle = 0, targetHeading = 0;
 	private double			yawResetDelaySec = .050;	// 50ms.
 	//private String			name = "NavX", subSystem = "Ungrouped";
@@ -66,7 +64,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Identifies port the NavX is plugged into
 	 */
-	public enum PortType {SPI, I2C, I2C_MXP, USB};
+	//public enum PortType {SPI, I2C, USB1, USB2};
 	
 	/**
 	 * Specifies pin type when accessing NavX pins.
@@ -82,51 +80,68 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	    
 	// Private constructor forces use of getInstance().
 	
-	private NavX(PortType portType)
+	private NavX(NavXComType portType, NavXUpdateRate updateRate)
 	{
-		Util.consoleLog("portType=%d", portType.ordinal());
+		Util.consoleLog("portType=%d, rate=%d", portType.ordinal(), updateRate.ordinal());
 		
-		// NavX is plugged into the RoboRio MXP port.
+		// NavX is typically plugged into the RoboRio MXP SPI port.
 		
-		switch (portType)
-		{
-			case SPI:
-				ahrs = new AHRS(SPI.Port.kMXP, navxUpdateRate);
-				break;
-				
-			case I2C:
-				ahrs = new AHRS(I2C.Port.kOnboard, navxUpdateRate);
-				break;
+		ahrs = new AHRS(portType, updateRate);
 
-			case I2C_MXP:
-				ahrs = new AHRS(I2C.Port.kMXP, navxUpdateRate);
-				break;
-
-			case USB:
-				ahrs = new AHRS(SerialPort.Port.kUSB);
-				
-				Timer.delay(1);	// delay to ensure USB port is opened.
-				
-				break;
-				
-			default:
-				ahrs = new AHRS(SPI.Port.kMXP, navxUpdateRate);
-		}
+		Timer.delay(1);	// delay to ensure USB port is opened.
+	}
+	
+//	private NavX(PortType portType)
+//	{
+//		Util.consoleLog("portType=%d", portType.ordinal());
+//		
+//		// NavX is typically plugged into the RoboRio MXP SPI port.
+//		
+//		switch (portType)
+//		{
+//			case SPI:
+//				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
+//				break;
+//				
+//			case I2C:
+//				ahrs = new AHRS(AHRS.NavXComType.kI2C, navxUpdateRate);
+//				break;
+//
+//			//case I2C_MXP:
+//			//	ahrs = new AHRS(AHRS.NavXComType., navxUpdateRate);
+//			//	break;
+//
+//			case USB1:
+//				ahrs = new AHRS(AHRS.NavXComType.kUSB1);
+//
+//				Timer.delay(1);	// delay to ensure USB port is opened.
+//				break;
+//				
+//			case USB2:
+//				ahrs = new AHRS(AHRS.NavXComType.kUSB2);
+//
+//				Timer.delay(1);	// delay to ensure USB port is opened.
+//			
+//				break;
+//				
+//			default:
+//				ahrs = new AHRS(AHRS.NavXComType.kMXP_SPI, navxUpdateRate);
+//		}
 		
 		//ahrs.enableBoardlevelYawReset(true);
-	}
+//	}
 	
 	/**
 	 * Return global instance of NavX object. First call creates the NavX global
 	 * object and starts the calibration process. Calibration can take up 10 seconds.
-	 * Uses SPI PortType to access the NavX.
+	 * Uses MXP_SPI PortType at 50hz to access the NavX.
 	 * @return NavX object reference.
 	 */
 	public static NavX getInstance()
 	{
 		Util.consoleLog();
 		
-		if (INSTANCE == null) INSTANCE = new NavX(PortType.SPI);
+		if (INSTANCE == null) INSTANCE = new NavX(NavXComType.kMXP_SPI, NavXUpdateRate.k50Hz);
 		
 		return INSTANCE;
 	}
@@ -134,14 +149,31 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	/**
 	 * Return global instance of NavX object. First call creates the NavX global
 	 * object and starts the calibration process. Calibration can take up 10 seconds.
+	 * Update rate is 50hz.
 	 * @param portType Specify the interface port to be used to access the NavX.
 	 * @return NavX object reference.
 	 */
-	public static NavX getInstance(PortType portType)
+	public static NavX getInstance(NavXComType portType)
 	{
 		Util.consoleLog();
 		
-		if (INSTANCE == null) INSTANCE = new NavX(portType);
+		if (INSTANCE == null) INSTANCE = new NavX(portType, NavXUpdateRate.k50Hz);
+		
+		return INSTANCE;
+	}
+
+	/**
+	 * Return global instance of NavX object. First call creates the NavX global
+	 * object and starts the calibration process. Calibration can take up 10 seconds.
+	 * @param portType Specify the interface port to be used to access the NavX.
+	 * @param updateRate Specify the navx update rate.
+	 * @return NavX object reference.
+	 */
+	public static NavX getInstance(NavXComType portType, NavXUpdateRate updateRate)
+	{
+		Util.consoleLog();
+		
+		if (INSTANCE == null) INSTANCE = new NavX(portType, updateRate);
 		
 		return INSTANCE;
 	}
@@ -638,7 +670,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
  
         /* These functions are compatible w/the WPI Gyro Class, providing a simple  */
         /* path for upgrading from the Kit-of-Parts gyro to the navx MXP            */
-        
+
         table.getEntry(    "IMU_TotalYaw")        .setNumber( ahrs.getAngle());
         table.getEntry(    "IMU_AngleAdjustment") .setNumber( ahrs.getAngleAdjustment());
         table.getEntry(    "IMU_YawRateDPS")      .setNumber( ahrs.getRate());
@@ -655,7 +687,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         /* FIRST FRC Robotics Field, due to accelerometer noise and the compounding */
         /* of these errors due to single (velocity) integration and especially      */
         /* double (displacement) integration.                                       */
-        
+
         table.getEntry(    "IMU_Velocity_X")      .setNumber( ahrs.getVelocityX());
         table.getEntry(    "IMU_Velocity_Y")      .setNumber( ahrs.getVelocityY());
         table.getEntry(    "IMU_Displacement_X")  .setNumber( ahrs.getDisplacementX());
@@ -665,7 +697,7 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         /* NOTE:  These values are not normally necessary, but are made available   */
         /* for advanced users.  Before using this data, please consider whether     */
         /* the processed data (see above) will suit your needs.                     */
-        
+
         table.getEntry(    "IMU_RawGyro_X")       .setNumber( ahrs.getRawGyroX());
         table.getEntry(    "IMU_RawGyro_Y")       .setNumber( ahrs.getRawGyroY());
         table.getEntry(    "IMU_RawGyro_Z")       .setNumber( ahrs.getRawGyroZ());
@@ -677,23 +709,25 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
         table.getEntry(    "IMU_RawMag_Z")        .setNumber( ahrs.getRawMagZ());
         table.getEntry(    "IMU_Temp_C")          .setNumber( ahrs.getTempC());
         table.getEntry(    "IMU_Timestamp")       .setNumber( ahrs.getLastSensorTimestamp());
-        
+
         /* Omnimount Yaw Axis Information                                           */
         /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
         AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
         table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
         table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
-        
+
         /* Quaternion Data                                                          */
         /* Quaternions are fascinating, and are the most compact representation of  */
         /* orientation data.  All of the Yaw, Pitch and Roll Values can be derived  */
         /* from the Quaternions.  If interested in motion processing, knowledge of  */
         /* Quaternions is highly recommended.                                       */
         table.getEntry(    "IMU_QuaternionW")     .setNumber( ahrs.getQuaternionW());
+
         table.getEntry(    "IMU_QuaternionX")     .setNumber( ahrs.getQuaternionX());
+
         table.getEntry(    "IMU_QuaternionY")     .setNumber( ahrs.getQuaternionY());
         table.getEntry(    "IMU_QuaternionZ")     .setNumber( ahrs.getQuaternionZ());
-         
+
         /* Connectivity Debugging Support                                           */
         table.getEntry(    "IMU_Byte_Count")      .setNumber( ahrs.getByteCount());
         table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
@@ -957,9 +991,13 @@ public class NavX implements Sendable, PIDSource, DoubleSupplier
 	 */
 	public void initializeSim()
 	{
-		int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+		//int dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
 		
-		simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+		//simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
+		
+		SimDeviceSim device = new SimDeviceSim("navX-Sensor", ahrs.getPort());
+		
+		simAngle = device.getDouble("Yaw");
 	}
 	
 	/**
