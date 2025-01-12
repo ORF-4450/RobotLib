@@ -45,12 +45,12 @@ This project originally set up under Eclipse. You can use VSCode with the follow
 ***************************************************************************************************************
 Version 4.9.0
 
-*	Update to 2025 Beta WPILib & vendor libraries.
+*	Update to 2025 WPILib & vendor libraries.
 *	Significant internal changes to FXEncoder, NavX.
 *	Upgrading SDS swerve library was going to be a huge project and we don't use SDS anymore so deleted
 	those classes.
 	
-R. Corn, December 9 2024 to January 3 2025
+R. Corn, December 9 2024 to January 11 2025
 
 Version 4.8.3
 
