@@ -42,7 +42,7 @@ else {
 					// Build in Eclispe using the Build RobotLib or Build RobotLib (Offline) 
 					// run configurations. You can push to github as much as you want.
 					//
-					// If you develope changes on a branch other than master, merge your
+					// If you develop changes on a branch other than master, merge your
 					// changes back to master. Release process only works on master branch.
 					//
 					// When ready to release, make sure the version number and dates are 
