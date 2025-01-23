@@ -17,32 +17,34 @@ public class ValveSA implements Sendable
 {
 	private final Solenoid	valveOpenSide;
 	private boolean			valveOpen = false;
-	private int				port, pcmCanId;
+	private int				port, canId;
 
 	/**
-	 * @param port DIO port wired to valve. Assumes PCM with CAN Id 0.
+	 * @param port DIO port wired to valve. Assumes Control Module CAN Id 0.
+	 * @param moduleType Pneumatics control module type.
 	 */
-	public ValveSA(int port)
+	public ValveSA(int port, PneumaticsModuleType moduleType)
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("canid=%d, port=%d", canId, port, moduleType);
 
 	  	this.port = port;
 	  	
-		valveOpenSide = new Solenoid(PneumaticsModuleType.CTREPCM, port);
+		valveOpenSide = new Solenoid(moduleType, port);
 	}
 
 	/**
-	 * @param pcmCanId PCM CAN Id number.
+	 * @param canId Control Module CAN Id number.
 	 * @param port DIO port wired to valve.
+	 * @param moduleType Pneumatics control module type.
 	 */
-	public ValveSA(int pcmCanId, int port)
+	public ValveSA(int canId, int port, PneumaticsModuleType moduleType)
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("canid=%d, port=%d", canId, port);
 
 	  	this.port = port;
-	  	this.pcmCanId = pcmCanId;
+	  	this.canId = canId;
 	  	
-		valveOpenSide = new Solenoid(pcmCanId, PneumaticsModuleType.CTREPCM, port);
+		valveOpenSide = new Solenoid(canId, moduleType, port);
 	}
 
 	/**
@@ -62,7 +64,7 @@ public class ValveSA implements Sendable
 	 */
 	public void Open()
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("pcm=%d, port=%d", canId, port);
     
 		valveOpenSide.set(true);
 		
@@ -74,7 +76,7 @@ public class ValveSA implements Sendable
 	 */
 	public void Close()
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("pcm=%d, port=%d", canId, port);
     
 		valveOpenSide.set(false);
 		

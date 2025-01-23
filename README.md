@@ -43,6 +43,12 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.10.0
+
+*	Update ValveSA and ValveDA classes to support the REV Pneumatics hub.
+
+R. Corn, January 23 2025
+
 Version 4.9.0
 
 *	Update to 2025 WPILib & vendor libraries.

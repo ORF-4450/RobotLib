@@ -20,14 +20,14 @@ import edu.wpi.first.wpilibj.Solenoid;
  * of the valve to extend a cylinder and close to retract. For DA valves, our convention is to wire
  * the A side to the first port and pipe to open or extend the cylinder and B side to close or retract.
  * Again, these are conventions and the reality is what you design your valve to cylinder piping to be
- * and the wiring to the corresponding sides of the valve to the PCM ports.
+ * and the wiring to the corresponding sides of the valve to the control module ports.
  */
 
 public class ValveDA implements Sendable
 {
 	private final Solenoid	valveOpenSide, valveCloseSide;
 	private boolean			valveOpen = false;
-	private int				port, pcmCanId = 0;
+	private int				port, canId = 0;
 
 	/**
 	 * Sets the time to apply power to make sure valve slide moves correctly.
@@ -38,34 +38,36 @@ public class ValveDA implements Sendable
 	public double           solenoidSlideTime = .02;
 
 	/**
-	 * @param port PCM port wired to open/A side of valve. Close/B side is wired to PCM next port.
-	 * Assumes PCM CAN Id 0.
+	 * @param port Control Module port wired to open/A side of valve. Close/B side is wired to module next port.
+	 * Assumes CAN Id 0.
+	 * @param moduleType Pneumatics control module type.
 	 */
 
-	public ValveDA(int port)
+	public ValveDA(int port, PneumaticsModuleType moduleType)
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("canid=%d, port=%d", canId, port);
 
-		valveOpenSide = new Solenoid(PneumaticsModuleType.CTREPCM, port);
-		valveCloseSide = new Solenoid(PneumaticsModuleType.CTREPCM, port + 1);
+		valveOpenSide = new Solenoid(moduleType, port);
+		valveCloseSide = new Solenoid(moduleType, port + 1);
     
 		this.port = port;
 	}
 
 	/**
-	 * @param pcmCanId PCM CAN Id number.
-	 * @param port PCM port wired to open/A side of valve. Close/B side is wired to PCM next port.
+	 * @param canId Control Module CAN Id number.
+	 * @param port PCM port wired to open/A side of valve. Close/B side is wired to module next port.
+	 * @param moduleType Pneumatics control module type.
 	 */
 
-	public ValveDA(int pcmCanId, int port)
+	public ValveDA(int canId, int port, PneumaticsModuleType moduleType)
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("canid=%d, port=%d", canId, port);
 
-		valveOpenSide = new Solenoid(pcmCanId, PneumaticsModuleType.CTREPCM, port);
-		valveCloseSide = new Solenoid(pcmCanId, PneumaticsModuleType.CTREPCM, port + 1);
+		valveOpenSide = new Solenoid(canId, moduleType, port);
+		valveCloseSide = new Solenoid(canId, moduleType, port + 1);
     
 		this.port = port;
-		this.pcmCanId = pcmCanId;
+		this.canId = canId;
 	}
 
 	/**
@@ -86,7 +88,7 @@ public class ValveDA implements Sendable
 	 */
 	public void Open()
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("canid=%d, port=%d", canId, port);
     
 		valveCloseSide.set(false);
     
@@ -116,7 +118,7 @@ public class ValveDA implements Sendable
 	 */
 	public void Close()
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", pcmCanId, port);
+	  	Util.consoleLog("canid=%d, port=%d", canId, port);
     
 		valveOpenSide.set(false);
     
