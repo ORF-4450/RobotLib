@@ -12,14 +12,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 
 /**
- * Compressor monitoring task.
+ * Compressor monitoring task. For CTRE PCM only.
  * Runs as a separate thread from our MyRobot class. Runs until our
  * program is terminated from the RoboRio. Displays compressor on/off
  * LED on DS. Can also monitor an air pressure sensor and report the
  * pressure to the DS. Assumes compressor is plugged into the first
  * PCM, device id 0.
- * Note: for 2022 only CTRE PCM is supported at this time. REV Pneumatic
- * Hub will be added later.
+
  */
 
 public class MonitorCompressor extends Thread implements Sendable
