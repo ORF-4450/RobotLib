@@ -24,7 +24,6 @@ public class MonitorCompressorPH extends Thread implements Sendable
   private final Compressor			compressor;
   private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
   private boolean					lowPressureAlarm = false, ledState = false, compressorState;
-  private int						loopCount;
   
   /**
    * Static reference to the internal MonitorCompressorPH instance created by
@@ -148,8 +147,7 @@ public class MonitorCompressorPH extends Thread implements Sendable
 				Util.consoleLog("compressor on=%b", saveState);
 			}
 			
-			pressure = getPressure();
-			
+			pressure = getPressure();			
 			
 			SmartDashboard.putNumber("AirPressure", (int) pressure);
 		
@@ -174,8 +172,6 @@ public class MonitorCompressorPH extends Thread implements Sendable
 					ledState = false;
 
 				SmartDashboard.putBoolean("LowPressure", ledState);
-				
-				loopCount++;
 			}
 			
 			Timer.delay(delay);
@@ -192,6 +188,5 @@ public class MonitorCompressorPH extends Thread implements Sendable
     builder.addDoubleProperty("PSI", this::getPressure, null);
     builder.addBooleanProperty("On", () -> compressorState, null);
     builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
-    builder.addDoubleProperty("Loop", () -> loopCount, null);
   }
 }
