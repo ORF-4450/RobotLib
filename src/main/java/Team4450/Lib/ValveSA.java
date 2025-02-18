@@ -3,6 +3,7 @@ package Team4450.Lib;
 
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 
@@ -18,24 +19,31 @@ public class ValveSA implements Sendable
 	private final Solenoid	valveOpenSide;
 	private boolean			valveOpen = false;
 	private int				port, canId;
+	private String			name = "ValveSA";
 
 	/**
-	 * @param port DIO port wired to valve. Assumes Control Module CAN Id 0.
-	 * @param moduleType Pneumatics control module type.
+	 * @param port DIO port wired to valve. Assumes Control Module CAN Id 0 for CTRE module, Id 1 for REV module.
+	 * @param moduleType Pneumatic control module type.
 	 */
 	public ValveSA(int port, PneumaticsModuleType moduleType)
 	{
+		if (moduleType == PneumaticsModuleType.REVPH) canId = 1;
+		
 	  	Util.consoleLog("canid=%d, port=%d", canId, port, moduleType);
 
 	  	this.port = port;
 	  	
 		valveOpenSide = new Solenoid(moduleType, port);
+        
+		name = String.format("%s[%d-%d]", name, canId, port);
+        
+		SendableRegistry.addLW(this, "ValveSA", name);
 	}
 
 	/**
-	 * @param canId Control Module CAN Id number.
+	 * @param canId Control Module CAN Id number, 0 for first CTRE module, 1 for first REV module.
 	 * @param port DIO port wired to valve.
-	 * @param moduleType Pneumatics control module type.
+	 * @param moduleType Pneumatic control module type.
 	 */
 	public ValveSA(int canId, int port, PneumaticsModuleType moduleType)
 	{
@@ -45,6 +53,23 @@ public class ValveSA implements Sendable
 	  	this.canId = canId;
 	  	
 		valveOpenSide = new Solenoid(canId, moduleType, port);
+        
+		name = String.format("%s[%d-%d]", name, canId, port);
+        
+		SendableRegistry.addLW(this, "ValveSA", name);
+	}
+	
+	/**
+	 * Sets the name used on the LiveWindow display for an instance of this class.
+	 * @param name The name to display.
+	 */
+	public void setName(String name)
+	{
+        
+		this.name = String.format("%s[%d-%d]", name, canId, port);
+        
+		SendableRegistry.setName(this, this.name);
+		
 	}
 
 	/**
