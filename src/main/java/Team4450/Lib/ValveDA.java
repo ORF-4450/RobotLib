@@ -40,8 +40,8 @@ public class ValveDA implements Sendable
 	public double           solenoidSlideTime = .02;
 
 	/**
+	 * Create instance of ValveDA class. Assumes CAN Id 0 for CTRE module, Id 1 for REV module.
 	 * @param port Control Module port wired to open/A side of valve. Close/B side is wired to module next port.
-	 * Assumes CAN Id 0 for CTRE module, Id 1 for REV module.
 	 * @param moduleType Pneumatic control module type.
 	 */
 
@@ -62,8 +62,9 @@ public class ValveDA implements Sendable
 	}
 
 	/**
+	 * Create instance of ValveDA class.
 	 * @param canId Control Module CAN Id number, 0 for first CTRE module, 1 for first REV module.
-	 * @param port PCM port wired to open/A side of valve. Close/B side is wired to module next port.
+	 * @param port Control module port wired to open/A side of valve. Close/B side is wired to module next port.
 	 * @param moduleType Pneumatic control module type.
 	 */
 

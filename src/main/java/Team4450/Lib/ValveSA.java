@@ -22,7 +22,9 @@ public class ValveSA implements Sendable
 	private String			name = "ValveSA";
 
 	/**
-	 * @param port DIO port wired to valve. Assumes Control Module CAN Id 0 for CTRE module, Id 1 for REV module.
+	 * Create instance of ValveSA class. Assumes Control Module CAN Id 0 for CTRE module, 
+	 * Id 1 for REV module.
+	 * @param port Control module port wired to valve. 
 	 * @param moduleType Pneumatic control module type.
 	 */
 	public ValveSA(int port, PneumaticsModuleType moduleType)
@@ -41,8 +43,9 @@ public class ValveSA implements Sendable
 	}
 
 	/**
+	 * Create an instance of ValveSA class. 
 	 * @param canId Control Module CAN Id number, 0 for first CTRE module, 1 for first REV module.
-	 * @param port DIO port wired to valve.
+	 * @param port Control module port wired to valve.
 	 * @param moduleType Pneumatic control module type.
 	 */
 	public ValveSA(int canId, int port, PneumaticsModuleType moduleType)

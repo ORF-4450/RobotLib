@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Compressor;
 
 /**
- * Compressor monitoring task. For REV Pneumatics Hub only.
+ * Compressor monitoring task. For REV Pneumatic Hub only.
  * Runs as a separate thread from our MyRobot class. Runs until our
  * program is terminated from the RoboRio. Displays compressor on/off
  * LED on DS. Can also monitor an air pressure sensor and report the
  * pressure to the DS. Assumes compressor is plugged into the first
- * PH, device id 1.
+ * PH, CAN id 1.
  */
 
 public class MonitorCompressorPH extends Thread implements Sendable
