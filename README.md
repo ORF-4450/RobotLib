@@ -43,6 +43,15 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.11.0
+
+*	More updates to ValveDA & SA for REV PH.
+*	Add LiveWindow support to ValveDA & SA.
+*	Add MonitorCommpressorPH class to monitor compressor controlled by REV PH.
+*	Update to WPILib 2025.3.1 and update vendordeps to latest versions.
+
+R. Corn, February 20 2025
+
 Version 4.10.0
 
 *	Update ValveSA and ValveDA classes to support the REV Pneumatics hub.
