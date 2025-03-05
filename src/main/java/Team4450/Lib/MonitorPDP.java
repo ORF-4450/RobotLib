@@ -74,7 +74,9 @@ public class MonitorPDP extends Thread implements Sendable
   private MonitorPDP()
   {
 	  Util.consoleLog();
+	  
 	  pdp = new PowerDistribution();
+	  
 	  this.setName("MonitorPDP");
       
 	  SendableRegistry.addLW(this, "MonitorPDP");
@@ -83,7 +85,9 @@ public class MonitorPDP extends Thread implements Sendable
   private MonitorPDP(PowerDistribution pdp)
   {
 	  Util.consoleLog();
+	  
 	  this.pdp = pdp;
+	  
 	  this.setName("MonitorPDP");
       
 	  SendableRegistry.addLW(this, "MonitorPDP");

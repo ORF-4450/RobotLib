@@ -14,14 +14,18 @@ import edu.wpi.first.wpilibj.Solenoid;
  * the valve to move to the open position. Power is then turned off and the valve
  * stays where it is (open). Calling close applies power to the close side momentarily causing the
  * valve to move to the closed position. Power is then turned off and the valve
- * stays where it is (closed).
+ * stays where it is (closed). Note that the actual movement of the valve which lasts for whatever
+ * the slide time is set to is done in a separate thread so as not to delay the calling thread.
  * 
  * Open and Close are arbitrary definitions, they are actually defined by the physical robot
  * valve piping/wiring and what you want the cylinder to do. Typically you would pipe the "open" side
  * of the valve to extend a cylinder and close to retract. For DA valves, our convention is to wire
  * the A side to the first port and pipe to open or extend the cylinder and B side to close or retract.
- * Again, these are conventions and the reality is what you design your valve to cylinder piping to be
- * and the wiring to the corresponding sides of the valve to the control module ports.
+ * This means we pipe B side to the "at rest" or not "active" position of the cylinder. A side is piped
+ * to the "active" or "doing the desired action" position of the cylinder. This based on the SMC manifold
+ * and valves which have A and B sides. So for a valve you would wire the A side of the valve to the port
+ * number on the constructor and the B side to that port + 1. Hoses go into A and B air ports to the ends
+ * of the target cylinder corredsponding to at rest and active.
  */
 
 public class ValveDA implements Sendable
@@ -35,7 +39,7 @@ public class ValveDA implements Sendable
 	 * Sets the time to apply power to make sure valve slide moves correctly.
 	 * The movement takes time so power has to be applied until slide has
 	 * moved from one side to the other. In seconds, defaults to .02 sec.
-	 * This default determined using Test mode.
+	 * This default determined using Test mode.ve
 	 */
 	public double           solenoidSlideTime = .02;
 
@@ -93,7 +97,6 @@ public class ValveDA implements Sendable
 		this.name = String.format("%s[%d-%d]", name, canId, port);
         
 		SendableRegistry.setName(this, this.name);
-		
 	}
 
 	/**
@@ -118,17 +121,22 @@ public class ValveDA implements Sendable
     
 		valveCloseSide.set(false);
     
-		valveOpenSide.set(true);
-		Timer.delay(solenoidSlideTime);
-		valveOpenSide.set(false);
+//		valveOpenSide.set(true);
+//		Timer.delay(solenoidSlideTime);
+//		valveOpenSide.set(false);
 		
-		valveOpen = true;
+		new Thread(() -> {
+			try {
+				valveOpenSide.set(true);
+				Timer.delay(solenoidSlideTime);
+				valveOpenSide.set(false);
+				valveOpen = true;
+			} catch (Exception e) { }
+		  }).start();
 	}
 	
 	/**
 	 * Pressurize the A side of the valve.
-	 * This function delays calling thread for the valve
-	 * slide time (default 20ms).
 	 */
 	public void SetA()
 	{
@@ -139,8 +147,6 @@ public class ValveDA implements Sendable
 
 	/**
 	 * Close the valve (pressurize port+1. This is B side).
-	 * This function delays calling thread for the valve
-	 * slide time (default 20ms).
 	 */
 	public void Close()
 	{
@@ -148,17 +154,22 @@ public class ValveDA implements Sendable
     
 		valveOpenSide.set(false);
     
-		valveCloseSide.set(true);
-		Timer.delay(solenoidSlideTime);
-		valveCloseSide.set(false);
+//		valveCloseSide.set(true);
+//		Timer.delay(solenoidSlideTime);
+//		valveCloseSide.set(false);
 		
-		valveOpen = false;
+		new Thread(() -> {
+			try {
+				valveCloseSide.set(true);
+				Timer.delay(solenoidSlideTime);
+				valveCloseSide.set(false);
+				valveOpen = false;
+			} catch (Exception e) { }
+		  }).start();		
 	}
 	
 	/**
 	 * Pressurize the B side of the valve.
-	 * This function delays calling thread for the valve
-	 * slide time (default 20ms).
 	 */
 	public void SetB()
 	{
@@ -172,7 +183,7 @@ public class ValveDA implements Sendable
 	 * valve, which is open based on our convention. Note, this value
 	 * is not reliable until your first call to open/SetA or close/SetB to set
 	 * the initial physical state of the valve.
-	 * @return True if valve open (pressure on A side), false if closed.
+	 * @return True if valve open (pressure on A side), false if closed (pressure on B side).
 	 */
 	public boolean isOpen()
 	{

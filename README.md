@@ -43,6 +43,13 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.12.0
+
+*	Modify ValveDA to execute the valve moves with the slide delay in a separate thread so the delay is 
+	not	incurred by the calling thread.
+	
+R. Corn, March 04 2025
+
 Version 4.11.0
 
 *	More updates to ValveDA & SA for REV PH.
