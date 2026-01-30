@@ -37,7 +37,7 @@ else {
 					// overview.html and gradle.properties. DO NOT update robotlib.json. It
 					// should point to the current release while you are working on a new
 					// release. RobotLib.json is updated by the release github action when you
-					// release with github. More below.
+					// release with github. More below. Change the year in settings.gradle.
 					//
 					// Build in Eclispe using the Build RobotLib or Build RobotLib (Offline) 
 					// run configurations. You can push to github as much as you want.
