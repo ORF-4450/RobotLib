@@ -46,8 +46,9 @@ This project originally set up under Eclipse. You can use VSCode with the follow
 Version 4.13.0
 
 *	Update vendordeps and WPILib to 2026 versions.
+*	Add MonitorPower class to support  monitoring of battery when using CTRE PDP v2.
 
-R. Corn, January 29 2026
+R. Corn, January 30 2026
 
 Version 4.12.0
 
