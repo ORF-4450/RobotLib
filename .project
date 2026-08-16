@@ -24,12 +24,12 @@
 		<link>
 			<name>gradle/gradleCI.yml</name>
 			<type>1</type>
-			<location>C:/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleCI.yml</location>
+			<location>C:/Users/Richard/Workspace/FRC Java/RobotLib/.github/workflows/gradleCI.yml</location>
 		</link>
 		<link>
 			<name>gradle/gradleRelease.yml</name>
 			<type>1</type>
-			<location>C:/Users/rcorn/workspace/FRC Java/RobotLib/.github/workflows/gradleRelease.yml</location>
+			<location>C:/Users/Richard/Workspace/FRC Java/RobotLib/.github/workflows/gradleRelease.yml</location>
 		</link>
 	</linkedResources>
 	<filteredResources>
