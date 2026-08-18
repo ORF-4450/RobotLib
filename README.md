@@ -20,10 +20,7 @@ Import of Javadocs, source attachment, and jars will be done automatically when 
 ### WARNING ###
 
 This library no longer contains its dependencies. You have to import the dependent libraries in the robot project
-consuming this library. As of 3.0 these libraries are needed: Navx, CTRE_Phoenix. You can copy the json files for
-these libraries from RobotLib vendordeps folder to your robot project vendordeps folder. Don't forget to do a 
-Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REVColorSensorV3. Note the REV color
-sensor vendordep was later included into REVLib so dropped as a separate vendordep for this library and robot
+consuming this library. As of 3.0 these libraries are needed: Navx (Studica), CTRE_Phoenix 5 & 6 and Revlib. You can copy the json files for these libraries from RobotLib vendordeps folder to your robot project vendordeps folder. Don't forget to do a Gradle refresh after changing any vendordeps file. As of 3.4.0 you also need REVColorSensorV3. Note the REV color sensor vendordep was later included into REVLib so dropped as a separate vendordep for this library and robot
 projects.
 
 ### NOTICE
@@ -43,6 +40,12 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
+Version 4.14.0-beta
+
+*	Begin process of updating for 2027.
+
+R. Corn, August 16 2026
+
 Version 4.13.0
 
 *	Update vendordeps and WPILib to 2026 versions.
