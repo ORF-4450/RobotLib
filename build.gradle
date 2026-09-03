@@ -1,17 +1,19 @@
 plugins {
     id "java-library"
     id "eclipse"
-	id "edu.wpi.first.GradleRIO" version "2026.2.1"
-    id "org.ajoberstar.grgit" version "3.0.0"
+	id "org.wpilib.GradleRIO" version "2027.0.0-alpha-7"
+    id "org.ajoberstar.grgit" version "5.0.0"
     id "maven-publish"
     id "io.github.mosadie.vendorJSON" version "1.1"
 }
 
 group = archivesGroup
 
-// Sets JDK compatibility to JDK 17
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+// Sets JDK compatibility to JDK 25
+java {
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
 
 // Configuration for build task which compiles RobotLib, generates the javadoc and does the install 
 // of RobotLib in local maven cache.
@@ -135,11 +137,7 @@ eclipse {
 dependencies {
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
-        
-    // For reference, here are a few more of the easy to add libraries not currently used:
-   	//implementation pathfinder() (Jaci's)
-   	//implementation openrioMatchData()
-
+            
    	// Quick guide to keywords:
    	// api is for libraries that are expected to be needed in the main robot project.
    	// implementation is for libraries that will not be needed in the main robot project.
@@ -148,8 +146,8 @@ dependencies {
    	// compile means include in the output library jar (see below).
 }
 
-// These next definitions (branch and hash) attempt to find extra information to add to the the manifest of
-// the robot program jar file.
+// These next definitions (branch and hash) attempt to find extra information from git to add to the the manifest of
+// the library jar file.
 
 // Returns either the name of the current branch, or an empty string if no git repo is found.
 def branch = { ->

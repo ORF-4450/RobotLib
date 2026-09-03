@@ -2,7 +2,7 @@ package Team4450.Lib;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
-import edu.wpi.first.wpilibj.AnalogInput;
+import org.wpilib.hardware.discrete.AnalogInput;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
 

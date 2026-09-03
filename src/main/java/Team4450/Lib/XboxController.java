@@ -6,7 +6,7 @@ import java.util.function.DoubleSupplier;
  * This is a wrapper class for WPILib XBoxController class. Allows us to add
  * or modify XBoxController functionality.
  */
-public class XboxController extends edu.wpi.first.wpilibj.XboxController 
+public class XboxController extends org.wpilib.driverstation.XboxController 
 {
 	private double	deadZone = 0.0, invertX = 1.0, invertY = 1.0;
 	
