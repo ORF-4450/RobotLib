@@ -7,15 +7,14 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 import com.ctre.phoenix6.hardware.TalonFX;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
-//import Team4450.Lib.Wpilib.Sendable;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.CounterBase;
+import org.wpilib.hardware.discrete.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.Timer;
+import org.wpilib.system.Timer;
 
 /**
  * Wrapper for Talon FX Encoder in relative (quadrature) mode.

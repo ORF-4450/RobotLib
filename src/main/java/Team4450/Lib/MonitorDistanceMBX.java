@@ -1,12 +1,12 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.hardware.discrete.AnalogInput;
+import org.wpilib.framework.RobotBase;
+import org.wpilib.system.Timer;
 
 /**
  * Task to monitor ultrasonic sensor and report distance to driver station.
@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.Timer;
  * Uses MaxBotix ultrasonic sensor.
  */
 
-public class MonitorDistanceMBX extends Thread implements Sendable
+public class MonitorDistanceMBX extends Thread //implements Sendable
 {
     RobotBase				robot;
     private int				port = 1;
@@ -61,7 +61,7 @@ public class MonitorDistanceMBX extends Thread implements Sendable
     /**
      * Get a reference to global MonitorDistanceMBX Thread object.
      * @param robot RobotBase instance calling this function (use 'this').
-     * @param port Analog port number for ultasonic sensor.
+     * @param port Analog port number for ultrasonic sensor.
      * @return Reference to global MonitorDistanceMBX object.
      */
       
@@ -70,14 +70,14 @@ public class MonitorDistanceMBX extends Thread implements Sendable
     	Util.consoleLog();
         	
         if (INSTANCE == null) INSTANCE = new MonitorDistanceMBX(robot, port);
-            
+           
         return INSTANCE;
     }
     
     /**
      * Get a reference to global MonitorDistanceMBX Thread object.
      * @param robot RobotBase instance calling this function (use 'this').
-     * @param ultraSonic AnalogInput instance for ultra sonic sensor.
+     * @param ultraSonic AnalogInput instance for ultrasonic sensor.
      * @return Reference to global MonitorDistanceMBX object.
      */
       
@@ -101,8 +101,8 @@ public class MonitorDistanceMBX extends Thread implements Sendable
 
         ultra = new AnalogInput(port);
         
-  	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
-  	  	SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
+  	  	//SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
+  	  	//SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
     }
 
     private MonitorDistanceMBX(RobotBase robot, int port)
@@ -114,8 +114,8 @@ public class MonitorDistanceMBX extends Thread implements Sendable
         
         ultra = new AnalogInput(port);
         
-  	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
-  	  	SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
+  	  	//SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
+  	  	//SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
 	}
 
     private MonitorDistanceMBX(RobotBase robot, AnalogInput ultraSonic)
@@ -126,7 +126,7 @@ public class MonitorDistanceMBX extends Thread implements Sendable
         
         ultra = ultraSonic;
         
-  	  	SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
+  	  	//SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
 	}
     
     /**
@@ -192,11 +192,11 @@ public class MonitorDistanceMBX extends Thread implements Sendable
 		catch (Throwable e) {Util.logException(e);}
 	}
 	
-    @Override
-    public void initSendable( SendableBuilder builder )
-    {
-    	builder.setSmartDashboardType("MonitorDistanceMBX");
-    	builder.addBooleanProperty(".controllable", () -> false, null);
-    	builder.addDoubleProperty("Range(in)", this::getRangeInches, null);
-    }
+//    @Override
+//    public void initSendable( SendableBuilder builder )
+//    {
+//    	builder.setSmartDashboardType("MonitorDistanceMBX");
+//    	builder.addBooleanProperty(".controllable", () -> false, null);
+//    	builder.addDoubleProperty("Range(in)", this::getRangeInches, null);
+//    }
 }

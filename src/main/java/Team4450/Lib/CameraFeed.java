@@ -11,15 +11,15 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import edu.wpi.first.cscore.CvSink;
-import edu.wpi.first.cscore.CvSource;
-import edu.wpi.first.cscore.MjpegServer;
-import edu.wpi.first.cscore.UsbCamera;
-import edu.wpi.first.cscore.UsbCameraInfo;
-import edu.wpi.first.cscore.VideoMode;
-import edu.wpi.first.util.PixelFormat;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.wpilibj.Timer;
+import org.wpilib.vision.camera.CvSink;
+import org.wpilib.vision.camera.CvSource;
+import org.wpilib.vision.camera.MjpegServer;
+import org.wpilib.vision.camera.UsbCamera;
+import org.wpilib.vision.camera.UsbCameraInfo;
+import org.wpilib.vision.camera.VideoMode;
+import org.wpilib.util.PixelFormat;
+import org.wpilib.vision.stream.CameraServer;
+import org.wpilib.system.Timer;
 
 /**
  * USB camera feed task. Runs as a thread separate from Robot class.
@@ -111,7 +111,7 @@ public class CameraFeed extends Thread
             
             // Create output image stream.
             
-            imageOutputStream = new CvSource("4450-CvSource", PixelFormat.kMJPEG, imageWidth, imageHeight, (int) frameRate);
+            imageOutputStream = new CvSource("4450-CvSource", PixelFormat.MJPEG, imageWidth, imageHeight, (int) frameRate);
             
             mjpegServer.setSource(imageOutputStream);
             

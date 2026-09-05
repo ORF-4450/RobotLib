@@ -1,15 +1,17 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.AnalogInput;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Compressor;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.hardware.discrete.AnalogInput;
+import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
+import org.wpilib.system.Timer;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.hardware.pneumatic.Compressor;
+import org.wpilib.hardware.bus.CANPort;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.driverstation.DriverStationErrors;
 
 /**
  * Compressor monitoring task. For CTRE PCM only.
@@ -17,13 +19,13 @@ import edu.wpi.first.wpilibj.Compressor;
  * program is terminated from the RoboRio. Displays compressor on/off
  * LED on DS. Can also monitor an air pressure sensor and report the
  * pressure to the DS. Assumes compressor is plugged into the first
- * PCM, device id 0.
+ * PCM on can bus 0, which is device id 0.
 
  */
 
-public class MonitorCompressor extends Thread implements Sendable
+public class MonitorCompressor extends Thread //implements Sendable
 {
-  private final Compressor			compressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
+  private final Compressor			compressor = new Compressor(CANPort.CAN_D0, 0, PneumaticsModuleType.CTRE_PCM);
   private AnalogInput				pressureSensor;
   private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
   private boolean					lowPressureAlarm = false, ledState = false, compressorState;
@@ -97,12 +99,12 @@ public class MonitorCompressor extends Thread implements Sendable
 	  
 	  this.setName("MonitorCompressor");
 
-	  SmartDashboard.putBoolean("LowPressure", false);
+	  Telemetry.log("LowPressure", false);
 	  
 	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
 	  
-	  SendableRegistry.addLW(this, "MonitorCompressor", pressureSensorPort);
-	  SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
+	  //SendableRegistry.addLW(this, "MonitorCompressor", pressureSensorPort);
+	  //SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
   }
 
   private MonitorCompressor(AnalogInput pressureSensor)
@@ -111,12 +113,12 @@ public class MonitorCompressor extends Thread implements Sendable
 	  
 	  this.setName("MonitorCompressor");
 
-	  SmartDashboard.putBoolean("LowPressure", false);
+	  Telemetry.log("LowPressure", false);
 	  
 	  this.pressureSensor = pressureSensor;	  
       
-	  SendableRegistry.addLW(this, "MonitorCompressor", pressureSensor.getChannel());
-	  SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
+	  //SendableRegistry.addLW(this, "MonitorCompressor", pressureSensor.getChannel());
+	  //SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
   }
     
   /**
@@ -204,7 +206,7 @@ public class MonitorCompressor extends Thread implements Sendable
 			if (compressorState != saveState)
 			{
 				saveState = compressorState;
-				SmartDashboard.putBoolean("Compressor", saveState);
+				Telemetry.log("Compressor", saveState);
 				Util.consoleLog("compressor on=%b", saveState);
 			}
 			
@@ -212,19 +214,19 @@ public class MonitorCompressor extends Thread implements Sendable
 			{
 				pressure = convertV2PSI(pressureSensor.getVoltage());
 				
-				SmartDashboard.putNumber("AirPressure", (int) pressure);
+				Telemetry.log("AirPressure", (int) pressure);
 			
 				if (lowPressureThreshold > 0)
 				{
 					if (pressure <= lowPressureThreshold)
 					{
-						if (!lowPressureAlarm) DriverStation.reportError(String.format("low air pressure alarm: %dpsi", (int) pressure), false);
+						if (!lowPressureAlarm) DriverStationErrors.reportError(String.format("low air pressure alarm: %dpsi", (int) pressure), false);
 
 						lowPressureAlarm = true;
 					}
 					else
 					{
-						if (lowPressureAlarm) DriverStation.reportError("low air pressure alarm cleared", false);
+						if (lowPressureAlarm) DriverStationErrors.reportError("low air pressure alarm cleared", false);
 						
 						lowPressureAlarm = false;
 					}
@@ -234,7 +236,7 @@ public class MonitorCompressor extends Thread implements Sendable
 					else
 						ledState = false;
 
-					SmartDashboard.putBoolean("LowPressure", ledState);
+					Telemetry.log("LowPressure", ledState);
 				}
 			}
 			
@@ -244,13 +246,13 @@ public class MonitorCompressor extends Thread implements Sendable
 	catch (Throwable e) {Util.logException(e);}
   }
 	
-  @Override
-  public void initSendable( SendableBuilder builder )
-  {
-	builder.setSmartDashboardType("MonitorCompressor");
-  	builder.addBooleanProperty(".controllable", () -> false, null);
-    builder.addDoubleProperty("PSI", this::getPressure, null);
-    builder.addBooleanProperty("On", () -> compressorState, null);
-    builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
-  }
+//  @Override
+//  public void initSendable( SendableBuilder builder )
+//  {
+//	builder.setSmartDashboardType("MonitorCompressor");
+//  	builder.addBooleanProperty(".controllable", () -> false, null);
+//    builder.addDoubleProperty("PSI", this::getPressure, null);
+//    builder.addBooleanProperty("On", () -> compressorState, null);
+//    builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
+//  }
 }

@@ -3,8 +3,8 @@ package Team4450.Lib;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
-import edu.wpi.first.util.datalog.StringLogEntry;
-import edu.wpi.first.wpilibj.DataLogManager;
+import org.wpilib.datalog.StringLogEntry;
+import org.wpilib.system.DataLogManager;
 
 /**
  * 

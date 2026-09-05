@@ -11,19 +11,19 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 //import Team4450.Lib.Wpilib.Sendable;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.CounterBase;
+import org.wpilib.hardware.discrete.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Wrapper for Talon SRX Magnetic Encoder used in relative (quadrature) mode.
  * Absolute position is also available.
  */
-public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier, Sendable
+public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier //, Sendable
 {
 	private WPI_TalonSRX	talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
@@ -833,16 +833,16 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		absoluteOffset = offset;
 	}
 
-	@Override
-	public void initSendable( SendableBuilder builder )
-	{
-		builder.setSmartDashboardType("Encoder");
-    	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addDoubleProperty("Position", this::get, null);
-	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
-	    builder.addDoubleProperty("RPM", this::getRPM, null);
-	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
-	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
-	    builder.addDoubleProperty("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
-	}
+//	@Override
+//	public void initSendable( SendableBuilder builder )
+//	{
+//		builder.setSmartDashboardType("Encoder");
+//    	builder.addBooleanProperty(".controllable", () -> false, null);
+//	    builder.addDoubleProperty("Position", this::get, null);
+//	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
+//	    builder.addDoubleProperty("RPM", this::getRPM, null);
+//	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
+//	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
+//	    builder.addDoubleProperty("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
+//	}
 }

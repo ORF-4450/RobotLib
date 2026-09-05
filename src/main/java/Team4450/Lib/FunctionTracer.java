@@ -1,12 +1,10 @@
 package Team4450.Lib;
 
 import java.io.PrintStream;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import edu.wpi.first.wpilibj.RobotController;
+import org.wpilib.system.RobotController;
 
 /**
  * A class used to record the time spent in functions to identify long running
@@ -55,7 +53,7 @@ public class FunctionTracer
      */
     public void enterFunction(String name)
     {
-        long now = RobotController.getFPGATime();
+        long now = RobotController.getTime();
 
         FunctionMarker marker = functions.get(name);
 
@@ -77,7 +75,7 @@ public class FunctionTracer
      */
     public void exitFunction(String name)
     {
-        long now = RobotController.getFPGATime();
+        long now = RobotController.getTime();
 
         FunctionMarker marker = functions.get(name);
 

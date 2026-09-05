@@ -1,14 +1,11 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Compressor;
+import org.wpilib.system.Timer;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.hardware.pneumatic.Compressor;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.driverstation.DriverStationErrors;
 
 /**
  * Compressor monitoring task. For REV Pneumatic Hub only.
@@ -16,10 +13,10 @@ import edu.wpi.first.wpilibj.Compressor;
  * program is terminated from the RoboRio. Displays compressor on/off
  * LED on DS. Can also monitor an air pressure sensor and report the
  * pressure to the DS. Assumes compressor is plugged into the first
- * PH, CAN id 1.
+ * PH, device id 0.
  */
 
-public class MonitorCompressorPH extends Thread implements Sendable
+public class MonitorCompressorPH extends Thread //implements Sendable
 {
   private final Compressor			compressor;
   private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
@@ -63,9 +60,9 @@ public class MonitorCompressorPH extends Thread implements Sendable
 	  
 	  this.setName("MonitorCompressorPH");
 
-	  SmartDashboard.putBoolean("LowPressure", false);
+	  Telemetry.log("LowPressure", false);
 	  
-	  SendableRegistry.addLW(this, "MonitorCompressorPH", 1);
+	  //SendableRegistry.addLW(this, "MonitorCompressorPH", 1);
   }
     
   /**
@@ -143,25 +140,25 @@ public class MonitorCompressorPH extends Thread implements Sendable
 			if (compressorState != saveState)
 			{
 				saveState = compressorState;
-				SmartDashboard.putBoolean("Compressor", saveState);
+				Telemetry.log("Compressor", saveState);
 				Util.consoleLog("compressor on=%b", saveState);
 			}
 			
 			pressure = getPressure();			
 			
-			SmartDashboard.putNumber("AirPressure", (int) pressure);
+			Telemetry.log("AirPressure", (int) pressure);
 		
 			if (lowPressureThreshold > 0)
 			{
 				if (pressure <= lowPressureThreshold)
 				{
-					if (!lowPressureAlarm) DriverStation.reportError(String.format("low air pressure alarm: %dpsi", (int) pressure), false);
+					if (!lowPressureAlarm) DriverStationErrors.reportError(String.format("low air pressure alarm: %dpsi", (int) pressure), false);
 
 					lowPressureAlarm = true;
 				}
 				else
 				{
-					if (lowPressureAlarm) DriverStation.reportError("low air pressure alarm cleared", false);
+					if (lowPressureAlarm) DriverStationErrors.reportError("low air pressure alarm cleared", false);
 					
 					lowPressureAlarm = false;
 				}
@@ -171,7 +168,7 @@ public class MonitorCompressorPH extends Thread implements Sendable
 				else
 					ledState = false;
 
-				SmartDashboard.putBoolean("LowPressure", ledState);
+				Telemetry.log("LowPressure", ledState);
 			}
 			
 			Timer.delay(delay);
@@ -180,13 +177,13 @@ public class MonitorCompressorPH extends Thread implements Sendable
 	catch (Throwable e) {Util.logException(e);}
   }
 	
-  @Override
-  public void initSendable( SendableBuilder builder )
-  {
-	builder.setSmartDashboardType("MonitorCompressorPH");
-  	builder.addBooleanProperty(".controllable", () -> false, null);
-    builder.addDoubleProperty("PSI", this::getPressure, null);
-    builder.addBooleanProperty("On", () -> compressorState, null);
-    builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
-  }
+//  @Override
+//  public void initSendable( SendableBuilder builder )
+//  {
+//	builder.setSmartDashboardType("MonitorCompressorPH");
+//  	builder.addBooleanProperty(".controllable", () -> false, null);
+//    builder.addDoubleProperty("PSI", this::getPressure, null);
+//    builder.addBooleanProperty("On", () -> compressorState, null);
+//    builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
+//  }
 }

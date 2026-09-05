@@ -1,9 +1,9 @@
 package Team4450.Lib;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.hal.util.BoundaryException;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.hardware.hal.util.BoundaryException;
 
 /**
  * This class implements a PID Control Loop.
@@ -13,7 +13,7 @@ import edu.wpi.first.hal.util.BoundaryException;
  * This class courtesy of Team 254 with modifications.
  */
 
-public class SynchronousPID implements Sendable, AutoCloseable
+public class SynchronousPID implements AutoCloseable //, Sendable
 {
 	private static int	instances;
 	
@@ -120,7 +120,7 @@ public class SynchronousPID implements Sendable, AutoCloseable
         
         m_name = String.format("%s[%d]-PID", name, instances);
         
-       	SendableRegistry.addLW(this, "SynchronousPID Controllers", m_name);
+       	//SendableRegistry.addLW(this, "SynchronousPID Controllers", m_name);
 
         Util.consoleLog("%s", m_name);
     }
@@ -144,7 +144,7 @@ public class SynchronousPID implements Sendable, AutoCloseable
     	
     	m_name = name + "-PID";
     	
-    	SendableRegistry.setName(this, m_name);
+    	//SendableRegistry.setName(this, m_name);
     }
     
     /**
@@ -154,7 +154,7 @@ public class SynchronousPID implements Sendable, AutoCloseable
     {
     	Util.consoleLog("%s", m_name);
 
-    	SendableRegistry.remove(this);
+    	//SendableRegistry.remove(this);
     }
 
     /**
@@ -575,21 +575,21 @@ public class SynchronousPID implements Sendable, AutoCloseable
 	 * Initialize the Sendable. Called by SmartDashboard.putData().
 	 * @param builder SendableBuilder object.
 	 */
-	@Override
-	public void initSendable( SendableBuilder builder )
-	{
-		builder.setSmartDashboardType("SynchronousPID");
-    	builder.addBooleanProperty(".controllable", () -> true, null);
-	    builder.addDoubleProperty("1 p", this::getP, this::setP);
-	    builder.addDoubleProperty("2 i", this::getI, this::setI);
-	    builder.addDoubleProperty("3 d", this::getD, this::setD);
-	    builder.addDoubleProperty("4 f", this::getF, this::setF);
-	    builder.addDoubleProperty("5 max output", () -> m_maximumOutput, this::setOutputRange);
-	    builder.addDoubleProperty("6 tolerance", this::getTolerance, this::setTolerance);
-	    builder.addDoubleProperty("7 setpoint", this::getSetpoint, this::setSetpoint);
-	    builder.addDoubleProperty("8 input", this::getInput, null);
-	    builder.addDoubleProperty("9 error", this::getError, null);
-	    builder.addDoubleProperty("a output", this::get, null);
-	}
+//	@Override
+//	public void initSendable( SendableBuilder builder )
+//	{
+//		builder.setSmartDashboardType("SynchronousPID");
+//    	builder.addBooleanProperty(".controllable", () -> true, null);
+//	    builder.addDoubleProperty("1 p", this::getP, this::setP);
+//	    builder.addDoubleProperty("2 i", this::getI, this::setI);
+//	    builder.addDoubleProperty("3 d", this::getD, this::setD);
+//	    builder.addDoubleProperty("4 f", this::getF, this::setF);
+//	    builder.addDoubleProperty("5 max output", () -> m_maximumOutput, this::setOutputRange);
+//	    builder.addDoubleProperty("6 tolerance", this::getTolerance, this::setTolerance);
+//	    builder.addDoubleProperty("7 setpoint", this::getSetpoint, this::setSetpoint);
+//	    builder.addDoubleProperty("8 input", this::getInput, null);
+//	    builder.addDoubleProperty("9 error", this::getError, null);
+//	    builder.addDoubleProperty("a output", this::get, null);
+//	}
     
 }

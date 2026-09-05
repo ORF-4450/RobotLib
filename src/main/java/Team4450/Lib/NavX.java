@@ -10,24 +10,23 @@ import com.studica.frc.AHRS.NavXUpdateRate;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
-//import Team4450.Lib.Wpilib.Sendable;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.Notifier;
-import edu.wpi.first.wpilibj.Timer;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.wpilibj.Notifier;
+//import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.hal.SimDouble;
-import edu.wpi.first.wpilibj.simulation.SimDeviceSim;
+import org.wpilib.simulation.SimDeviceSim.SimDeviceSim;
 //import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import org.wpilib.networktables.NetworkTable;
+import org.wpilib.networktables.NetworkTableInstance;
 
 /**
  * Wrapper class for NavX MXP navigation sensor board.
  */
 
-public class NavX implements Sendable, PIDSource, DoubleSupplier
+public class NavX implements PIDSource, DoubleSupplier //, Sendable
 {
 
     // Create single instance of this class and return that single instance to any callers.

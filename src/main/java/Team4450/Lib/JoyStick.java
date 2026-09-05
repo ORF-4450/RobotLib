@@ -6,7 +6,7 @@ import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.wpi.first.wpilibj.Joystick;
+import org.wpilib.driverstation.Joystick;
 
 /** 
  * This class provides an interface to the Joystick buttons. It monitors

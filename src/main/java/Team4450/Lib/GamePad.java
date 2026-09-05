@@ -6,7 +6,7 @@ import java.util.EventListener;
 import java.util.HashSet;
 import java.util.Set;
 
-import edu.wpi.first.wpilibj.Joystick;
+import org.wpilib.driverstation.Joystick;
 
 /**
  * This class provides an interface to the GamePad buttons. It monitors
@@ -292,11 +292,14 @@ public class GamePad
 
 	/**
 	 * Get the actual instantaneous POV angle value directly from the GamePad.
-	 * @return Angle in degrees.
+	 * @return Angle in degrees or -1 if POV button not pressed.
 	 */
 	public int GetPOVAngle()
 	{
-		return joyStick.getPOV();
+		if (joyStick.getPOV().getAngle().isPresent())
+			return (int) joyStick.getPOV().getAngle().get().getDegrees();
+		else
+			return -1;
 	}
 	
 	/**
@@ -341,7 +344,7 @@ public class GamePad
     	            	{
     	            		previousPOVAngle = button.povAngle;
     	            	
-    	            		button.povAngle = joyStick.getPOV();
+    	            		button.povAngle = GetPOVAngle();
     	            	
      	            		if (button.povAngle != previousPOVAngle) notifyButtonDown(button);
      	            		

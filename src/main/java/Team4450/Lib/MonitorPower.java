@@ -1,13 +1,15 @@
 package Team4450.Lib;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.hardware.power.PowerDistribution;
+import org.wpilib.system.RobotController;
+import org.wpilib.system.Timer;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.driverstation.DriverStationErrors;
+import org.wpilib.hardware.bus.CANPort;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * RoboRio monitoring task. Monitors battery voltage and brownout. Logs warnings to
@@ -15,7 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * Robot class. Runs until robot program is terminated.
  */
 
-public class MonitorPower extends Thread implements Sendable
+public class MonitorPower extends Thread //implements Sendable
 {
   // Theoretical max current from good FRC battery is 250 amps, brown out power
   // cuts start at 7 volts.
@@ -55,7 +57,7 @@ public class MonitorPower extends Thread implements Sendable
 	  
 	  this.setName("MonitorPower");
       
-	  SendableRegistry.addLW(this, "MonitorPower");
+	  //SendableRegistry.addLW(this, "MonitorPower");
   }
   
   /**
@@ -143,7 +145,7 @@ public class MonitorPower extends Thread implements Sendable
 			  
 			  if (voltage <= lowVoltage)
 			  {
-				  DriverStation.reportError(String.format("battery voltage warning: %.2fv", voltage), false);
+				  DriverStationErrors.reportError(String.format("battery voltage warning: %.2fv", voltage), false);
 			  
 				  alarmInProgress = true;
 				  lowBatteryAlarm = true;
@@ -154,7 +156,7 @@ public class MonitorPower extends Thread implements Sendable
 			  
 			  if (RobotController.isBrownedOut())
 			  {
-				  DriverStation.reportError(String.format("brownout warning: %.1fv", voltage), false);
+				  DriverStationErrors.reportError(String.format("brownout warning: %.1fv", voltage), false);
 			  
 				  alarmInProgress = true;
 				  overloadAlarm = true;
@@ -170,11 +172,11 @@ public class MonitorPower extends Thread implements Sendable
 				  else
 					  alarmFlash = true;
         
-				  SmartDashboard.putBoolean("Low Battery", alarmFlash);
+				  Telemetry.log("Low Battery", alarmFlash);
         	  }
 			  else
 			  {
-				  SmartDashboard.putBoolean("Low Battery", false);
+				  Telemetry.log("Low Battery", false);
         	  }
 			  
     		  if (alarmInProgress && overloadAlarm)
@@ -184,11 +186,11 @@ public class MonitorPower extends Thread implements Sendable
     			  else
     				  alarmFlash2 = true;
         
-    			  SmartDashboard.putBoolean("Overload", alarmFlash2);
+    			  Telemetry.log("Overload", alarmFlash2);
         	  }
     		  else
     		  {
-    			  SmartDashboard.putBoolean("Overload", false);
+    			  Telemetry.log("Overload", false);
         	  }
 
 			  Timer.delay(sampleInterval);
@@ -198,14 +200,14 @@ public class MonitorPower extends Thread implements Sendable
   }
   
 	
-  @Override
-  public void initSendable( SendableBuilder builder )
-  {
-	  builder.setSmartDashboardType("MonitorPower");
-  	  builder.addBooleanProperty(".controllable", () -> false, null);
-  	  builder.addDoubleProperty("Voltage", () -> RobotController.getBatteryVoltage(), null);
-  	  //builder.addDoubleProperty("TotalCurrent", () -> pdp.getTotalCurrent(), null);
-  	  builder.addBooleanProperty("LowBatteryAlarm", () -> lowBatteryAlarm, null);
-  	  builder.addBooleanProperty("BrownOutAlarm", () -> overloadAlarm, null);
-  }
+//  @Override
+//  public void initSendable( SendableBuilder builder )
+//  {
+//	  builder.setSmartDashboardType("MonitorPower");
+//  	  builder.addBooleanProperty(".controllable", () -> false, null);
+//  	  builder.addDoubleProperty("Voltage", () -> RobotController.getBatteryVoltage(), null);
+//  	  //builder.addDoubleProperty("TotalCurrent", () -> pdp.getTotalCurrent(), null);
+//  	  builder.addBooleanProperty("LowBatteryAlarm", () -> lowBatteryAlarm, null);
+//  	  builder.addBooleanProperty("BrownOutAlarm", () -> overloadAlarm, null);
+//  }
 }

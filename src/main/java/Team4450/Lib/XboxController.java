@@ -145,24 +145,24 @@ public class XboxController extends org.wpilib.driverstation.XboxController
 	}
 	
 	/**
-	 * Get left trigger as a boolean.
+	 * Get left trigger axis as a boolean.
 	 * @return True if trigger axis is not zero.
 	 */
-	public boolean getLeftTrigger()
+	public boolean getLeftTriggerAxis()
 	{
-		if (super.getLeftTriggerAxis() != 0)
+		if (super.getLeftTrigger() != 0)
 		    return true;
 		else
 			return false;
 	}
 
 	/**
-	 * Get right trigger as a boolean.
+	 * Get right trigger axis as a boolean.
 	 * @return True if trigger axis is not zero.
 	 */
-	public boolean getRightTrigger()
+	public boolean getRightTriggerAxis()
 	{
-		if (super.getRightTriggerAxis() != 0)
+		if (super.getRightTrigger() != 0)
 		    return true;
 		else
 			return false;
@@ -170,15 +170,21 @@ public class XboxController extends org.wpilib.driverstation.XboxController
 	
 	/**
 	 * Compare POV value to target.
-	 * @param angle Target angle.
+	 * @param angle Target angle. 0, 90, 180, 270
 	 * @return True if POV angle matches target, false if not.
 	 */
 	public boolean getPOVAngle(int angle)
 	{
-		if (super.getPOV() == angle)
+		if (angle == 0 && super.getDpadUpButton())
 			return true;
-		else
-			return false;
+		else if (angle == 90 && super.getDpadRightButton())
+			return true;
+		else if (angle == 180 && super.getDpadDownButton())
+			return true;
+		else if (angle == 270 && super.getDpadLeftButton())
+			return true;
+			
+		return false;
 	}
 	 
 	/**
