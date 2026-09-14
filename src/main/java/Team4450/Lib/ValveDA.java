@@ -1,12 +1,13 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import org.wpilib.system.Timer;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
+import org.wpilib.hardware.pneumatic.Solenoid;
+import org.wpilib.hardware.bus.CANPort;
 
 /**
  * Wrapper class for Double Action pneumatic valve.
@@ -25,14 +26,15 @@ import edu.wpi.first.wpilibj.Solenoid;
  * to the "active" or "doing the desired action" position of the cylinder. This based on the SMC manifold
  * and valves which have A and B sides. So for a valve you would wire the A side of the valve to the port
  * number on the constructor and the B side to that port + 1. Hoses go into A and B air ports to the ends
- * of the target cylinder corredsponding to at rest and active.
+ * of the target cylinder corresponding to at rest and active.
  */
 
-public class ValveDA implements Sendable
+public class ValveDA //implements Sendable
 {
 	private final Solenoid	valveOpenSide, valveCloseSide;
 	private boolean			valveOpen = false;
-	private int				port, canId = 0;
+	private int				port;
+	private int		        canPort;
 	private String			name = "ValveDA";
 
 	/**
@@ -44,47 +46,27 @@ public class ValveDA implements Sendable
 	public double           solenoidSlideTime = .02;
 
 	/**
-	 * Create instance of ValveDA class. Assumes CAN Id 0 for CTRE module, Id 1 for REV module.
-	 * @param port Control Module port wired to open/A side of valve. Close/B side is wired to module next port.
-	 * @param moduleType Pneumatic control module type.
-	 */
-
-	public ValveDA(int port, PneumaticsModuleType moduleType)
-	{
-		if (moduleType == PneumaticsModuleType.REVPH) canId = 1;
-		
-	  	Util.consoleLog("canid=%d, port=%d", canId, port);
-
-		valveOpenSide = new Solenoid(moduleType, port);
-		valveCloseSide = new Solenoid(moduleType, port + 1);
-    
-		this.port = port;
-        
-		name = String.format("%s[%d-%d]", name, canId, port);
-		
-		SendableRegistry.addLW(this, "ValveDA", name);
-	}
-
-	/**
 	 * Create instance of ValveDA class.
-	 * @param canId Control Module CAN Id number, 0 for first CTRE module, 1 for first REV module.
-	 * @param port Control module port wired to open/A side of valve. Close/B side is wired to module next port.
+	 * @param canPort Can bus pneumatic module is connected to. S0-S4.
+	 * @param port Control Module port wired to open/A side of valve. Close/B side is wired to module next port. Also
+	 * called channel in WPILib doc.
 	 * @param moduleType Pneumatic control module type.
 	 */
-
-	public ValveDA(int canId, int port, PneumaticsModuleType moduleType)
+	public ValveDA(CANPort canPort, int port, PneumaticsModuleType moduleType)
 	{
-	  	Util.consoleLog("canid=%d, port=%d", canId, port);
+		//if (moduleType == PneumaticsModuleType.REVPH) canId = 1;
+		
+	  	Util.consoleLog("canport=%d, port=%d", canPort.value, port);
 
-		valveOpenSide = new Solenoid(canId, moduleType, port);
-		valveCloseSide = new Solenoid(canId, moduleType, port + 1);
+		valveOpenSide = new Solenoid(canPort, moduleType, port);
+		valveCloseSide = new Solenoid(canPort, moduleType, port + 1);
     
 		this.port = port;
-		this.canId = canId;
+		this.canPort = canPort.value;
         
-		name = String.format("%s[%d-%d]", name, canId, port);
-        
-		SendableRegistry.addLW(this, "ValveDA", name);
+		name = String.format("%s[%d-%d]", name, canPort.value, port);
+		
+		//SendableRegistry.addLW(this, "ValveDA", name);
 	}
 	
 	/**
@@ -94,9 +76,9 @@ public class ValveDA implements Sendable
 	public void setName(String name)
 	{
         
-		this.name = String.format("%s[%d-%d]", name, canId, port);
+		this.name = String.format("%s[%d-%d]", name, canPort, port);
         
-		SendableRegistry.setName(this, this.name);
+		//SendableRegistry.setName(this, this.name);
 	}
 
 	/**
@@ -117,7 +99,7 @@ public class ValveDA implements Sendable
 	 */
 	public void Open()
 	{
-	  	Util.consoleLog("canid=%d, port=%d", canId, port);
+	  	Util.consoleLog("canPort=%d, port=%d", canPort, port);
     
 		valveCloseSide.set(false);
     
@@ -150,7 +132,7 @@ public class ValveDA implements Sendable
 	 */
 	public void Close()
 	{
-	  	Util.consoleLog("canid=%d, port=%d", canId, port);
+	  	Util.consoleLog("canPort=%d, port=%d", canPort, port);
     
 		valveOpenSide.set(false);
     
@@ -212,12 +194,12 @@ public class ValveDA implements Sendable
 		solenoidSlideTime = slideTime;
 	}
 	
-	@Override
-	public void initSendable( SendableBuilder builder )
-	{
-		builder.setSmartDashboardType("ValveDA");
-    	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addBooleanProperty("Open(A)", this::isOpen, null);
-    	builder.addDoubleProperty("SlideTime", () -> solenoidSlideTime, this::setSlideTime);
-	}
+//	@Override
+//	public void initSendable( SendableBuilder builder )
+//	{
+//		builder.setSmartDashboardType("ValveDA");
+//    	builder.addBooleanProperty(".controllable", () -> false, null);
+//	    builder.addBooleanProperty("Open(A)", this::isOpen, null);
+//    	builder.addDoubleProperty("SlideTime", () -> solenoidSlideTime, this::setSlideTime);
+//	}
 } 

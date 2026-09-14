@@ -28,13 +28,15 @@ import java.nio.ByteOrder;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Filesystem;
-import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.hal.can.CANJNI;
-import edu.wpi.first.hal.util.BoundaryException;
+import org.wpilib.system.DataLogManager;
+import org.wpilib.driverstation.DriverStation;
+import org.wpilib.driverstation.DriverStationErrors;
+import org.wpilib.system.Filesystem;
+import org.wpilib.framework.RobotBase;
+import org.wpilib.system.Timer;
+import org.wpilib.hardware.hal.can.CANJNI;
+import org.wpilib.hardware.hal.can.CANReceiveMessage;
+import org.wpilib.hardware.hal.util.BoundaryException;
 
 /**
  * Provides a set of utility functions.
@@ -454,7 +456,7 @@ public class Util
 	 */
 	public static void logException(Throwable e)
 	{
-		DriverStation.reportError(e.toString(), false);
+		DriverStationErrors.reportError(e.toString(), false);
 		
 		e.printStackTrace(Util.logPrintStream);
 	}
@@ -462,8 +464,8 @@ public class Util
 	/** helper routine to get last received message for a given ID */
 	private static long checkMessage(int fullId, int deviceID) 
 	{
-		ByteBuffer targetID = ByteBuffer.allocateDirect(4);
-		ByteBuffer timeStamp = ByteBuffer.allocateDirect(4);
+		ByteBuffer 			targetID = ByteBuffer.allocateDirect(4);
+		CANReceiveMessage 	canMessage = new CANReceiveMessage();
 
 		try 
 		{
@@ -471,13 +473,15 @@ public class Util
 			targetID.order(ByteOrder.LITTLE_ENDIAN);
 			targetID.asIntBuffer().put(0,fullId|deviceID);
 
-			timeStamp.clear();
-			timeStamp.order(ByteOrder.LITTLE_ENDIAN);
-			timeStamp.asIntBuffer().put(0,0x00000000);
+			//timeStamp.clear();
+			//timeStamp.order(ByteOrder.LITTLE_ENDIAN);
+			//timeStamp.asIntBuffer().put(0,0x00000000);
 			
-			CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetID.asIntBuffer(), 0x1fffffff, timeStamp);
+			//CANJNI.FRCNetCommCANSessionMuxReceiveMessage(targetID.asIntBuffer(), 0x1fffffff, timeStamp);
+			
+			CANJNI.receiveMessage(targetID.getInt(), 0x1fffffff, canMessage);
 		
-			long retval = timeStamp.getInt();
+			long retval = canMessage.timestamp;
 			
 			retval &= 0xFFFFFFFF; /* undo sign-extension */ 
 			
@@ -713,7 +717,8 @@ public class Util
 	 */
 	public static double getElaspedTime()
 	{
-		double now = Timer.getFPGATimestamp();
+		//double now = Timer.getFPGATimestamp();
+		double now = Timer.getTimestamp();
 		if (timeMarker == 0) timeMarker = now;
 		double elapsedTime = now - timeMarker;
 		timeMarker = now;
@@ -727,7 +732,7 @@ public class Util
 	 */
 	public static double getElaspedTime(double previousTime)
 	{
-		return Timer.getFPGATimestamp() - previousTime;
+		return Timer.getTimestamp() - previousTime;
 	}
 
 	/**
@@ -736,7 +741,8 @@ public class Util
 	 */
 	public static double timeStamp()
 	{
-		return Timer.getFPGATimestamp();
+		//return Timer.getFPGATimestamp();
+		return Timer.getTimestamp();
 	}
 	
 	/**

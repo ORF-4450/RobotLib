@@ -3,17 +3,18 @@ package Team4450.Lib;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.StatusFrameEnhanced;
 import com.ctre.phoenix.motorcontrol.TalonSRXSimCollection;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
 //import Team4450.Lib.Wpilib.Sendable;
 import org.wpilib.math.geometry.Rotation2d;
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
+import org.wpilib.system.Timer;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.util.sendable.SendableBuilder;
 import org.wpilib.hardware.discrete.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
@@ -49,12 +50,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public SRXMagneticEncoderRelative( WPI_TalonSRX talon )
 	{
-		Util.consoleLog("%s", talon.getDescription());
+		//TODOUtil.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
 		
 		// Select Talon CTRE Magnetic encoder relative mode as feedback device.
-		this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+		//TODO this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
 		reset();
 	}
@@ -67,12 +68,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public SRXMagneticEncoderRelative( WPI_TalonSRX talon, double wheelDiameter )
 	{
-		Util.consoleLog("%s", talon.getDescription());
+		//TODOUtil.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
 		
 		// Select Talon CTRE Magnetic encoder relative mode as feedback device.
-		this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
+		//TODO this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 		
 		setWheelDiameter(wheelDiameter);
 		
@@ -178,8 +179,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 //			return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
 //				talon.getSensorCollection().getQuadraturePosition();
-		return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
-			(int) talon.getSelectedSensorPosition();
+		
+		//TODOreturn isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
+		//	(int) talon.getSelectedSensorPosition();
+		
+		return 0;
 	}
 	
 	/**
@@ -265,8 +269,11 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 //		return isInverted() ? talon.getSensorCollection().getQuadratureVelocity() * -1 :
 //			talon.getSensorCollection().getQuadratureVelocity();
-		return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
-			(int) talon.getSelectedSensorVelocity();
+		
+		//TODOreturn isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
+		//	(int) talon.getSelectedSensorVelocity();
+		
+		return 0;
 	}
 	
 	/**
@@ -330,7 +337,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		totalTicks += getRaw();
 		
 //			talon.getSensorCollection().setQuadraturePosition(0, 0);
-		ErrorCode errorCode= talon.setSelectedSensorPosition(0);
+		ErrorCode errorCode = ErrorCode.OK; //TODO talon.setSelectedSensorPosition(0);
 		
 		if (errorCode != ErrorCode.OK) 
 			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());	}
@@ -352,7 +359,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		totalTicks += getRaw();
 		
 //			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
-		errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
+		errorCode = ErrorCode.OK; //TODOtalon.setSelectedSensorPosition(0, 0, timeout);
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
 		// the reset command. It may take up to 20 additional ms for the zeroing to be reflected
@@ -371,7 +378,6 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	/**
 	 * Not implemented.
 	 */
-	@Override
 	public double getPeriod()
 	{
 		return 0;
@@ -382,7 +388,6 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 * if the robot is stopped.
 	 * @param maxPeriod The time in seconds.
 	 */
-	@Override
 	public void setMaxPeriod( double maxPeriod )
 	{
 		if (maxPeriod < 0) throw new IllegalArgumentException("Max Period must be >= 0");
@@ -441,7 +446,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public void setTalon( WPI_TalonSRX talon )
 	{
-		Util.consoleLog("%s", talon.getDescription());
+		//TODO Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
 		
@@ -458,7 +463,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
+		ErrorCode errorCode = ErrorCode.OK; //TODO this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
 		
 		if (errorCode == ErrorCode.OK) 
 			Timer.delay(.010);
@@ -477,7 +482,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+		ErrorCode errorCode = ErrorCode.OK; //TODO this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
 		
 		if (errorCode == ErrorCode.OK) 
 			Timer.delay(.010);
@@ -688,7 +693,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public void initializeSim()
 	{
-		simCollection = talon.getSimCollection();
+		//TODO simCollection = talon.getSimCollection();
 	}
 	
 	// https://github.com/CrossTheRoadElec/Phoenix-Examples-Languages/blob/master/Java%20General/DifferentialDrive_Simulation/src/main/java/frc/robot/Robot.java
@@ -791,7 +796,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		//return talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 		
-		int ticks =  talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+		int ticks = 0; //TODO talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 		
 		ticks -= absoluteOffset;
 		

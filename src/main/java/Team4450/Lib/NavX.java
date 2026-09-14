@@ -14,10 +14,12 @@ import Team4450.Lib.Wpilib.PIDSourceType;
 //import edu.wpi.first.util.sendable.Sendable;
 //import edu.wpi.first.wpilibj.Notifier;
 //import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.math.geometry.Rotation2d;
+import org.wpilib.math.geometry.Rotation2d;
 //import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.hal.SimDouble;
-import org.wpilib.simulation.SimDeviceSim.SimDeviceSim;
+import org.wpilib.hardware.hal.SimDouble;
+import org.wpilib.simulation.SimDeviceSim;
+import org.wpilib.system.Notifier;
+import org.wpilib.system.Timer;
 //import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import org.wpilib.networktables.NetworkTable;
 import org.wpilib.networktables.NetworkTableInstance;
@@ -195,7 +197,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public String getFirmwareVersion()
 	{
-		return ahrs.getFirmwareVersion();
+		return "Not Implemented"; //TODOahrs.getFirmwareVersion();
 	}
 	
 	/**
@@ -210,7 +212,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public float getYaw()
 	{
-		return ahrs.getYaw();
+		return 0; //TODO ahrs.getYaw();
 	}
 	
 	/**
@@ -228,7 +230,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public double getTotalYaw()
 	{
-		return ahrs.getAngle();
+		return 0; //TODO ahrs.getAngle();
 	}
 
 	/**
@@ -270,7 +272,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public double getTotalAngle()
 	{
-		return ahrs.getAngle() + totalAngle;
+		return 0; // TODO ahrs.getAngle() + totalAngle;
 	}
 	
 	public Rotation2d getTotalAngle2d()
@@ -315,7 +317,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public double getYawRate()
 	{
-		return ahrs.getRate();
+		return 0; //TODO ahrs.getRate();
 	}
 	
 	/**
@@ -325,17 +327,17 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public double getRotationalVelocity(GyroAxis axis) 
 	{
-		switch (axis)
-		{
-			case X:
-				return INSTANCE.getAHRS().getRawGyroX();
-				
-			case Y:
-				return INSTANCE.getAHRS().getRawGyroY();
-				
-			case Z:
-				return INSTANCE.getAHRS().getRawGyroZ();
-		}
+//TODO		switch (axis)
+//		{
+//			case X:
+//				return INSTANCE.getAHRS().getRawGyroX();
+//				
+//			case Y:
+//				return INSTANCE.getAHRS().getRawGyroY();
+//				
+//			case Z:
+//				return INSTANCE.getAHRS().getRawGyroZ();
+//		}
 		
 		return 0;
 	}	
@@ -451,7 +453,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public boolean isConnected()
 	{
-		return ahrs.isConnected();
+		return true; //TODO ahrs.isConnected();
 	}
 	
 	/**
@@ -460,7 +462,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public boolean isCalibrating()
 	{
-		return ahrs.isCalibrating();
+		return false; //TODO ahrs.isCalibrating();
 	}
 	
 	/**
@@ -469,7 +471,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public boolean isMoving()
 	{
-		return ahrs.isMoving();
+		return false; //TODO ahrs.isMoving();
 	}
 	
 	/**
@@ -478,7 +480,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public boolean isRotating()
 	{
-		return ahrs.isRotating();
+		return false; //TODOahrs.isRotating();
 	}
 	
 	/**
@@ -496,12 +498,12 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	public void resetYaw()
 	{
-		totalAngle += ahrs.getAngle();
+		//TODO totalAngle += ahrs.getAngle();
 			
-		ahrs.zeroYaw();
+		//TODO ahrs.zeroYaw();
 
-		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
-						ahrs.getAngle(), totalAngle);
+		//TODO Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+		//				ahrs.getAngle(), totalAngle);
 	}	
 	
 	/**
@@ -518,8 +520,8 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 		
         Timer.delay(yawResetDelaySec);
 
-		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
-						ahrs.getAngle(), totalAngle);
+		//TODO Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+		//				ahrs.getAngle(), totalAngle);
 	}	
 	
 	/**
@@ -537,8 +539,8 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 		
         Timer.delay(wait / 1000.0);
 
-		Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
-						ahrs.getAngle(), totalAngle);
+		//TODO Util.consoleLog("yaw=%.2f hdg=%.2f angle=%.2f tangle=%.2f", getYaw(), getHeading(),
+		//				ahrs.getAngle(), totalAngle);
 	}
 	
 	/**
@@ -576,14 +578,14 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 		
 		resetYaw();
 		
-		while (!Util.checkRange(Math.abs(ahrs.getYaw()), 0, tolerance) && waitCount > 0)
-		{
-			Timer.delay(.010);
-			waits++;
-			waitCount--;
-			
-			Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, ahrs.getYaw());
-		}
+//TODO		while (!Util.checkRange(Math.abs(ahrs.getYaw()), 0, tolerance) && waitCount > 0)
+//		{
+//			Timer.delay(.010);
+//			waits++;
+//			waitCount--;
+//			
+//			Util.consoleLog("wait=%dms  yaw=%.2f", waits * 10, ahrs.getYaw());
+//		}
 	}
 	
 	/**
@@ -646,101 +648,101 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 		NetworkTableInstance instance = NetworkTableInstance.getDefault();
 		NetworkTable table = instance.getTable("NavX-Dump");
 		
-		table.getEntry(    "IMU_Connected")       .setBoolean(ahrs.isConnected());
-		if (!ahrs.isConnected()) return;
-
-        /* Sensor Board Information                                                 */
-        table.getEntry(    "IMU_FirmwareVersion") .setString( ahrs.getFirmwareVersion());
-        table.getEntry(    "IMU_UpdateRate(hz)")  .setNumber( ahrs.getActualUpdateRate());
-        table.getEntry(    "IMU_BoardLevelYawReset").setBoolean( ahrs.isBoardlevelYawResetEnabled());
-
-        table.getEntry(    "IMU_IsCalibrating")   .setBoolean(ahrs.isCalibrating());
-        table.getEntry(    "IMU_Yaw")             .setNumber( ahrs.getYaw());
-        table.getEntry(    "IMU_Pitch")           .setNumber( ahrs.getPitch());
-        table.getEntry(    "IMU_Roll")            .setNumber( ahrs.getRoll());
-                
-        /* Display tilt-corrected, Magnetometer-based heading (requires             */
-        /* magnetometer calibration to be useful)                                   */
-                
-        table.getEntry(    "IMU_CompassHeading")  .setNumber( ahrs.getCompassHeading());
-             
-        /* Display 9-axis Heading (requires magnetometer calibration to be useful)  */
-        table.getEntry(    "IMU_FusedHeading")    .setNumber( ahrs.getFusedHeading());
- 
-        /* These functions are compatible w/the WPI Gyro Class, providing a simple  */
-        /* path for upgrading from the Kit-of-Parts gyro to the navx MXP            */
-
-        table.getEntry(    "IMU_TotalYaw")        .setNumber( ahrs.getAngle());
-        table.getEntry(    "IMU_AngleAdjustment") .setNumber( ahrs.getAngleAdjustment());
-        table.getEntry(    "IMU_YawRateDPS")      .setNumber( ahrs.getRate());
-
-        /* Display Processed Acceleration Data (Linear Acceleration, Motion Detect) */
-        
-        table.getEntry(    "IMU_Accel_X")         .setNumber( ahrs.getWorldLinearAccelX());
-        table.getEntry(    "IMU_Accel_Y")         .setNumber( ahrs.getWorldLinearAccelY());
-        table.getEntry(    "IMU_IsMoving")        .setBoolean(ahrs.isMoving());
-        table.getEntry(    "IMU_IsRotating")      .setBoolean(ahrs.isRotating());
-
-        /* Display estimates of velocity/displacement.  Note that these values are  */
-        /* not expected to be accurate enough for estimating robot position on a    */
-        /* FIRST FRC Robotics Field, due to accelerometer noise and the compounding */
-        /* of these errors due to single (velocity) integration and especially      */
-        /* double (displacement) integration.                                       */
-
-        table.getEntry(    "IMU_Velocity_X")      .setNumber( ahrs.getVelocityX());
-        table.getEntry(    "IMU_Velocity_Y")      .setNumber( ahrs.getVelocityY());
-        table.getEntry(    "IMU_Displacement_X")  .setNumber( ahrs.getDisplacementX());
-        table.getEntry(    "IMU_Displacement_Y")  .setNumber( ahrs.getDisplacementY());
-        
-        /* Display Raw Gyro/Accelerometer/Magnetometer Values                       */
-        /* NOTE:  These values are not normally necessary, but are made available   */
-        /* for advanced users.  Before using this data, please consider whether     */
-        /* the processed data (see above) will suit your needs.                     */
-
-        table.getEntry(    "IMU_RawGyro_X")       .setNumber( ahrs.getRawGyroX());
-        table.getEntry(    "IMU_RawGyro_Y")       .setNumber( ahrs.getRawGyroY());
-        table.getEntry(    "IMU_RawGyro_Z")       .setNumber( ahrs.getRawGyroZ());
-        table.getEntry(    "IMU_RawAccel_X")      .setNumber( ahrs.getRawAccelX());
-        table.getEntry(    "IMU_RawAccel_Y")      .setNumber( ahrs.getRawAccelY());
-        table.getEntry(    "IMU_RawAccel_Z")      .setNumber( ahrs.getRawAccelZ());
-        table.getEntry(    "IMU_RawMag_X")        .setNumber( ahrs.getRawMagX());
-        table.getEntry(    "IMU_RawMag_Y")        .setNumber( ahrs.getRawMagY());
-        table.getEntry(    "IMU_RawMag_Z")        .setNumber( ahrs.getRawMagZ());
-        table.getEntry(    "IMU_Temp_C")          .setNumber( ahrs.getTempC());
-        table.getEntry(    "IMU_Timestamp")       .setNumber( ahrs.getLastSensorTimestamp());
-
-        /* Omnimount Yaw Axis Information                                           */
-        /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
-        AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
-        table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
-        table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
-
-        /* Quaternion Data                                                          */
-        /* Quaternions are fascinating, and are the most compact representation of  */
-        /* orientation data.  All of the Yaw, Pitch and Roll Values can be derived  */
-        /* from the Quaternions.  If interested in motion processing, knowledge of  */
-        /* Quaternions is highly recommended.                                       */
-        table.getEntry(    "IMU_QuaternionW")     .setNumber( ahrs.getQuaternionW());
-
-        table.getEntry(    "IMU_QuaternionX")     .setNumber( ahrs.getQuaternionX());
-
-        table.getEntry(    "IMU_QuaternionY")     .setNumber( ahrs.getQuaternionY());
-        table.getEntry(    "IMU_QuaternionZ")     .setNumber( ahrs.getQuaternionZ());
-
-        /* Connectivity Debugging Support                                           */
-        table.getEntry(    "IMU_Byte_Count")      .setNumber( ahrs.getByteCount());
-        table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
+//		table.getEntry(    "IMU_Connected")       .setBoolean(ahrs.isConnected());
+//		if (!ahrs.isConnected()) return;
+//
+//        /* Sensor Board Information                                                 */
+//        table.getEntry(    "IMU_FirmwareVersion") .setString( ahrs.getFirmwareVersion());
+//        table.getEntry(    "IMU_UpdateRate(hz)")  .setNumber( ahrs.getActualUpdateRate());
+//        table.getEntry(    "IMU_BoardLevelYawReset").setBoolean( ahrs.isBoardlevelYawResetEnabled());
+//
+//        table.getEntry(    "IMU_IsCalibrating")   .setBoolean(ahrs.isCalibrating());
+//        table.getEntry(    "IMU_Yaw")             .setNumber( ahrs.getYaw());
+//        table.getEntry(    "IMU_Pitch")           .setNumber( ahrs.getPitch());
+//        table.getEntry(    "IMU_Roll")            .setNumber( ahrs.getRoll());
+//                
+//        /* Display tilt-corrected, Magnetometer-based heading (requires             */
+//        /* magnetometer calibration to be useful)                                   */
+//                
+//        table.getEntry(    "IMU_CompassHeading")  .setNumber( ahrs.getCompassHeading());
+//             
+//        /* Display 9-axis Heading (requires magnetometer calibration to be useful)  */
+//        table.getEntry(    "IMU_FusedHeading")    .setNumber( ahrs.getFusedHeading());
+// 
+//        /* These functions are compatible w/the WPI Gyro Class, providing a simple  */
+//        /* path for upgrading from the Kit-of-Parts gyro to the navx MXP            */
+//
+//        table.getEntry(    "IMU_TotalYaw")        .setNumber( ahrs.getAngle());
+//        table.getEntry(    "IMU_AngleAdjustment") .setNumber( ahrs.getAngleAdjustment());
+//        table.getEntry(    "IMU_YawRateDPS")      .setNumber( ahrs.getRate());
+//
+//        /* Display Processed Acceleration Data (Linear Acceleration, Motion Detect) */
+//        
+//        table.getEntry(    "IMU_Accel_X")         .setNumber( ahrs.getWorldLinearAccelX());
+//        table.getEntry(    "IMU_Accel_Y")         .setNumber( ahrs.getWorldLinearAccelY());
+//        table.getEntry(    "IMU_IsMoving")        .setBoolean(ahrs.isMoving());
+//        table.getEntry(    "IMU_IsRotating")      .setBoolean(ahrs.isRotating());
+//
+//        /* Display estimates of velocity/displacement.  Note that these values are  */
+//        /* not expected to be accurate enough for estimating robot position on a    */
+//        /* FIRST FRC Robotics Field, due to accelerometer noise and the compounding */
+//        /* of these errors due to single (velocity) integration and especially      */
+//        /* double (displacement) integration.                                       */
+//
+//        table.getEntry(    "IMU_Velocity_X")      .setNumber( ahrs.getVelocityX());
+//        table.getEntry(    "IMU_Velocity_Y")      .setNumber( ahrs.getVelocityY());
+//        table.getEntry(    "IMU_Displacement_X")  .setNumber( ahrs.getDisplacementX());
+//        table.getEntry(    "IMU_Displacement_Y")  .setNumber( ahrs.getDisplacementY());
+//        
+//        /* Display Raw Gyro/Accelerometer/Magnetometer Values                       */
+//        /* NOTE:  These values are not normally necessary, but are made available   */
+//        /* for advanced users.  Before using this data, please consider whether     */
+//        /* the processed data (see above) will suit your needs.                     */
+//
+//        table.getEntry(    "IMU_RawGyro_X")       .setNumber( ahrs.getRawGyroX());
+//        table.getEntry(    "IMU_RawGyro_Y")       .setNumber( ahrs.getRawGyroY());
+//        table.getEntry(    "IMU_RawGyro_Z")       .setNumber( ahrs.getRawGyroZ());
+//        table.getEntry(    "IMU_RawAccel_X")      .setNumber( ahrs.getRawAccelX());
+//        table.getEntry(    "IMU_RawAccel_Y")      .setNumber( ahrs.getRawAccelY());
+//        table.getEntry(    "IMU_RawAccel_Z")      .setNumber( ahrs.getRawAccelZ());
+//        table.getEntry(    "IMU_RawMag_X")        .setNumber( ahrs.getRawMagX());
+//        table.getEntry(    "IMU_RawMag_Y")        .setNumber( ahrs.getRawMagY());
+//        table.getEntry(    "IMU_RawMag_Z")        .setNumber( ahrs.getRawMagZ());
+//        table.getEntry(    "IMU_Temp_C")          .setNumber( ahrs.getTempC());
+//        table.getEntry(    "IMU_Timestamp")       .setNumber( ahrs.getLastSensorTimestamp());
+//
+//        /* Omnimount Yaw Axis Information                                           */
+//        /* For more info, see http://navx-mxp.kauailabs.com/installation/omnimount  */
+//        AHRS.BoardYawAxis yaw_axis = ahrs.getBoardYawAxis();
+//        table.getEntry(    "IMU_YawAxisDirection").setString( yaw_axis.up ? "Up" : "Down" );
+//        table.getEntry(    "IMU_YawAxis")         .setNumber( yaw_axis.board_axis.getValue() );
+//
+//        /* Quaternion Data                                                          */
+//        /* Quaternions are fascinating, and are the most compact representation of  */
+//        /* orientation data.  All of the Yaw, Pitch and Roll Values can be derived  */
+//        /* from the Quaternions.  If interested in motion processing, knowledge of  */
+//        /* Quaternions is highly recommended.                                       */
+//        table.getEntry(    "IMU_QuaternionW")     .setNumber( ahrs.getQuaternionW());
+//
+//        table.getEntry(    "IMU_QuaternionX")     .setNumber( ahrs.getQuaternionX());
+//
+//        table.getEntry(    "IMU_QuaternionY")     .setNumber( ahrs.getQuaternionY());
+//        table.getEntry(    "IMU_QuaternionZ")     .setNumber( ahrs.getQuaternionZ());
+//
+//        /* Connectivity Debugging Support                                           */
+//        table.getEntry(    "IMU_Byte_Count")      .setNumber( ahrs.getByteCount());
+//        table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
 	}
 
-	@Override
-	public void initSendable( SendableBuilder builder )
-	{
-		// Type must be Gyro to connect this sendable to the Shuffleboard gyro widget.
-		builder.setSmartDashboardType("Gyro");
-    	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addDoubleProperty("Value", this::getHeadingInt, null);
-	    builder.addDoubleProperty("Yaw", this::getYaw, null);
-	}
+//	@Override
+//	public void initSendable( SendableBuilder builder )
+//	{
+//		// Type must be Gyro to connect this sendable to the Shuffleboard gyro widget.
+//		builder.setSmartDashboardType("Gyro");
+//    	builder.addBooleanProperty(".controllable", () -> false, null);
+//	    builder.addDoubleProperty("Value", this::getHeadingInt, null);
+//	    builder.addDoubleProperty("Yaw", this::getYaw, null);
+//	}
 	
 	/**
 	 * When using PID Source Type of displacement, selects which displacement 
@@ -910,18 +912,18 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 	 */
 	private void detectCollision(double g)
 	{
-        double currLinearAccelX = ahrs.getWorldLinearAccelX();
-        double currentJerkX = currLinearAccelX - lastLinearAccelX;
-        lastLinearAccelX = currLinearAccelX;
-        
-        double currLinearAccelY = ahrs.getWorldLinearAccelY();
-        double currentJerkY = currLinearAccelY - lastLinearAccelY;
-        lastLinearAccelY = currLinearAccelY;
-        
-        if ( Math.abs(currentJerkX) > g ) 
-        	notifyEventListener(NavXEventType.collisionDetected, currentJerkX);
-        else if ( Math.abs(currentJerkY) > g ) 
-        	notifyEventListener(NavXEventType.collisionDetected, currentJerkY);
+//TODO        double currLinearAccelX = ahrs.getWorldLinearAccelX();
+//        double currentJerkX = currLinearAccelX - lastLinearAccelX;
+//        lastLinearAccelX = currLinearAccelX;
+//        
+//        double currLinearAccelY = ahrs.getWorldLinearAccelY();
+//        double currentJerkY = currLinearAccelY - lastLinearAccelY;
+//        lastLinearAccelY = currLinearAccelY;
+//        
+//        if ( Math.abs(currentJerkX) > g ) 
+//        	notifyEventListener(NavXEventType.collisionDetected, currentJerkX);
+//        else if ( Math.abs(currentJerkY) > g ) 
+//        	notifyEventListener(NavXEventType.collisionDetected, currentJerkY);
 	}
 	
 	// Event Handling classes.
@@ -994,9 +996,9 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 		
 		//simAngle = new SimDouble(SimDeviceDataJNI.getSimValueHandle(dev, "Yaw"));
 		
-		SimDeviceSim device = new SimDeviceSim("navX-Sensor", ahrs.getPort());
+		//TODO SimDeviceSim device = new SimDeviceSim("navX-Sensor", ahrs.getPort());
 		
-		simAngle = device.getDouble("Yaw");
+		//TODO simAngle = device.getDouble("Yaw");
 	}
 	
 	/**

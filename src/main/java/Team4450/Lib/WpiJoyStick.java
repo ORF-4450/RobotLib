@@ -2,7 +2,7 @@ package Team4450.Lib;
 
 import java.util.function.DoubleSupplier;
 
-import edu.wpi.first.wpilibj.Joystick;
+import org.wpilib.driverstation.Joystick;
 
 /**
  * This is a wrapper class for WPILib Joystick class. Allows us to add

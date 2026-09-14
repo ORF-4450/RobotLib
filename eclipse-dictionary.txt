@@ -8,3 +8,5 @@ talon
 ultrasonic
 brownout
 sendable
+pneumatic
+radians

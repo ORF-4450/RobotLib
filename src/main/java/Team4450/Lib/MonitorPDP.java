@@ -44,7 +44,7 @@ public class MonitorPDP extends Thread //implements Sendable
   // only one PDP and that PDP is on can bus 0.
     
   /**
-   * Get a reference to global MonitorPDP Thread object.
+   * Get a reference to global MonitorPDP Thread object. Assumes PDP is on can bus S0.
    * @return Reference to global MonitorPDP object.
    */
       
@@ -59,7 +59,7 @@ public class MonitorPDP extends Thread //implements Sendable
   
   /**
    * Get a reference to global MonitorPDP Thread object.
-   * @param pdp PowerDistributionPanel instance.
+   * @param pdp PowerDistributionPanel instance to monitor.
    * @return Reference to global MonitorPDP object.
    */
         
@@ -78,7 +78,7 @@ public class MonitorPDP extends Thread //implements Sendable
   {
 	  Util.consoleLog();
 	  
-	  pdp = new PowerDistribution(CANPort.CAN_D0);
+	  pdp = new PowerDistribution(CANPort.CAN_S0);
 	  
 	  this.setName("MonitorPDP");
       

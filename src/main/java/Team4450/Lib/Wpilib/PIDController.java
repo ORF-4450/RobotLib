@@ -7,9 +7,9 @@ package Team4450.Lib.Wpilib;
 /* the project.                                                               */
 /*----------------------------------------------------------------------------*/
 
-import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableBuilder;
 //import edu.wpi.first.wpilibj.Controller;
-import edu.wpi.first.wpilibj.Notifier;
+import org.wpilib.system.Notifier;
 //import edu.wpi.first.wpilibj.PIDBase;
 
 /**
@@ -193,12 +193,12 @@ public class PIDController extends PIDBase implements Controller, AutoCloseable
     super.reset();
   }
 
-  @Override
-  public void initSendable(SendableBuilder builder) 
-  {
-    super.initSendable(builder);
-    builder.addBooleanProperty("enabled", this::isEnabled, this::setEnabled);
-  }
+//  @Override
+//  public void initSendable(SendableBuilder builder) 
+//  {
+//    super.initSendable(builder);
+//    builder.addBooleanProperty("enabled", this::isEnabled, this::setEnabled);
+//  }
   
   /**
    * Set logging of setpoint, input, error and output values on each

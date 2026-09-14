@@ -1,11 +1,12 @@
 
 package Team4450.Lib;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+//import edu.wpi.first.util.sendable.Sendable;
+//import edu.wpi.first.util.sendable.SendableBuilder;
+//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
+import org.wpilib.hardware.pneumatic.Solenoid;
+import org.wpilib.hardware.bus.CANPort;
 
 /**
  * Wrapper class for Single Action pneumatic valve.
@@ -14,52 +15,33 @@ import edu.wpi.first.wpilibj.Solenoid;
  * is turned off and the spring closes the valve.
  */
 
-public class ValveSA implements Sendable
+public class ValveSA //implements Sendable
 {
 	private final Solenoid	valveOpenSide;
 	private boolean			valveOpen = false;
-	private int				port, canId;
+	private int				port, canPort;
 	private String			name = "ValveSA";
 
 	/**
-	 * Create instance of ValveSA class. Assumes Control Module CAN Id 0 for CTRE module, 
-	 * Id 1 for REV module.
+	 * Create instance of ValveSA class.
+	 * @param canPort Can bus pneumatic module is connected to. S0-S4.
 	 * @param port Control module port wired to valve. 
 	 * @param moduleType Pneumatic control module type.
 	 */
-	public ValveSA(int port, PneumaticsModuleType moduleType)
+	public ValveSA(CANPort canPort, int port, PneumaticsModuleType moduleType)
 	{
-		if (moduleType == PneumaticsModuleType.REVPH) canId = 1;
+		//if (moduleType == PneumaticsModuleType.REVPH) canId = 1;
 		
-	  	Util.consoleLog("canid=%d, port=%d", canId, port, moduleType);
+	  	Util.consoleLog("canid=%d, port=%d", canPort.value, port, moduleType);
 
 	  	this.port = port;
+	  	this.canPort = canPort.value;
 	  	
-		valveOpenSide = new Solenoid(moduleType, port);
+		valveOpenSide = new Solenoid(canPort, moduleType, port);
         
-		name = String.format("%s[%d-%d]", name, canId, port);
+		name = String.format("%s[%d-%d]", name, canPort.value, port);
         
-		SendableRegistry.addLW(this, "ValveSA", name);
-	}
-
-	/**
-	 * Create an instance of ValveSA class. 
-	 * @param canId Control Module CAN Id number, 0 for first CTRE module, 1 for first REV module.
-	 * @param port Control module port wired to valve.
-	 * @param moduleType Pneumatic control module type.
-	 */
-	public ValveSA(int canId, int port, PneumaticsModuleType moduleType)
-	{
-	  	Util.consoleLog("canid=%d, port=%d", canId, port);
-
-	  	this.port = port;
-	  	this.canId = canId;
-	  	
-		valveOpenSide = new Solenoid(canId, moduleType, port);
-        
-		name = String.format("%s[%d-%d]", name, canId, port);
-        
-		SendableRegistry.addLW(this, "ValveSA", name);
+		//SendableRegistry.addLW(this, "ValveSA", name);
 	}
 	
 	/**
@@ -69,9 +51,9 @@ public class ValveSA implements Sendable
 	public void setName(String name)
 	{
         
-		this.name = String.format("%s[%d-%d]", name, canId, port);
+		this.name = String.format("%s[%d-%d]", name, canPort, port);
         
-		SendableRegistry.setName(this, this.name);
+		//SendableRegistry.setName(this, this.name);
 		
 	}
 
@@ -92,7 +74,7 @@ public class ValveSA implements Sendable
 	 */
 	public void Open()
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", canId, port);
+	  	Util.consoleLog("pcm=%d, port=%d", canPort, port);
     
 		valveOpenSide.set(true);
 		
@@ -104,7 +86,7 @@ public class ValveSA implements Sendable
 	 */
 	public void Close()
 	{
-	  	Util.consoleLog("pcm=%d, port=%d", canId, port);
+	  	Util.consoleLog("pcm=%d, port=%d", canPort, port);
     
 		valveOpenSide.set(false);
 		
@@ -124,11 +106,11 @@ public class ValveSA implements Sendable
 		return valveOpen;
 	}
 	
-	@Override
-	public void initSendable( SendableBuilder builder )
-	{
-		builder.setSmartDashboardType("ValveSA");
-    	builder.addBooleanProperty(".controllable", () -> false, null);
-	    builder.addBooleanProperty("Open", this::isOpen, null);
-	}
+//	@Override
+//	public void initSendable( SendableBuilder builder )
+//	{
+//		builder.setSmartDashboardType("ValveSA");
+//    	builder.addBooleanProperty(".controllable", () -> false, null);
+//	    builder.addBooleanProperty("Open", this::isOpen, null);
+//	}
 }

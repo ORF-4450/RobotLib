@@ -25,7 +25,7 @@ import org.wpilib.driverstation.DriverStationErrors;
 
 public class MonitorCompressor extends Thread //implements Sendable
 {
-  private final Compressor			compressor = new Compressor(CANPort.CAN_D0, 0, PneumaticsModuleType.CTRE_PCM);
+  private final Compressor			compressor = new Compressor(CANPort.CAN_S0, 0, PneumaticsModuleType.CTRE_PCM);
   private AnalogInput				pressureSensor;
   private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
   private boolean					lowPressureAlarm = false, ledState = false, compressorState;

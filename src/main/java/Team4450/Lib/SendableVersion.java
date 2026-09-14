@@ -1,27 +1,25 @@
 
 package Team4450.Lib;
 
-
-import edu.wpi.first.util.sendable.Sendable;
-//import Team4450.Lib.Wpilib.Sendable;
-import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.util.sendable.SendableRegistry;
-import edu.wpi.first.wpilibj.util.WPILibVersion;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.system.WPILibVersion;
+//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryTable;
 
 import java.net.URL;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
 /**
- * Obtain and transmit version information to SmartDashboard as a Sendable.
+ * Obtain and transmit version information to SmartDashboard.
  * Reads version info from jar manifest as written by build.gradle.
  * Courtesy of Team 2502. 
  * Note: for 2022 this does not work under simulation as this implementation 
  * depends on the calling code being run from a "fat" jar as if on the physical
  * robot. Sim changed for 2022 and does not run from a jar.
  */
-public class SendableVersion implements Sendable
+public class SendableVersion
+
 {
 	// Singleton class single instance.
     public static final SendableVersion INSTANCE = new SendableVersion();
@@ -34,6 +32,7 @@ public class SendableVersion implements Sendable
     private String user;
     private String manifestPath;
     private int	   updateCount;
+    private final  TelemetryTable versionTable = Telemetry.getTable("Version");
 
     // Private constructor since this class is a singleton.
     
@@ -45,8 +44,6 @@ public class SendableVersion implements Sendable
         robotlibVersion = "unknown";
         time = "unknown";
         user = "unknown";
-		
-		//registerSendable("SendableVersion");
     }
 
     /**
@@ -98,49 +95,24 @@ public class SendableVersion implements Sendable
         }
         catch(Exception ignored) { Util.logException(ignored); }
     }
-
-    /**
-     * Initialize Sendable. Do not call, used by SmartDashboard. The function defined
-     * for each property will be called each time the SB updates this sendable.
-     */
-    @Override
-    public void initSendable(SendableBuilder builder)
-    {
-    	builder.addBooleanProperty(".controllable", () -> false, null);
-        builder.addStringProperty("Branch: ", () -> branch, null);
-        builder.addStringProperty("Commit: ", () -> commit, null);
-        builder.addStringProperty("Program: ", () -> programVersion, null);
-        builder.addStringProperty("RobotLib: ", () -> robotlibVersion, null);
-        //builder.addStringProperty("WPILib: ", () -> WPILibVersion.Version, null);
-        builder.addStringProperty("Time: ", () -> time, null);
-        builder.addStringProperty("User: ", () -> user, null);
-        builder.addDoubleProperty("UpdateCount", this::getUpdateCount, null);
-    }
-
-	/**
-	 * Remove this Sendable from the SendableRegistry.
-	 */
-	public void removeSendable()
-	{
-		SendableRegistry.remove(this);
-	}
 	
 	/**
 	 * Update the dashboard directly with version information. Use instead
 	 * adding this Sendable to the dashboard. This gets around the problem 
-	 * where adding this aa a sendable causes the static version information
+	 * where adding this as a sendable causes the static version information
 	 * to be updated every 20ms as part of the Sendable scheme. That is a lot
 	 * of useless overhead, so added a function to just add the version info
 	 * to the dashboard as static data.
 	 */
 	public void updateDashBoard()
 	{
-		SmartDashboard.putString("Version/Program", programVersion);
-		SmartDashboard.putString("Version/RobotLib", robotlibVersion);
-		SmartDashboard.putString("Version/Branch", branch);
-		SmartDashboard.putString("Version/Commit", commit);
-		SmartDashboard.putString("Version/Time", time);
-		SmartDashboard.putString("Version/User", user);
+		versionTable.log("Program", programVersion);
+		versionTable.log("RobotLib", robotlibVersion);
+		versionTable.log("WPILib: ", WPILibVersion.Version);
+		versionTable.log("Branch", branch);
+		versionTable.log("Commit", commit);
+		versionTable.log("Time", time);
+		versionTable.log("User", user);
 	}
 	
     /**
