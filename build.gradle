@@ -1,6 +1,6 @@
 plugins {
     id "java-library"
-    id "eclipse"
+    //id "eclipse"
 	id "org.wpilib.GradleRIO" version "2027.0.0-alpha-7"
     id "org.ajoberstar.grgit" version "5.0.0"
     id "maven-publish"
@@ -15,8 +15,19 @@ java {
     targetCompatibility = JavaVersion.VERSION_25
 }
 
+// NOTE: This library was orignally developed in Eclipse and was maintained in Eclipse until the
+// update for 2027. At that point there were too many problems as WPI does not support Eclipse.
+// So library development switched to VSCode. There may be Eclipse artifacts in the project folder
+// for a period of time but once the switch settles out, Eclipse artifacts will be removed.
+
+// NOTE: While you can build this library with the VSCcode WPILib build command, doing so does not
+// compile as a local version and does not publish to the local maven cache to be used by robot
+// programs on this PC. Use the batch file build-robotlib.bat in Powershell or just click-to-run to 
+// build and publish. You can use VSCode build to save and compile for error checking but you must
+// publish to local maven cache for library to be available to local robot programs.
+
 // Configuration for build task which compiles RobotLib, generates the javadoc and does the install 
-// of RobotLib in local maven cache.
+// of RobotLib in local maven cache. Proptery set by -D gradle option in build-robotlib.bat.
 // Also used by Jitpack/GitHub Actions.
 
 if (System.getProperty("local")) {
@@ -41,8 +52,8 @@ else {
 					// release. RobotLib.json is updated by the release github action when you
 					// release with github. More below. Change the year in settings.gradle.
 					//
-					// Build in Eclispe using the Build RobotLib or Build RobotLib (Offline) 
-					// run configurations. You can push to github as much as you want.
+					// Build in Windows command window using the Build-RobotLib.bat batch file. 
+					// You can push to github as much as you want.
 					//
 					// If you develop changes on a branch other than master, merge your
 					// changes back to master. Release process only works on master branch.
@@ -77,15 +88,9 @@ else {
 					// located in .github\workflows.
 					//
 					// More notes on updating each year:
-					// Update the gradlerio version above along with any change to JDK version. Note
-					// we point the Eclipse JDK path to the WPILib JDK path which gets the required
-					// JDK and Gradle versions for the new year. The path is in the Build Robotlib.launch
-					// files. You need to update the github action files when JDK version changes. On 
-					// Gradle change, update gradle-wrapper.properties located in the gradle directory.
-					// After updating vendordep files for new year, run a gradle refresh from the
-					// right click menu on project folder in the explorer pane. After a refresh, if
-					// working in Eclipse, the build path to the JDK will have to be reset to the
-					// current WPILib JDK.
+					// Update the gradlerio version above along with any change to JDK version. You need
+					// to update the github action files when JDK version changes. On Gradle change, check
+					// gradle-wrapper.properties located in the gradle directory.
 					//
 					// Also need up update the year in settings.gradle.
 					// Finally, update the year in RobotLib.json as required by VSCode/WPIlib.
@@ -126,15 +131,16 @@ repositories {
 }
 
 // Setup eclipse classpath settings, so the javadoc and sources are available in eclipse
-eclipse {
-    classpath {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
+// eclipse {
+//     classpath {
+//         downloadJavadoc = true
+//         downloadSources = true
+//     }
+//}
 
 // Defining dependencies. In this case, WPILib (+ friends), and some vendor libraries (NavX, CTRE)
 dependencies {
+    annotationProcessor wpi.java.deps.wpilibAnnotations()
     implementation wpi.java.deps.wpilib()
     implementation wpi.java.vendor.java()
             
@@ -146,8 +152,8 @@ dependencies {
    	// compile means include in the output library jar (see below).
 }
 
-// These next definitions (branch and hash) attempt to find extra information from git to add to the the manifest of
-// the library jar file.
+// These next definitions (branch and hash) attempt to find extra information from git to add to the the
+// manifest of the library jar file.
 
 // Returns either the name of the current branch, or an empty string if no git repo is found.
 def branch = { ->
@@ -184,14 +190,12 @@ jar {
 //    from sourceSets.main.allSource
 //}
 
-// When Javadoc is created (./gradlew.bat javadoc) it will be in this directory in the project folder.
+// When Javadoc is created (./gradlew javadoc) it will be in this directory in the project folder.
+// This task should execute automatically during build.
 javadoc {
     destinationDir = file("doc")
     title = "RobotLib"
     options.overview = "src/main/resources/overview.html"
-    // These options obsolete with move to JDK 17.
-    //options.addBooleanOption "-no-module-directories", true
-    //options.addBooleanOption "-frames", true
     // This option supresses all Javadoc warnings. Some warnings are usefull but many
     // we ignore. Should review warnings with any significant changes to the library.
 	options.addStringOption('Xdoclint:all,-missing', '-quiet')
@@ -210,8 +214,8 @@ artifacts {
 }
 
 // Required as of gradle 7.1.1. Configures PublishToMavenLocal task. This task is required to get our
-// jars published to the local maven repository on this PC for consumption by robot projects on this PC.
-// The PubishToMavenLocal task is executed in the eclipse .launch files that run this build.
+// jars published to the local maven repository on this PC for consumption by robot projects on this 
+// PC. The PubishToMavenLocal task is executed in the eclipse .launch files that run this build.
 publishing {
     publications {
         robotLib(MavenPublication) {

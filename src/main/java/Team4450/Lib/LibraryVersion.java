@@ -19,6 +19,12 @@ public class LibraryVersion
 	 */
 	
 	/*
+	 * NOTE: While you can build this library with the VSCcode WPILib build command, doing so does not
+     * compile as a local version and does not publish to the local maven cache to be used by robot
+     * programs on this PC. Use the batch file build-robotlib.bat in Powershell or just click-to-run to 
+     * build and publish. You can use VSCode build to save and compile for error checking but you must
+	 * publish to local maven cache for library to be available to local robot programs.
+	 * 
 	 * When you start a new version of the library, you can change the version here
 	 * so that it is reflected by the robot programs that use the library. After a
 	 * library compile, you go to the robot program project's external references and do a
@@ -47,7 +53,7 @@ public class LibraryVersion
 	 * of the Jitpack compile when requested and will be automatically made available via JitPack. 
 	 */
 	
-	public static final String version = "4.14.0 (09.13.2026) WPILib=" + WPILibVersion.Version;	
+	public static final String version = "4.14.0 (10.09.2026) WPILib=" + WPILibVersion.Version;	
 	
 	// Private constructor means this class can't be instantiated.
 	private LibraryVersion()
