@@ -181,9 +181,12 @@ public class PIDBase implements PIDInterface, PIDOutput, AutoCloseable //Sendabl
     m_pidOutput = output;
 
     instances++;
+    // Not at all sure of this new form of HAL.report does the same thing as
+    // the old one below.
+    HAL.reportUsage("PIDController", instances, ""); // 2027
     //HAL.report(tResourceType.kResourceType_PIDController, instances); TODO
     m_tolerance = new NullTolerance();
-    //SendableRegistry.add(this, "PIDController", instances);
+    //SendableRegistry.add(this, "PIDController", instances);TODO
   }
 
   /**

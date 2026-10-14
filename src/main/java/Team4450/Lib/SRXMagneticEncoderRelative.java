@@ -23,6 +23,9 @@ import org.wpilib.hardware.discrete.CounterBase;
 /**
  * Wrapper for Talon SRX Magnetic Encoder used in relative (quadrature) mode.
  * Absolute position is also available.
+ * WARNING: This class based on Phoenix 5 and may not be usable for 2027. May
+ * require conversion to Phoenix 6. 5 wants Sendable which is not available
+ * for 2027. Could try converting WPI_TalonSRX to CTRE Talon.
  */
 public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier //, Sendable
 {
@@ -50,7 +53,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public SRXMagneticEncoderRelative( WPI_TalonSRX talon )
 	{
-		//TODOUtil.consoleLog("%s", talon.getDescription());
+		//TODO Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
 		
@@ -68,7 +71,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	 */
 	public SRXMagneticEncoderRelative( WPI_TalonSRX talon, double wheelDiameter )
 	{
-		//TODOUtil.consoleLog("%s", talon.getDescription());
+		//TODO Util.consoleLog("%s", talon.getDescription());
 		
 		this.talon = talon;
 		
@@ -180,9 +183,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 //			return isInverted() ? talon.getSensorCollection().getQuadraturePosition() * -1 :
 //				talon.getSensorCollection().getQuadraturePosition();
 		
-		//TODOreturn isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
+		//TODO return isInverted() ? (int) talon.getSelectedSensorPosition() * -1 :
 		//	(int) talon.getSelectedSensorPosition();
-		
+
 		return 0;
 	}
 	
@@ -270,9 +273,9 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 //		return isInverted() ? talon.getSensorCollection().getQuadratureVelocity() * -1 :
 //			talon.getSensorCollection().getQuadratureVelocity();
 		
-		//TODOreturn isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
+		//TODO return isInverted() ? (int) talon.getSelectedSensorVelocity() * -1 :
 		//	(int) talon.getSelectedSensorVelocity();
-		
+		 
 		return 0;
 	}
 	
@@ -334,13 +337,16 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	@Override
 	public void reset()
 	{
+		ErrorCode errorCode;
+
 		totalTicks += getRaw();
 		
 //			talon.getSensorCollection().setQuadraturePosition(0, 0);
-		ErrorCode errorCode = ErrorCode.OK; //TODO talon.setSelectedSensorPosition(0);
+		//TODO errorCode = talon.setSelectedSensorPosition(0);
 		
-		if (errorCode != ErrorCode.OK) 
-			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());	}
+		//if (errorCode != ErrorCode.OK) 
+		//	Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());
+	}
 
 	/**
 	 * Reset the encoder count. Will wait the specified milliseconds for the
@@ -359,7 +365,7 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		totalTicks += getRaw();
 		
 //			errorCode = talon.getSensorCollection().setQuadraturePosition(0, timeout);
-		errorCode = ErrorCode.OK; //TODOtalon.setSelectedSensorPosition(0, 0, timeout);
+		//TODO errorCode = talon.setSelectedSensorPosition(0, 0, timeout);
 		
 		// The set function typically returns quite quickly but could take up to 10ms to send
 		// the reset command. It may take up to 20 additional ms for the zeroing to be reflected
@@ -367,12 +373,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		// encoder counts from SRXEnc to the API. We go ahead and delay the requested amount to guarantee
 		// we wait long enough that next get() call returns zero counts.
 		
-		if (errorCode == ErrorCode.OK) 
-			Timer.delay(timeout / 1000.0);
-		else
-			Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());
+		//TODO if (errorCode == ErrorCode.OK) 
+		// 	Timer.delay(timeout / 1000.0);
+		// else
+		// 	Util.consoleLog("encoder reset failed (%d) %s", errorCode.value, errorCode.name());
 	
-		return errorCode.value;
+		return 0; //TODO errorCode.value;
 	}
 
 	/**
@@ -463,12 +469,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		ErrorCode errorCode = ErrorCode.OK; //TODO this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
+		//TODO ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_2_Feedback0, period);
 		
-		if (errorCode == ErrorCode.OK) 
-			Timer.delay(.010);
-		else
-			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
+		// if (errorCode == ErrorCode.OK) 
+		// 	Timer.delay(.010);
+		// else
+		// 	Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
 	}
 	
 	/**
@@ -482,12 +488,12 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		if (period < 1) throw new IllegalArgumentException("Period must be >= 1  ms");
 
-		ErrorCode errorCode = ErrorCode.OK; //TODO this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
+		//TODO ErrorCode errorCode = this.talon.setStatusFramePeriod(StatusFrameEnhanced.Status_8_PulseWidth, period);
 		
-		if (errorCode == ErrorCode.OK) 
-			Timer.delay(.010);
-		else
-			Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
+		// if (errorCode == ErrorCode.OK) 
+		// 	Timer.delay(.010);
+		// else
+		// 	Util.consoleLog("set status frame period failed (%d) %s", errorCode.value, errorCode.name());		
 	}
 	
 	/**
@@ -796,13 +802,13 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 	{
 		//return talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 		
-		int ticks = 0; //TODO talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
+		//TODO int ticks = talon.getSensorCollection().getPulseWidthPosition() & 0xFFF;
 		
-		ticks -= absoluteOffset;
+		// ticks -= absoluteOffset;
 		
-		if (ticks < 0) ticks += TICKS_PER_REVOLUTION;
+		// if (ticks < 0) ticks += TICKS_PER_REVOLUTION;
 	
-		return ticks;
+		return 0; //ticks;
 	}
 	
 	/**

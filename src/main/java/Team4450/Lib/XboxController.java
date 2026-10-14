@@ -4,7 +4,7 @@ import java.util.function.DoubleSupplier;
 
 /**
  * This is a wrapper class for WPILib XBoxController class. Allows us to add
- * or modify XBoxController functionality.
+ * or modify XBoxController functionality. 2027 Test.
  */
 public class XboxController extends org.wpilib.driverstation.XboxController 
 {
@@ -28,7 +28,7 @@ public class XboxController extends org.wpilib.driverstation.XboxController
 	}
 	
 	/**
-	 * Invert the X axis output.
+	 * Invert the X axis output. 2027 Test.
 	 * @param invert True is invert, false is normal.
 	 */
 	public void invertX(boolean invert)
