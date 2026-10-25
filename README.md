@@ -40,11 +40,12 @@ This project originally set up under Eclipse. You can use VSCode with the follow
   Do not let VSCode update the project automatically on a new year. This may damage the highly customized
   build.gradle used by this project. New year updates need to done manually.
 ***************************************************************************************************************
-Version 4.14.0-beta
+Version 5.0.0-beta
 
-*	Begin process of updating for 2027.
+*	Significant changes updating for 2027.
+*	Add LiveWindow replacment class.
 
-R. Corn, August 16 2026
+R. Corn, October 24 2026
 
 Version 4.13.0
 

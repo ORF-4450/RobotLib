@@ -11,6 +11,8 @@ import org.wpilib.system.Timer;
 import org.wpilib.hardware.pneumatic.Compressor;
 import org.wpilib.hardware.bus.CANPort;
 import org.wpilib.telemetry.Telemetry;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 import org.wpilib.driverstation.DriverStationErrors;
 
 /**
@@ -23,12 +25,12 @@ import org.wpilib.driverstation.DriverStationErrors;
 
  */
 
-public class MonitorCompressor extends Thread //implements Sendable
+public class MonitorCompressor extends Thread implements ComplexTunable
 {
-  private final Compressor			compressor = new Compressor(CANPort.CAN_S0, 0, PneumaticsModuleType.CTRE_PCM);
+  private final Compressor	compressor = new Compressor(CANPort.CAN_S0, 0, PneumaticsModuleType.CTRE_PCM);
   private AnalogInput				pressureSensor;
-  private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
-  private boolean					lowPressureAlarm = false, ledState = false, compressorState;
+  private double					  delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
+  private boolean					  lowPressureAlarm = false, ledState = false, compressorState;
   
   /**
    * Static reference to the internal MonitorCompressor instance created by
@@ -97,13 +99,13 @@ public class MonitorCompressor extends Thread //implements Sendable
   {
 	  Util.consoleLog("port=%d", pressureSensorPort);
 	  
-	  this.setName("MonitorCompressor");
+	  this.setName(String.format("%s-%d","MonitorCompressor", pressureSensorPort));
 
 	  Telemetry.log("LowPressure", false);
 	  
 	  if (pressureSensorPort > -1) pressureSensor = new AnalogInput(pressureSensorPort);
 	  
-	  //SendableRegistry.addLW(this, "MonitorCompressor", pressureSensorPort);
+    LiveWindow.registerComplexTunable(this, this.getName());
 	  //SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
   }
 
@@ -111,14 +113,14 @@ public class MonitorCompressor extends Thread //implements Sendable
   {
 	  Util.consoleLog("port=%d", pressureSensor.getChannel());
 	  
-	  this.setName("MonitorCompressor");
+	  this.setName(String.format("%s-%d","MonitorCompressor", pressureSensor.getChannel()));
 
 	  Telemetry.log("LowPressure", false);
 	  
 	  this.pressureSensor = pressureSensor;	  
       
-	  //SendableRegistry.addLW(this, "MonitorCompressor", pressureSensor.getChannel());
-	  //SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
+    LiveWindow.registerComplexTunable( this, this.getName());
+    //SendableRegistry.setName(pressureSensor, "PressureSensorAIO", pressureSensor.getChannel());
   }
     
   /**
@@ -246,13 +248,16 @@ public class MonitorCompressor extends Thread //implements Sendable
 	catch (Throwable e) {Util.logException(e);}
   }
 	
-//  @Override
-//  public void initSendable( SendableBuilder builder )
-//  {
-//	builder.setSmartDashboardType("MonitorCompressor");
-//  	builder.addBooleanProperty(".controllable", () -> false, null);
-//    builder.addDoubleProperty("PSI", this::getPressure, null);
-//    builder.addBooleanProperty("On", () -> compressorState, null);
-//    builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
-//  }
+
+	@Override
+	public void publishTunable(TunableTable table) {
+    table.publishDouble("PSI", this::getPressure, null);
+    table.publishBoolean("On", () -> compressorState, null);
+    table.publishBoolean("Alarm", () -> lowPressureAlarm, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "MonitorCompressor";
+	}
 }

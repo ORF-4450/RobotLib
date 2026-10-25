@@ -2,9 +2,8 @@
 package Team4450.Lib;
 
 import org.wpilib.system.Timer;
-//import edu.wpi.first.util.sendable.Sendable;
-//import edu.wpi.first.util.sendable.SendableBuilder;
-//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
 import org.wpilib.hardware.pneumatic.Solenoid;
 import org.wpilib.hardware.bus.CANPort;
@@ -29,7 +28,7 @@ import org.wpilib.hardware.bus.CANPort;
  * of the target cylinder corresponding to at rest and active.
  */
 
-public class ValveDA //implements Sendable
+public class ValveDA implements ComplexTunable
 {
 	private final Solenoid	valveOpenSide, valveCloseSide;
 	private boolean			valveOpen = false;
@@ -66,7 +65,7 @@ public class ValveDA //implements Sendable
         
 		name = String.format("%s[%d-%d]", name, canPort.value, port);
 		
-		//SendableRegistry.addLW(this, "ValveDA", name);
+		LiveWindow.registerComplexTunable(this, name);
 	}
 	
 	/**
@@ -94,8 +93,9 @@ public class ValveDA //implements Sendable
 
 	/**
 	 * Open the valve (pressurize port. This is A side).
-	 * This function delays calling thread for the valve
-	 * slide time (default 20ms).
+	 * This function operates the valve in a separate thread
+	 * to not delay the calling thread while waiting for the
+	 * valve to slide.
 	 */
 	public void Open()
 	{
@@ -193,13 +193,15 @@ public class ValveDA //implements Sendable
 	{
 		solenoidSlideTime = slideTime;
 	}
-	
-//	@Override
-//	public void initSendable( SendableBuilder builder )
-//	{
-//		builder.setSmartDashboardType("ValveDA");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//	    builder.addBooleanProperty("Open(A)", this::isOpen, null);
-//    	builder.addDoubleProperty("SlideTime", () -> solenoidSlideTime, this::setSlideTime);
-//	}
+
+	@Override
+	public void publishTunable(TunableTable table) {
+		table.publishBoolean("Open(A)", this::isOpen, null);
+    	table.publishDouble("SlideTime", () -> solenoidSlideTime, this::setSlideTime);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "ValeDA";
+	}
 } 

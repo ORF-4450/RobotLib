@@ -9,17 +9,16 @@ package Team4450.Lib.Wpilib;
 
 import java.util.concurrent.locks.ReentrantLock;
 
+import Team4450.Lib.LiveWindow;
 import Team4450.Lib.Util;
 
 //import edu.wpi.first.hal.FRCNetComm.tResourceType;
 import org.wpilib.hardware.hal.HAL;
 import org.wpilib.hardware.hal.util.BoundaryException;
 import org.wpilib.math.filter.LinearFilter;
-//import edu.wpi.first.wpilibj.PIDInterface;
-//import edu.wpi.first.wpilibj.Sendable;
 import org.wpilib.system.Timer;
-//import edu.wpi.first.util.sendable.SendableBuilder;
-//import edu.wpi.first.util.sendable.SendableRegistry;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 
 import static org.wpilib.util.ErrorMessages.requireNonNullParam;
 
@@ -35,10 +34,10 @@ import static org.wpilib.util.ErrorMessages.requireNonNullParam;
  *
  * Copied from Wpilib so we can still use it if WPI removes it.
  */
-public class PIDBase implements PIDInterface, PIDOutput, AutoCloseable //Sendable 
+public class PIDBase implements PIDInterface, PIDOutput, AutoCloseable, ComplexTunable
 {
-  public static final double kDefaultPeriod = 0.05;
-  private static int instances;
+  public static final double  kDefaultPeriod = 0.05;
+  private static int          instances;
 
   // Factor for "proportional" control
   private double m_P;
@@ -104,7 +103,7 @@ public class PIDBase implements PIDInterface, PIDOutput, AutoCloseable //Sendabl
 
   protected PIDSource 	m_pidInput;
   protected PIDOutput 	m_pidOutput;
-  protected Timer 		m_setpointTimer;
+  protected Timer 		  m_setpointTimer;
 
   /**
    * Tolerance is the type of tolerance used to specify if the PID controller is on target.
@@ -186,7 +185,8 @@ public class PIDBase implements PIDInterface, PIDOutput, AutoCloseable //Sendabl
     HAL.reportUsage("PIDController", instances, ""); // 2027
     //HAL.report(tResourceType.kResourceType_PIDController, instances); TODO
     m_tolerance = new NullTolerance();
-    //SendableRegistry.add(this, "PIDController", instances);TODO
+
+    LiveWindow.registerComplexTunable(this, String.format("%s-%d", "PIDController", instances));
   }
 
   /**
@@ -842,19 +842,23 @@ public class PIDBase implements PIDInterface, PIDOutput, AutoCloseable //Sendabl
     setSetpoint(output);
   }
 
-//  @Override
-//  public void initSendable(SendableBuilder builder) {
-//    builder.setSmartDashboardType("PIDController");
-//    builder.setSafeState(this::reset);
-//    builder.addDoubleProperty("p", this::getP, this::setP);
-//    builder.addDoubleProperty("i", this::getI, this::setI);
-//    builder.addDoubleProperty("d", this::getD, this::setD);
-//    builder.addDoubleProperty("f", this::getF, this::setF);
-//    builder.addDoubleProperty("setpoint", this::getSetpoint, this::setSetpoint);
-//    builder.addDoubleProperty("input", this::getInput, null);
-//    builder.addDoubleProperty("error", this::getError, null);
-//    builder.addDoubleProperty("result", this::getResult, null);
-//  }
+	@Override
+	public void publishTunable(TunableTable table) 
+  {
+   table.publishDouble("p", this::getP, this::setP);
+   table.publishDouble("i", this::getI, this::setI);
+   table.publishDouble("d", this::getD, this::setD);
+   table.publishDouble("f", this::getF, this::setF);
+   table.publishDouble("setpoint", this::getSetpoint, this::setSetpoint);
+   table.publishDouble("input", this::getInput, null);
+   table.publishDouble("error", this::getError, null);
+   table.publishDouble("result", this::getResult, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "PIDBase";
+	}
 
   /**
    * Wraps error around for continuous inputs. The original error is returned if continuous mode is

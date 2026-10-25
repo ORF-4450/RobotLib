@@ -16,12 +16,14 @@ import org.wpilib.hardware.discrete.CounterBase;
 //import edu.wpi.first.wpilibj.PIDSource;
 //import edu.wpi.first.wpilibj.PIDSourceType;
 import org.wpilib.system.Timer;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 import org.wpilib.units.measure.Angle;
 
 /**
 * Wrapper for Talon FX Encoder in relative (quadrature) mode.
 */
-public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier //, Sendable
+public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier, ComplexTunable
 {
 	private TalonFX			talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
@@ -84,7 +86,7 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier //, Sen
 		
 		this.talon = talon;
 		
-		//rich Select Talon FX integrated encoder as feedback device.
+		//TODO Select Talon FX integrated encoder as feedback device.
 		//this.talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
 		
 		// May not need this for 2025. RotoSensor is default feedback source.
@@ -95,11 +97,11 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier //, Sen
 		
 		setWheelDiameter(wheelDiameter);
        
-       name = String.format("%s[%d]", name, talon.getDeviceID());
+        name = String.format("%s[%d]", name, talon.getDeviceID());
 
-      	//SendableRegistry.addLW(this, name);
+		LiveWindow.registerComplexTunable(this, name);
 
-       Util.consoleLog("%s", name);
+       	Util.consoleLog("%s", name);
 		
 		reset();
 	}
@@ -875,17 +877,19 @@ public class FXEncoder implements CounterBase, PIDSource, DoubleSupplier //, Sen
 		
 		absoluteOffset = offset;
 	}
-	
-//	@Override
-//	rich public void initSendable( SendableBuilder builder )
-//	{
-//		builder.setSmartDashboardType("FXEncoder");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//	    builder.addDoubleProperty("Position (ticks)", this::get, null);
-//	    builder.addDoubleProperty("AbsPosition (ticks)", this::getAbsolutePosition, null);
-//	    builder.addDoubleProperty("RPM", this::getRPM, null);
-//	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
-//	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
-//	    builder.addDoubleProperty("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
-//	}
+
+	@Override
+	public void publishTunable(TunableTable table) {
+	    table.publishDouble("Position (ticks)", this::get, null);
+	    table.publishDouble("AbsPosition (ticks)", this::getAbsolutePosition, null);
+	    table.publishDouble("RPM", this::getRPM, null);
+	    table.publishDouble("MaxRPM", this::getMaxRPM, null);
+	    table.publishDouble("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
+	    table.publishDouble("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "FXEncoder";
+	}
 }

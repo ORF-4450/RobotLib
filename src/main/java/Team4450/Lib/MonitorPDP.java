@@ -1,13 +1,12 @@
 
 package Team4450.Lib;
 
-//import edu.wpi.first.util.sendable.Sendable;
-//import edu.wpi.first.util.sendable.SendableBuilder;
-//import edu.wpi.first.util.sendable.SendableRegistry;
 import org.wpilib.hardware.power.PowerDistribution;
 import org.wpilib.system.RobotController;
 import org.wpilib.system.Timer;
 import org.wpilib.telemetry.Telemetry;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 import org.wpilib.driverstation.DriverStationErrors;
 import org.wpilib.hardware.bus.CANPort;
 
@@ -20,7 +19,7 @@ import org.wpilib.hardware.bus.CANPort;
  * Robot class. Runs until robot program is terminated.
  */
 
-public class MonitorPDP extends Thread //implements Sendable
+public class MonitorPDP extends Thread implements ComplexTunable
 {
   // Theoretical max current from good FRC battery is 250 amps, brown out power
   // cuts start at 7 volts.
@@ -29,7 +28,7 @@ public class MonitorPDP extends Thread //implements Sendable
   private double					sampleInterval = 1.0;	// Seconds
   private boolean					alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
   private boolean					ports[] = new boolean[24];
-  private int						numPorts;
+  private int						  numPorts;
   
   /**
    * Static reference to the internal MonitorPDP instance created by
@@ -274,16 +273,19 @@ public class MonitorPDP extends Thread //implements Sendable
 	  }
 	  catch (Throwable e) {Util.logException(e);}
   }
-  
-	
-//  @Override
-//  public void initSendable( SendableBuilder builder )
-//  {
-//	  builder.setSmartDashboardType("MonitorPDP");
-//  	  builder.addBooleanProperty(".controllable", () -> false, null);
-//  	  builder.addDoubleProperty("Voltage", () -> pdp.getVoltage(), null);
-//  	  builder.addDoubleProperty("TotalCurrent", () -> pdp.getTotalCurrent(), null);
-//  	  builder.addBooleanProperty("LowBatteryAlarm", () -> lowBatteryAlarm, null);
-//  	  builder.addBooleanProperty("BrownOutAlarm", () -> overloadAlarm, null);
-//  }
+
+	@Override
+	public void publishTunable(TunableTable table) {
+		  //table.publishBoolean("Open(A)", this::isOpen, null);
+    	//table.publishDouble("SlideTime", () -> solenoidSlideTime, this::setSlideTime);
+   	  table.publishDouble("Voltage", () -> pdp.getVoltage(), null);
+ 	    table.publishDouble("TotalCurrent", () -> pdp.getTotalCurrent(), null);
+ 	    table.publishBoolean("LowBatteryAlarm", () -> lowBatteryAlarm, null);
+ 	    table.publishBoolean("BrownOutAlarm", () -> overloadAlarm, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "MonitorPDP";
+	}
 }

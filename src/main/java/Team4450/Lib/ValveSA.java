@@ -6,6 +6,8 @@ package Team4450.Lib;
 //import edu.wpi.first.util.sendable.SendableRegistry;
 import org.wpilib.hardware.pneumatic.PneumaticsModuleType;
 import org.wpilib.hardware.pneumatic.Solenoid;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 import org.wpilib.hardware.bus.CANPort;
 
 /**
@@ -15,7 +17,7 @@ import org.wpilib.hardware.bus.CANPort;
  * is turned off and the spring closes the valve.
  */
 
-public class ValveSA //implements Sendable
+public class ValveSA implements ComplexTunable
 {
 	private final Solenoid	valveOpenSide;
 	private boolean			valveOpen = false;
@@ -41,7 +43,7 @@ public class ValveSA //implements Sendable
         
 		name = String.format("%s[%d-%d]", name, canPort.value, port);
         
-		//SendableRegistry.addLW(this, "ValveSA", name);
+		LiveWindow.registerComplexTunable(this, name);
 	}
 	
 	/**
@@ -54,7 +56,6 @@ public class ValveSA //implements Sendable
 		this.name = String.format("%s[%d-%d]", name, canPort, port);
         
 		//SendableRegistry.setName(this, this.name);
-		
 	}
 
 	/**
@@ -105,12 +106,14 @@ public class ValveSA //implements Sendable
 	{
 		return valveOpen;
 	}
-	
-//	@Override
-//	public void initSendable( SendableBuilder builder )
-//	{
-//		builder.setSmartDashboardType("ValveSA");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//	    builder.addBooleanProperty("Open", this::isOpen, null);
-//	}
+
+	@Override
+	public void publishTunable(TunableTable table) {
+		table.publishBoolean("Open", this::isOpen, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "ValeSA";
+	}
 }

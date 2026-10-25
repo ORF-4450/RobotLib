@@ -7,6 +7,8 @@ package Team4450.Lib;
 import org.wpilib.hardware.discrete.AnalogInput;
 import org.wpilib.framework.RobotBase;
 import org.wpilib.system.Timer;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 
 /**
  * Task to monitor ultrasonic sensor and report distance to driver station.
@@ -16,7 +18,7 @@ import org.wpilib.system.Timer;
  * Uses MaxBotix ultrasonic sensor.
  */
 
-public class MonitorDistanceMBX extends Thread //implements Sendable
+public class MonitorDistanceMBX extends Thread implements ComplexTunable
 {
     RobotBase				robot;
     private int				port = 1;
@@ -96,12 +98,13 @@ public class MonitorDistanceMBX extends Thread //implements Sendable
     private MonitorDistanceMBX(RobotBase robot)
 	{
 		Util.consoleLog("port=%d", port);
+
         this.robot = robot;
-        this.setName("MonitorDistanceMBX");
+        this.setName(String.format("%s-%d","MonitorDistanceMBX", port));
 
         ultra = new AnalogInput(port);
         
-  	  	//SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
+        LiveWindow.registerComplexTunable(this, this.getName());
   	  	//SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
     }
 
@@ -110,24 +113,25 @@ public class MonitorDistanceMBX extends Thread //implements Sendable
 		Util.consoleLog("port=%d", port);
         this.robot = robot;
         this.port = port;
-        this.setName("MonitorDistanceMBX");
-        
+        this.setName(String.format("%s-%d","MonitorDistanceMBX", port));
+
         ultra = new AnalogInput(port);
         
-  	  	//SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
+        LiveWindow.registerComplexTunable(this, this.getName());
   	  	//SendableRegistry.setName(ultra, "MonitorDistanceAIO", ultra.getChannel());
 	}
 
     private MonitorDistanceMBX(RobotBase robot, AnalogInput ultraSonic)
 	{
 		Util.consoleLog("port=%d", ultraSonic.getChannel());
+
         this.robot = robot;
-        this.setName("MonitorDistanceMBX");
-        
+        this.setName(String.format("%s-%d","MonitorDistanceMBX", ultraSonic.getChannel()));
+
         ultra = ultraSonic;
         
-  	  	//SendableRegistry.addLW(this, "MonitorDistanceMBX", ultra.getChannel());
-	}
+        LiveWindow.registerComplexTunable(this, this.getName());
+    }
     
     /**
      * Set the delay between samples of the sensor.
@@ -191,12 +195,14 @@ public class MonitorDistanceMBX extends Thread //implements Sendable
 		}
 		catch (Throwable e) {Util.logException(e);}
 	}
-	
-//    @Override
-//    public void initSendable( SendableBuilder builder )
-//    {
-//    	builder.setSmartDashboardType("MonitorDistanceMBX");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//    	builder.addDoubleProperty("Range(in)", this::getRangeInches, null);
-//    }
+
+	@Override
+	public void publishTunable(TunableTable table) {
+        table.publishDouble("Range(in)", this::getRangeInches, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "MonitorDistanceMBX";
+	}	
 }

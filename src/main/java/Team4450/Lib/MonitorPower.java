@@ -1,15 +1,12 @@
 package Team4450.Lib;
 
-//import edu.wpi.first.util.sendable.Sendable;
-//import edu.wpi.first.util.sendable.SendableBuilder;
-//import edu.wpi.first.util.sendable.SendableRegistry;
-import org.wpilib.hardware.power.PowerDistribution;
 import org.wpilib.system.RobotController;
 import org.wpilib.system.Timer;
 import org.wpilib.telemetry.Telemetry;
 import org.wpilib.driverstation.DriverStationErrors;
-import org.wpilib.hardware.bus.CANPort;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
+import org.wpilib.tunable.Tunables;
 
 /**
  * RoboRio monitoring task. Monitors battery voltage and brownout. Logs warnings to
@@ -17,11 +14,11 @@ import org.wpilib.hardware.bus.CANPort;
  * Robot class. Runs until robot program is terminated.
  */
 
-public class MonitorPower extends Thread //implements Sendable
+public class MonitorPower extends Thread implements ComplexTunable
 {
   // Theoretical max current from good FRC battery is 250 amps, brown out power
   // cuts start at 7 volts.
-  private double			  		lowVoltage = 9, maxCurrent = 240;
+  private double			  	lowVoltage = 9, maxCurrent = 240;
   private double					sampleInterval = 1.0;	// Seconds
   private boolean					alarmInProgress = false, lowBatteryAlarm = false, overloadAlarm = false;
   
@@ -44,9 +41,9 @@ public class MonitorPower extends Thread //implements Sendable
   {
 	  Util.consoleLog();
     	
-  	  if (INSTANCE == null) INSTANCE = new MonitorPower();
+  	if (INSTANCE == null) INSTANCE = new MonitorPower();
         
-  	  return INSTANCE;
+  	return INSTANCE;
   }
   
   // Private constructors means callers must use getInstance.
@@ -57,7 +54,7 @@ public class MonitorPower extends Thread //implements Sendable
 	  
 	  this.setName("MonitorPower");
       
-	  //SendableRegistry.addLW(this, "MonitorPower");
+    LiveWindow.registerComplexTunable(this, this.getName());
   }
   
   /**
@@ -199,15 +196,15 @@ public class MonitorPower extends Thread //implements Sendable
 	  catch (Throwable e) {Util.logException(e);}
   }
   
-	
-//  @Override
-//  public void initSendable( SendableBuilder builder )
-//  {
-//	  builder.setSmartDashboardType("MonitorPower");
-//  	  builder.addBooleanProperty(".controllable", () -> false, null);
-//  	  builder.addDoubleProperty("Voltage", () -> RobotController.getBatteryVoltage(), null);
-//  	  //builder.addDoubleProperty("TotalCurrent", () -> pdp.getTotalCurrent(), null);
-//  	  builder.addBooleanProperty("LowBatteryAlarm", () -> lowBatteryAlarm, null);
-//  	  builder.addBooleanProperty("BrownOutAlarm", () -> overloadAlarm, null);
-//  }
+  @Override
+  public void publishTunable(TunableTable table) {
+      table.publishDouble("Voltage", () -> RobotController.getBatteryVoltage(), null);
+      table.publishBoolean("LowBatteryAlarm", () -> lowBatteryAlarm, null);
+      table.publishBoolean("BrownOutAlarm", () -> overloadAlarm, null);
+  }
+    
+  @Override
+  public String getTunableType() {
+      return "MonitorPower";
+  }
 }

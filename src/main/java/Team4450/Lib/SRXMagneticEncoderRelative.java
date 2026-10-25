@@ -10,15 +10,11 @@ import com.ctre.phoenix.motorcontrol.can.BaseMotorController;
 
 import Team4450.Lib.Wpilib.PIDSource;
 import Team4450.Lib.Wpilib.PIDSourceType;
-//import Team4450.Lib.Wpilib.Sendable;
 import org.wpilib.math.geometry.Rotation2d;
 import org.wpilib.system.Timer;
-//import edu.wpi.first.util.sendable.Sendable;
-//import edu.wpi.first.util.sendable.SendableBuilder;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 import org.wpilib.hardware.discrete.CounterBase;
-//import edu.wpi.first.wpilibj.PIDSource;
-//import edu.wpi.first.wpilibj.PIDSourceType;
-//import edu.wpi.first.wpilibj.Timer;
 
 /**
  * Wrapper for Talon SRX Magnetic Encoder used in relative (quadrature) mode.
@@ -27,7 +23,7 @@ import org.wpilib.hardware.discrete.CounterBase;
  * require conversion to Phoenix 6. 5 wants Sendable which is not available
  * for 2027. Could try converting WPI_TalonSRX to CTRE Talon.
  */
-public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier //, Sendable
+public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, DoubleSupplier, ComplexTunable
 {
 	private WPI_TalonSRX	talon;
 	private PIDSourceType	pidSourceType = PIDSourceType.kDisplacement;
@@ -60,6 +56,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		// Select Talon CTRE Magnetic encoder relative mode as feedback device.
 		//TODO this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 
+		//TODO LiveWindow.registerComplexTunable(this, "SRXMagneticEncoderRelative", talon.getDeviceID());
+
 		reset();
 	}
 	
@@ -79,6 +77,8 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		//TODO this.talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative);
 		
 		setWheelDiameter(wheelDiameter);
+
+		//TODO LiveWindow.registerComplexTunable(this, "SRXMagneticEncoderRelative", talon.getDeviceID());
 		
 		reset();
 	}
@@ -844,16 +844,18 @@ public class SRXMagneticEncoderRelative implements CounterBase, PIDSource, Doubl
 		absoluteOffset = offset;
 	}
 
-//	@Override
-//	public void initSendable( SendableBuilder builder )
-//	{
-//		builder.setSmartDashboardType("Encoder");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//	    builder.addDoubleProperty("Position", this::get, null);
-//	    builder.addDoubleProperty("AbsPosition", this::getAbsolutePosition, null);
-//	    builder.addDoubleProperty("RPM", this::getRPM, null);
-//	    builder.addDoubleProperty("MaxRPM", this::getMaxRPM, null);
-//	    builder.addDoubleProperty("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
-//	    builder.addDoubleProperty("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
-//	}
+	@Override
+	public void publishTunable(TunableTable table) {
+	    table.publishDouble("Position", this::get, null);
+	    table.publishDouble("AbsPosition", this::getAbsolutePosition, null);
+	    table.publishDouble("RPM", this::getRPM, null);
+	    table.publishDouble("MaxRPM", this::getMaxRPM, null);
+	    table.publishDouble("Velocity(mps)", () -> getVelocity(PIDRateType.velocityMPS), null);
+	    table.publishDouble("MaxVelocity(mps)", () -> getMaxVelocity(PIDRateType.velocityMPS), null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "SRXMagneticEncoderRelative";
+	}
 }

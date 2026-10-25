@@ -168,11 +168,11 @@ import org.wpilib.units.measure.Angle;
 ////	public void initSendable( SendableBuilder builder )
 ////	{
 ////		builder.setSmartDashboardType("Talon_FX");
-////    	//builder.addBooleanProperty(".controllable", () -> false, null);
-////	    //builder.addDoubleProperty("amps", () -> this., null);
-////	    builder.addDoubleProperty("speed", this::get, null);
-////	    builder.addDoubleProperty("position (rot)", getPositionDS(), null);
-////	    builder.addDoubleProperty("velocity (rps)", getVelocityDS(), null);
+////    	//table.publishBoolean(".controllable", () -> false, null);
+////	    //table.publishDouble("amps", () -> this., null);
+////	    table.publishDouble("speed", this::get, null);
+////	    table.publishDouble("position (rot)", getPositionDS(), null);
+////	    table.publishDouble("velocity (rps)", getVelocityDS(), null);
 ////	}
 //}
 //

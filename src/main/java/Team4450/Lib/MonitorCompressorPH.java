@@ -5,6 +5,8 @@ import org.wpilib.system.Timer;
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.wpilib.hardware.pneumatic.Compressor;
 import org.wpilib.telemetry.Telemetry;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 import org.wpilib.driverstation.DriverStationErrors;
 
 /**
@@ -16,11 +18,11 @@ import org.wpilib.driverstation.DriverStationErrors;
  * PH, device id 0.
  */
 
-public class MonitorCompressorPH extends Thread //implements Sendable
+public class MonitorCompressorPH extends Thread implements ComplexTunable
 {
-  private final Compressor			compressor;
-  private double					delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
-  private boolean					lowPressureAlarm = false, ledState = false, compressorState;
+  private final Compressor	compressor;
+  private double					  delay = 2.0, lowPressureThreshold = 0.0, correction = 0.0;
+  private boolean					  lowPressureAlarm = false, ledState = false, compressorState;
   
   /**
    * Static reference to the internal MonitorCompressorPH instance created by
@@ -62,7 +64,7 @@ public class MonitorCompressorPH extends Thread //implements Sendable
 
 	  Telemetry.log("LowPressure", false);
 	  
-	  //SendableRegistry.addLW(this, "MonitorCompressorPH", 1);
+    LiveWindow.registerComplexTunable(this, this.getName());
   }
     
   /**
@@ -176,14 +178,16 @@ public class MonitorCompressorPH extends Thread //implements Sendable
 	}
 	catch (Throwable e) {Util.logException(e);}
   }
-	
-//  @Override
-//  public void initSendable( SendableBuilder builder )
-//  {
-//	builder.setSmartDashboardType("MonitorCompressorPH");
-//  	builder.addBooleanProperty(".controllable", () -> false, null);
-//    builder.addDoubleProperty("PSI", this::getPressure, null);
-//    builder.addBooleanProperty("On", () -> compressorState, null);
-//    builder.addBooleanProperty("Alarm", () -> lowPressureAlarm, null);
-//  }
+
+	@Override
+	public void publishTunable(TunableTable table) {
+    table.publishDouble("PSI", this::getPressure, null);
+    table.publishBoolean("On", () -> compressorState, null);
+    table.publishBoolean("Alarm", () -> lowPressureAlarm, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "MonitorCompressorPH";
+	}	
 }

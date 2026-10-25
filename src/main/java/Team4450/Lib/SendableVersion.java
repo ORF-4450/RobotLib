@@ -2,7 +2,6 @@
 package Team4450.Lib;
 
 import org.wpilib.system.WPILibVersion;
-//import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.wpilib.telemetry.Telemetry;
 import org.wpilib.telemetry.TelemetryTable;
 
@@ -19,7 +18,6 @@ import java.util.jar.Manifest;
  * robot. Sim changed for 2022 and does not run from a jar.
  */
 public class SendableVersion
-
 {
 	// Singleton class single instance.
     public static final SendableVersion INSTANCE = new SendableVersion();

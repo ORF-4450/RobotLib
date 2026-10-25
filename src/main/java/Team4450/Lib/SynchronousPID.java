@@ -4,6 +4,8 @@ package Team4450.Lib;
 //import edu.wpi.first.util.sendable.SendableBuilder;
 //import edu.wpi.first.util.sendable.SendableRegistry;
 import org.wpilib.hardware.hal.util.BoundaryException;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 
 /**
  * This class implements a PID Control Loop.
@@ -13,7 +15,7 @@ import org.wpilib.hardware.hal.util.BoundaryException;
  * This class courtesy of Team 254 with modifications.
  */
 
-public class SynchronousPID implements AutoCloseable //, Sendable
+public class SynchronousPID implements AutoCloseable, ComplexTunable
 {
 	private static int	instances;
 	
@@ -120,7 +122,7 @@ public class SynchronousPID implements AutoCloseable //, Sendable
         
         m_name = String.format("%s[%d]-PID", name, instances);
         
-       	//SendableRegistry.addLW(this, "SynchronousPID Controllers", m_name);
+        LiveWindow.registerComplexTunable(this, m_name);
 
         Util.consoleLog("%s", m_name);
     }
@@ -570,26 +572,23 @@ public class SynchronousPID implements AutoCloseable //, Sendable
     {
     	setOutputRange(-range, range);
     }
-    
-	/**
-	 * Initialize the Sendable. Called by SmartDashboard.putData().
-	 * @param builder SendableBuilder object.
-	 */
-//	@Override
-//	public void initSendable( SendableBuilder builder )
-//	{
-//		builder.setSmartDashboardType("SynchronousPID");
-//    	builder.addBooleanProperty(".controllable", () -> true, null);
-//	    builder.addDoubleProperty("1 p", this::getP, this::setP);
-//	    builder.addDoubleProperty("2 i", this::getI, this::setI);
-//	    builder.addDoubleProperty("3 d", this::getD, this::setD);
-//	    builder.addDoubleProperty("4 f", this::getF, this::setF);
-//	    builder.addDoubleProperty("5 max output", () -> m_maximumOutput, this::setOutputRange);
-//	    builder.addDoubleProperty("6 tolerance", this::getTolerance, this::setTolerance);
-//	    builder.addDoubleProperty("7 setpoint", this::getSetpoint, this::setSetpoint);
-//	    builder.addDoubleProperty("8 input", this::getInput, null);
-//	    builder.addDoubleProperty("9 error", this::getError, null);
-//	    builder.addDoubleProperty("a output", this::get, null);
-//	}
-    
+
+	@Override
+	public void publishTunable(TunableTable table) {
+	    table.publishDouble("1 p", this::getP, this::setP);
+	    table.publishDouble("2 i", this::getI, this::setI);
+	    table.publishDouble("3 d", this::getD, this::setD);
+	    table.publishDouble("4 f", this::getF, this::setF);
+	    table.publishDouble("5 max output", () -> m_maximumOutput, this::setOutputRange);
+	    table.publishDouble("6 tolerance", this::getTolerance, this::setTolerance);
+	    table.publishDouble("7 setpoint", this::getSetpoint, this::setSetpoint);
+	    table.publishDouble("8 input", this::getInput, null);
+	    table.publishDouble("9 error", this::getError, null);
+	    table.publishDouble("a output", this::get, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "SynchronousPID";
+	}
 }

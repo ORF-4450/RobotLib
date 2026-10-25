@@ -111,9 +111,9 @@
 //    public void initSendable( SendableBuilder builder )
 //    {
 //    	builder.setSmartDashboardType("Lidar");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//    	builder.addDoubleProperty("Distance(cm)", () -> medianCm, this::setOffset);
-//    	builder.addDoubleProperty("Distance(in)", () -> getDistanceIn(false), null);
-//    	builder.addDoubleProperty("Offset(cm)", () -> offset, this::setOffset);
+//    	table.publishBoolean(".controllable", () -> false, null);
+//    	table.publishDouble("Distance(cm)", () -> medianCm, this::setOffset);
+//    	table.publishDouble("Distance(in)", () -> getDistanceIn(false), null);
+//    	table.publishDouble("Offset(cm)", () -> offset, this::setOffset);
 //    }
 //}

@@ -20,6 +20,8 @@ import org.wpilib.hardware.hal.SimDouble;
 import org.wpilib.simulation.SimDeviceSim;
 import org.wpilib.system.Notifier;
 import org.wpilib.system.Timer;
+import org.wpilib.tunable.ComplexTunable;
+import org.wpilib.tunable.TunableTable;
 //import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
 import org.wpilib.networktables.NetworkTable;
 import org.wpilib.networktables.NetworkTableInstance;
@@ -28,7 +30,7 @@ import org.wpilib.networktables.NetworkTableInstance;
  * Wrapper class for NavX MXP navigation sensor board.
  */
 
-public class NavX implements PIDSource, DoubleSupplier //, Sendable
+public class NavX implements PIDSource, DoubleSupplier, ComplexTunable
 {
 
     // Create single instance of this class and return that single instance to any callers.
@@ -90,6 +92,8 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 		ahrs = new AHRS(portType, updateRate);
 
 		Timer.delay(1);	// delay to ensure USB port is opened.
+
+		LiveWindow.registerComplexTunable(this, "NavX");
 	}
 	
 //	private NavX(PortType portType)
@@ -648,7 +652,7 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 		NetworkTableInstance instance = NetworkTableInstance.getDefault();
 		NetworkTable table = instance.getTable("NavX-Dump");
 		
-//		table.getEntry(    "IMU_Connected")       .setBoolean(ahrs.isConnected());
+//TODO		table.getEntry(    "IMU_Connected")       .setBoolean(ahrs.isConnected());
 //		if (!ahrs.isConnected()) return;
 //
 //        /* Sensor Board Information                                                 */
@@ -734,16 +738,17 @@ public class NavX implements PIDSource, DoubleSupplier //, Sendable
 //        table.getEntry(    "IMU_Update_Count")    .setNumber( ahrs.getUpdateCount());
 	}
 
-//	@Override
-//	public void initSendable( SendableBuilder builder )
-//	{
-//		// Type must be Gyro to connect this sendable to the Shuffleboard gyro widget.
-//		builder.setSmartDashboardType("Gyro");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//	    builder.addDoubleProperty("Value", this::getHeadingInt, null);
-//	    builder.addDoubleProperty("Yaw", this::getYaw, null);
-//	}
-	
+	@Override
+	public void publishTunable(TunableTable table) {
+	    table.publishDouble("Value", this::getHeadingInt, null);
+	    table.publishDouble("Yaw", this::getYaw, null);
+	}
+		
+	@Override
+	public String getTunableType() {
+		return "NavX";
+	}
+
 	/**
 	 * When using PID Source Type of displacement, selects which displacement 
 	 * measurement function to use.

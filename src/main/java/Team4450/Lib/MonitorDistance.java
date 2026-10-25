@@ -188,7 +188,7 @@
 //    public void initSendable( SendableBuilder builder )
 //    {
 //    	builder.setSmartDashboardType("MonitorDistance");
-//    	builder.addBooleanProperty(".controllable", () -> false, null);
-//    	builder.addDoubleProperty("Range(in)", this::getRangeInches, null);
+//    	table.publishBoolean(".controllable", () -> false, null);
+//    	table.publishDouble("Range(in)", this::getRangeInches, null);
 //    }
 //}
