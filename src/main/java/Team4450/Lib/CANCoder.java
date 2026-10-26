@@ -27,7 +27,7 @@
 //
 ///**
 // * Wrapper for CTRE CANCoder. Based on Phoenix5 API which was deprecated in 2025
-// * removed in 2026. A rewrite would be needed using Phoenix6 API. This is not planned
+// * removed in 2026?. A rewrite would be needed using Phoenix6 API. This is not planned
 // * as of January 2026. This class was used for old style autonomous and old
 // * style PID using a CANCoder. With advent of Phoenix6 API and path following
 // * autonomous, the functionality provided by this class is not needed anymore.
