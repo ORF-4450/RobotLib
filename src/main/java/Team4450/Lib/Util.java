@@ -712,7 +712,7 @@ public class Util
 	}
 	
 	/**
-	 * Return the elapsed time since the last call to this method.
+	 * Return the elapsed time since the last call to this method. Not thread safe.
 	 * @return Elapsed time in seconds.
 	 */
 	public static double getElaspedTime()
@@ -736,7 +736,7 @@ public class Util
 	}
 
 	/**
-	 * Return current FPGA timestamp.
+	 * Return current timestamp.
 	 * @return The timestamp in seconds.
 	 */
 	public static double timeStamp()
