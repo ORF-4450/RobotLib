@@ -13,7 +13,7 @@ import org.wpilib.tunable.TunableTable;
  * With WPILib 2027, Sendable and LiveWindow were dropped. Sendable was
  * replaced with ComplexTunable but the Tunable API did not have a replacement
  * for LiveWindow. LiveWindow allowed classes to register Sendables but not
- * actually send them to the Network tables unless LiveWindw was enabled. This
+ * actually send them to the Network tables unless LiveWindow was enabled. This
  * allowed for classes to be able to send debugging/test data to the NT only
  * LW was enabled. So we only enabled LW during test (now utility) mode,
  * thereby not sending debug data during regular modes, ie during matches.
