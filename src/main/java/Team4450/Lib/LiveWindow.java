@@ -3,6 +3,8 @@ package Team4450.Lib;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.wpilib.telemetry.Telemetry;
+import org.wpilib.telemetry.TelemetryLoggable;
 import org.wpilib.tunable.ComplexTunable;
 import org.wpilib.tunable.TunableRegistry;
 import org.wpilib.tunable.TunableTable;
@@ -21,12 +23,17 @@ import org.wpilib.tunable.TunableTable;
  * So this class implements a simple LiveWindow replacement allowing ComplexTunables
  * to be registered but not published unless requested by calling publish on this
  * class.
+ * 
+ * Later added TelemetryLoggables. ComplexTunables are published once and WPILib
+ * will refresh them every execution loop. TelemetryLoggables are not refreshed
+ * automatically so we do that ourselves in Robot.utilityPeriodic.
  */
 public final class LiveWindow {
     private static final TunableTable rootTable = TunableRegistry.getTable("/");
     private static final TunableTable liveWindow = rootTable.getTable("LiveWindow");
 
-    private static Map<String, ComplexTunable> tunables = new TreeMap<>();
+    private static Map<String, ComplexTunable>      tunables = new TreeMap<>();
+    private static Map<String, TelemetryLoggable>   loggables = new TreeMap<>();
 
     private static boolean published = false;
 
@@ -43,15 +50,14 @@ public final class LiveWindow {
     public static void registerComplexTunable(ComplexTunable tunable, String name)
     {
         // Publishes the tunable if registry has already been published.
-        if (published && tunables.get(name) == null)
-            liveWindow.publish(name, tunable);
+        if (published && tunables.get(name) == null) liveWindow.publish(name, tunable);
 
         tunables.putIfAbsent(name, tunable);
     }
     
     /**
      * Register a class that implements ComplexTunable to be published 
-     * if LiveWindow.publish() is called. Appends id to name to create
+     * if LiveWindow.publishTunables() is called. Appends id to name to create
      * a unique name.
      * @param tunable Class implementing ComplexTunable.
      * @param name Name of tunable.
@@ -61,11 +67,37 @@ public final class LiveWindow {
     {
         registerComplexTunable(tunable, String.format("%s-%d", name, id));
     }
+    
+    /**
+     * Register a class that implements TelemetryLoggable to be published 
+     * if LiveWindow.publishLoggables() is called.
+     * @param loggable Class implementing TelemetryLoggable.
+     * @param name Name of loggable.
+     */
+    public static void registerTelemetryLoggable(TelemetryLoggable loggable, String name)
+    {
+        loggables.putIfAbsent(name, loggable);
+    }
+    
+    /**
+     * Register a class that implements TelemetryLoggable to be published 
+     * if LiveWindow.publish() is called. Appends id to name to create
+     * a unique name.
+     * @param loggable Class implementing TelemetryLoggable.
+     * @param name Name of loggable.
+     * @param id Identifying integer.
+     */
+    public static void registerTelemetryLoggable(TelemetryLoggable loggable, String name, int id)
+    {
+        registerTelemetryLoggable(loggable, String.format("%s-%d", name, id));
+    }
 
     /**
-     * Publish the registry of ComplexTunables to the network tables.
+     * Publish the registry of ComplexTunables and TelemetryLoggables to the network tables.
+     * Only needs to be called once. WPILib handles repeated publishing of the tunable's 
+     * data on each execution loop.
      */
-    public static void publish()
+    public static void publishTunables()
     {
         for (Map.Entry<String, ComplexTunable> entry : tunables.entrySet())
         {
@@ -73,6 +105,18 @@ public final class LiveWindow {
         }
 
         published = true;
+    }
+
+    /**
+     * Publish the registry of TelemetryLoggables to the network tables.
+     * Must be called each execution loop. Typically in Robot.utilityPeriodic.
+     */
+    public static void publishLoggables()
+    {
+        for (Map.Entry<String, TelemetryLoggable> entry : loggables.entrySet())
+        {
+            Telemetry.log(entry.getKey(), entry.getValue());
+        }
     }
 
     /**
