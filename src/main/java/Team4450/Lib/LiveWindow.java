@@ -43,12 +43,19 @@ public final class LiveWindow {
     
     /**
      * Register a class that implements ComplexTunable to be published 
-     * if LiveWindow.publish() is called.
+     * if LiveWindow.publish() is called. The tunable is published to
+     * the network tables as a subtable of the table "LiveWindow". The
+     * table elements are defined by the class implementing ComplexTunable.
+     * You may add a ComplexTunable table as a subtable of any other table
+     * by using the parent table name followed by / then the subtable name
+     * in the name parameter.
      * @param tunable Class implementing ComplexTunable.
      * @param name Name of tunable.
      */
     public static void registerComplexTunable(ComplexTunable tunable, String name)
     {
+        Util.consoleLog("%s", name);
+
         // Publishes the tunable if registry has already been published.
         if (published && tunables.get(name) == null) liveWindow.publish(name, tunable);
 
@@ -58,7 +65,11 @@ public final class LiveWindow {
     /**
      * Register a class that implements ComplexTunable to be published 
      * if LiveWindow.publishTunables() is called. Appends id to name to create
-     * a unique name.
+     * a unique name. The tunable is published to the network tables as a subtable
+     * of the table "LiveWindow". The table elements are defined by the class 
+     * implementing ComplexTunable. You may add a ComplexTunable table as a subtable 
+     * of any other table by using the parent table name followed by / then the subtable 
+     * name in the name parameter.
      * @param tunable Class implementing ComplexTunable.
      * @param name Name of tunable.
      * @param id Identifying integer.
@@ -70,19 +81,30 @@ public final class LiveWindow {
     
     /**
      * Register a class that implements TelemetryLoggable to be published 
-     * if LiveWindow.publishLoggables() is called.
+     * if LiveWindow.publishLoggables() is called. The loggable is published to
+     * the network tables as a subtable of the table "LiveWindow". The
+     * table elements are defined by the class implementing TelemetryLoggable.
+     * You may add a TelemetryLoggable table as a subtable of any other table
+     * by using the parent table name followed by / then the subtable name
+     * in the name parameter.
      * @param loggable Class implementing TelemetryLoggable.
      * @param name Name of loggable.
      */
     public static void registerTelemetryLoggable(TelemetryLoggable loggable, String name)
     {
+        Util.consoleLog("%s", name);
+
         loggables.putIfAbsent(name, loggable);
     }
     
     /**
      * Register a class that implements TelemetryLoggable to be published 
      * if LiveWindow.publish() is called. Appends id to name to create
-     * a unique name.
+     * a unique name. The loggable is published to the network tables as a subtable 
+     * of the table "LiveWindow". The table elements are defined by the class 
+     * implementing TelemetryLoggable. You may add a TelemetryLoggable table as a 
+     * subtable of any other table by using the parent table name followed by / then 
+     * the subtable name in the name parameter.
      * @param loggable Class implementing TelemetryLoggable.
      * @param name Name of loggable.
      * @param id Identifying integer.
@@ -94,11 +116,13 @@ public final class LiveWindow {
 
     /**
      * Publish the registry of ComplexTunables and TelemetryLoggables to the network tables.
-     * Only needs to be called once. WPILib handles repeated publishing of the tunable's 
+     * Only needs to be called once. WPILib handles repeated publishing of each tunable's 
      * data on each execution loop.
      */
     public static void publishTunables()
     {
+        Util.consoleLog();
+
         for (Map.Entry<String, ComplexTunable> entry : tunables.entrySet())
         {
             liveWindow.publish(entry.getKey(), entry.getValue());
@@ -108,8 +132,9 @@ public final class LiveWindow {
     }
 
     /**
-     * Publish the registry of TelemetryLoggables to the network tables.
-     * Must be called each execution loop. Typically in Robot.utilityPeriodic.
+     * Publish the registry of TelemetryLoggables to the network tables. This is
+     * a one time publishing of the loggables data so it must be called each 
+     * execution loop. Typically in Robot.utilityPeriodic.
      */
     public static void publishLoggables()
     {
