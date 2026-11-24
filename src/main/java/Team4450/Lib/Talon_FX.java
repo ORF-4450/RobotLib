@@ -41,7 +41,8 @@ public class Talon_FX extends TalonFX implements ComplexTunable
    /**
     * Create Talon_fX instance.
 	* @param name Name assigned in Network Tables viewer.
-	* @param id CAN id of TalonFX.
+    * @param canBus Can bus CANdle is connected to.
+    * @param id CAN id of TalonFX.
     * @param dcMotor Motor type the TalonFX is controlling.
     * @param gearRatio Gear ratio (number of driven shaft turns to motor shaft turns).
     */
